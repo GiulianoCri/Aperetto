@@ -1,9 +1,9 @@
 body{
-    background-color: black;
+    background-color: rgb(255, 145, 0);
     padding-top: 80px;/* spazio per la navbar fissa */
 }
 .logo{
-    width: 60px;
+    width: 80px;
 }
 .searchbar{
     flex: 1;
@@ -23,9 +23,9 @@ body{
     display: flex;
     align-items: center;
     gap: 15px;
-    padding: 10px 20px;
+    padding: 20px 20px;
     z-index: 1000;
-    background-color: black;
+    background-color: rgb(255, 145, 0);
 }
 .usermenu{
     position: relative;
@@ -37,6 +37,24 @@ body{
     border-radius: 50%;
     background-color: white;
     cursor: pointer;
+}
+.container {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  gap: 750px;
+}
+.accesstab {
+    padding: 50px;
+    height: 200px; 
+    width: 200px;
+    background-color: gray;
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+.accesslogo {
+    padding: 150px;
+    height: 450px; 
+    width: 450px;
 }
 .dropdown {
     position: absolute;
