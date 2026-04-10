@@ -4,13 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Aperetto: aperitivo o cornetto?</title>
-    <link rel="icon" type="image/x-icon" href="/Client/Foto/APERETTO (1).png">
+    <link rel="icon" type="image/x-icon" href="/Foto/APERETTO (1).png">
     <link rel="stylesheet" href="classi.css">
 </head>
 
 <body>
     <div class="navbar">
-        <img src="/Client/Foto/APERETTO (1).png" alt="Impossibile da visualizzare" class="logo">
+        <img src="/Foto/APERETTO (1).png" alt="Impossibile da visualizzare" class="logo">
         <input type="text" placeholder="Cerca..." class="searchbar">
         <div class="usermenu">
             <button class="loginbtn">👤</button>
@@ -20,39 +20,14 @@
             </div>
         </div>
     </div>
-    <div class="risultati">
-            <h1>Risultati della ricerca</h1>
-            <p>Non sono stati trovati risultati per la tua ricerca.</p>
-            <p>Non sono stati trovati risultati per la tua ricerca.</p>
-            <p>Non sono stati trovati risultati per la tua ricerca.</p>
-            <p>Non sono stati trovati risultati per la tua ricerca.</p>
-            <p>Non sono stati trovati risultati per la tua ricerca.</p>
-            <p>Non sono stati trovati risultati per la tua ricerca.</p>
-            <p>Non sono stati trovati risultati per la tua ricerca.</p>
-            <p>Non sono stati trovati risultati per la tua ricerca.</p>
-            <p>Non sono stati trovati risultati per la tua ricerca.</p>
-            <p>Non sono stati trovati risultati per la tua ricerca.</p>
-            <p>Non sono stati trovati risultati per la tua ricerca.</p>
-            <p>Non sono stati trovati risultati per la tua ricerca.</p>
-            <p>Non sono stati trovati risultati per la tua ricerca.</p>
-            <p>Non sono stati trovati risultati per la tua ricerca.</p>
-            <p>Non sono stati trovati risultati per la tua ricerca.</p>
-            <p>Non sono stati trovati risultati per la tua ricerca.</p>
-            <p>Non sono stati trovati risultati per la tua ricerca.</p>
-            <p>Non sono stati trovati risultati per la tua ricerca.</p>
-            <p>Non sono stati trovati risultati per la tua ricerca.</p>
-            <p>Non sono stati trovati risultati per la tua ricerca.</p>
-            <p>Non sono stati trovati risultati per la tua ricerca.</p>
-            <p>Non sono stati trovati risultati per la tua ricerca.</p>
-            <p>Non sono stati trovati risultati per la tua ricerca.</p>
-            <p>Non sono stati trovati risultati per la tua ricerca.</p>
-            <p>Non sono stati trovati risultati per la tua ricerca.</p>
-            <p>Non sono stati trovati risultati per la tua ricerca.</p>
+    <div class="risultati" id="risultati">
+        <!-- I risultati dei luoghi verranno inseriti qui -->
+        
     </div>
     
 
 </body>
-
+<!-- Script per gestire il menu a tendina -->
 <script>
     const btn = document.querySelector(".loginbtn");
     const menu = document.querySelector(".dropdown");
@@ -67,5 +42,35 @@
             menu.classList.remove("show");
         }
     });
+</script>
+<!-- Script per caricare i luoghi dal server -->
+<script>
+    const caricaLuoghi=async () => {
+        try {
+            const response = await fetch('/api/luoghi');
+            if (!response.ok) {
+                throw new Error('Errore nella risposta del server');
+            }
+            const luoghi = await response.json();
+            console.log(luoghi);
+            inserisciLuoghi(luoghi);
+        } catch (error) {
+            console.error('Errore nel caricamento dei luoghi:', error);
+        }
+    };
+    const inserisciLuoghi=(luoghi) => {
+        const container = document.getElementById('risultati');
+        container.innerHTML = ''; // Pulisce il container prima di inserire i nuovi luoghi
+        luoghi.forEach(luogo => {
+            const div = document.createElement('div');
+            div.innerHTML = `
+                <h2>${luogo.nome}</h2>
+                <p>${luogo.descrizione}</p>
+                <p>Indirizzo: ${luogo.indirizzo}</p>
+            `;
+            container.appendChild(div);
+        });
+    };
+    caricaLuoghi();
 </script>
 </html>

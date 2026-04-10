@@ -4,20 +4,21 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server/index.js"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/GiulianoCri/PROGETTO-TECNICHE-DI-PROGRAMMAZIONE-WEB.git"
+    "url": "git+https://github.com/GiulianoCri/Aperetto.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "type": "commonjs",
   "bugs": {
-    "url": "https://github.com/GiulianoCri/PROGETTO-TECNICHE-DI-PROGRAMMAZIONE-WEB/issues"
+    "url": "https://github.com/GiulianoCri/Aperetto/issues"
   },
-  "homepage": "https://github.com/GiulianoCri/PROGETTO-TECNICHE-DI-PROGRAMMAZIONE-WEB#readme",
+  "homepage": "https://github.com/GiulianoCri/Aperetto#readme",
   "dependencies": {
     "@supabase/supabase-js": "^2.103.0",
     "express": "^5.2.1"
