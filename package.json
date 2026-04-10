@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/GiulianoCri/PROGETTO-TECNICHE-DI-PROGRAMMAZIONE-WEB#readme",
   "dependencies": {
+    "@supabase/supabase-js": "^2.103.0",
     "express": "^5.2.1"
   }
 }
