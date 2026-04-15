@@ -26,7 +26,6 @@
     </div>
     
 
-</body>
 <!-- Script per gestire il menu a tendina -->
 <script>
     const btn = document.querySelector(".loginbtn");
@@ -60,10 +59,13 @@
     };
     const inserisciLuoghi=(luoghi) => {
         const container = document.getElementById('risultati');
+        container.className="spazio";
         container.innerHTML = ''; // Pulisce il container prima di inserire i nuovi luoghi
         luoghi.forEach(luogo => {
             const div = document.createElement('div');
+            div.className="risultati";
             div.innerHTML = `
+                <img src="${luogo.immagine}" alt="${luogo.nome}" class="imgluogo">
                 <h2>${luogo.nome}</h2>
                 <p>${luogo.descrizione}</p>
                 <p>Indirizzo: ${luogo.indirizzo}</p>
@@ -73,4 +75,7 @@
     };
     caricaLuoghi();
 </script>
+
+</body>
+
 </html>

@@ -1,13 +1,13 @@
 
 //Inizailizzazione del server
 const express=require('express');
+const path = require("path");
 const app=express();
 
 
 const PORT=3000;
 const HOST='0.0.0.0';
 //permetto al server di accedere alla cartella client
-const path = require("path");
 const ROOT = path.join(__dirname,'..','client');
 app.use(express.static(ROOT)); 
 
@@ -36,15 +36,31 @@ app.get('/api/luoghi', async (req, res) => {
     const { data, error } = await supabase
         .from('Luoghi')
         .select('*');
-
+    //per debug
     console.log("DATA:", data);
     console.log("ERROR:", error);
+    //Per elaborazione foto
+    const risultati = data.map(luogo => {
+        //dati ricevuti dal database, con il nome del file dell'immagine
+        const { data: urlData } = supabase.storage
+        .from('foto')
+        .getPublicUrl(luogo.immagine); 
+
+        return {
+            //resto dei dati del database, con l'aggiunta dell'URL pubblico dell'immagine
+            ...luogo,
+            //aggiorno il campo immagine con l'URL pubblico ottenuto da Supabase Storage
+            immagine: urlData.publicUrl
+      };
+    });
+
+
 
     if (error) {
         return res.status(500).json({ error: error.message });
     }
-
-    res.json(data);
+    //invio i risultati al client
+    res.json(risultati);
 });
 
 

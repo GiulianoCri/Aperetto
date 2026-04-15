@@ -126,7 +126,7 @@ body{
     color: black;
 }
 .risultati {
-    width: 90%;                /* un po’ di margine ai lati */
+    width: 80%;                /* un po’ di margine ai lati */
     max-width: 1300px;         /* larghezza massima */
     margin-left: auto;
     margin-right: auto;        /* centrato orizzontalmente */
@@ -136,4 +136,15 @@ body{
     box-shadow: 0 5px 15px rgba(0,0,0,0.2); /* ombra leggera */
     min-height: 150px;         /* altezza minima */
     box-sizing: border-box;
+    gap: 20px;                 /* spazio tra i luoghi */
+}
+.imgluogo {
+    width: 100%;
+    height: auto;
+    border-radius: 10px;
+}
+.spazio{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 }
