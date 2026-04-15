@@ -7,6 +7,7 @@ const app=express();
 
 const PORT=3000;
 const HOST='0.0.0.0';
+
 //permetto al server di accedere alla cartella client
 const ROOT = path.join(__dirname,'..','client');
 app.use(express.static(ROOT)); 
@@ -22,6 +23,11 @@ app.get('/login',(req,res)=>{
     res.sendFile(path.join(ROOT,'login.html'));
 });
 
+//pagina Luoghi
+app.get('/luogo',(req,res)=>{
+    res.sendFile(path.join(ROOT,'luogo.html'));
+});
+
 
 
 
@@ -31,36 +37,51 @@ const supabaseApi= 'https://ocoztbtixgjdfadqoxtn.supabase.co';
 const supabaseApiKey= 'sb_publishable_YyR37XC53HHN1lm8tmbfMA_zreVDEUU';
 const supabase = createClient(supabaseApi, supabaseApiKey);
 
-//Ottengo i luoghi dal database
+//Funzione per aggiungere l'url dell'immagine a un luogo
+const aggiungiUrl = (luogo) => {
+    const { data: urlData } = supabase.storage
+        .from('foto')
+        .getPublicUrl(luogo.immagine);
+    return { 
+        ...luogo, 
+        immagine: urlData.publicUrl 
+    };
+};
+
+
+//API
+
+
+//Ottengo tutti i luoghi dal database
 app.get('/api/luoghi', async (req, res) => {
     const { data, error } = await supabase
         .from('Luoghi')
         .select('*');
-    //per debug
-    console.log("DATA:", data);
-    console.log("ERROR:", error);
-    //Per elaborazione foto
-    const risultati = data.map(luogo => {
-        //dati ricevuti dal database, con il nome del file dell'immagine
-        const { data: urlData } = supabase.storage
-        .from('foto')
-        .getPublicUrl(luogo.immagine); 
-
-        return {
-            //resto dei dati del database, con l'aggiunta dell'URL pubblico dell'immagine
-            ...luogo,
-            //aggiorno il campo immagine con l'URL pubblico ottenuto da Supabase Storage
-            immagine: urlData.publicUrl
-      };
-    });
-
-
-
     if (error) {
         return res.status(500).json({ error: error.message });
     }
-    //invio i risultati al client
-    res.json(risultati);
+    //per debug
+    console.log("DATA:", data);
+    console.log("ERROR:", error);
+
+    //aggiungo l'url dell'immagine
+    res.json(data.map(aggiungiUrl));
+});
+//Ottengo un luogo specifico dal database
+app.get('/api/luoghi/:id', async (req, res) => {
+    const id = req.params.id;
+    const { data, error } = await supabase
+        .from('Luoghi')
+        .select('*')
+        .eq('id', id)
+        .maybeSingle(); // restituisce oggetto singolo, non array     
+
+    console.log("ID:", id, "| DATA:", data, "| ERROR:", error);
+
+    if (error) return res.status(500).json({ error: error.message });
+    if (!data)  return res.status(404).json({ error: 'Luogo non trovato' });
+
+    res.json(aggiungiUrl(data));
 });
 
 

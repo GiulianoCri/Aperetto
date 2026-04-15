@@ -70,6 +70,10 @@
                 <p>${luogo.descrizione}</p>
                 <p>Indirizzo: ${luogo.indirizzo}</p>
             `;
+            //redireziona alla pagina del luogo al click
+            div.addEventListener('click', () => {
+                window.location.href = `/luogo.html?id=${luogo.id}`;
+            });
             container.appendChild(div);
         });
     };

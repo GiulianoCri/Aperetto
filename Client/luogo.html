@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Caricamento...</title>
+    <link rel="icon" type="image/x-icon" href="/Foto/APERETTO (1).png">
+    <link rel="stylesheet" href="classi.css">
+</head>
+<body>
+    <!-- La navbar è stata mantenuta per coerenza con il resto del sito -->
+    <div class="navbar">
+        <img src="/Foto/APERETTO (1).png" alt="Impossibile da visualizzare" class="logo">
+        <input type="text" placeholder="Cerca..." class="searchbar">
+        <div class="usermenu">
+            <button class="loginbtn"></button>
+            <div class="dropdown">
+                <a href="login.html">Accedi</a>
+                <a href="register.html">Registrati</a>
+            </div>
+        </div>
+    </div>
+    <!-- Caricamento -->
+    <div class="detail-wrap" id="detail-wrap">
+        <p>Caricamento...</p>
+    </div>
+    <!-- Script menu a tendina -->
+    <script>
+        const btn  = document.querySelector(".loginbtn");
+        const menu = document.querySelector(".dropdown");
+        btn.addEventListener("click", () => menu.classList.toggle("show"));
+        document.addEventListener("click", (e) => {
+            if (!btn.contains(e.target) && !menu.contains(e.target))
+                menu.classList.remove("show");
+        });
+    </script>
+    <script>
+        const formattaOrario = (orario) => {
+            if (!orario) return 'N/A';
+            const [ore, minuti] = orario.split(':');
+            return `${ore}:${minuti}`;
+        };
+    </script>
+     <!-- Script informazioni -->
+    <script>
+        const wrap = document.getElementById('detail-wrap');
+
+        // Legge l'id dall'URL
+        const params = new URLSearchParams(window.location.search);
+        const id = params.get('id');
+
+        if (!id) {
+            // Nessun ID → torna alla home
+            window.location.href = '/';
+        }
+
+        const caricaDettaglio = async () => {
+            try {
+                const res = await fetch(`/api/luoghi/${id}`);
+                if (!res.ok) throw new Error('Luogo non trovato');
+                const luogo = await res.json();
+
+                // Aggiorna il titolo della scheda browser
+                document.title = `${luogo.nome} — Aperetto`;
+
+                // Costruisco il contenuto della pagina
+                wrap.innerHTML = `
+                    <button class="btn-back" onclick="history.back()">
+                        &#8592; Torna alla lista
+                    </button>
+                    <img src="${luogo.immagine}" alt="${luogo.nome}" loading="lazy">
+                    <div class="risultati">
+                        <h1>${luogo.nome}</h1>
+                        <p><strong>Indirizzo:</strong> ${luogo.indirizzo}</p>
+                        <h2>Informazioni:</h2>
+                        <p>${luogo.descrizione}</p>
+                        <p><strong>Orari:</strong> ${formattaOrario(luogo.apertura)} – ${formattaOrario(luogo.chiusura)}</p>
+                        <p><strong>Servizi disponibili:</strong> ${luogo.tipologia}</p>
+                        <h2>Contatti:</h2>
+                        <p><strong>Sito web:</strong> <a href="${luogo.sito}" target="_blank" rel="noopener">Visita il sito ↗</a></p>
+                        <p><strong>Telefono:</strong> ${luogo.telefono}</p>
+                    </div>
+                `;
+
+            } catch (err) {
+                wrap.innerHTML = `
+                    <div class="errore">
+                        <p>Luogo non trovato.</p>
+                        <button class="btn-back" onclick="window.location.href='/'">
+                            &#8592; Torna alla lista
+                        </button>
+                    </div>
+                `;
+            }
+        };
+
+        caricaDettaglio();
+    </script>
+
+</body>
+</html>
