@@ -9,12 +9,12 @@
 </head>
 <body>
     <!-- La navbar è stata mantenuta per coerenza con il resto del sito -->
-    <div class="navbar">
-        <img src="/Foto/APERETTO (1).png" alt="Impossibile da visualizzare" class="logo">
-        <input type="text" placeholder="Cerca..." class="searchbar">
-        <div class="usermenu">
-            <button class="loginbtn"></button>
-            <div class="dropdown">
+    <div class="navbar-custom d-flex fixed-top align-items-center gap-3 px-3 bg-primary">
+        <img src="/Foto/APERETTO (1).png" alt="Logo Aperetto" class="col-1">
+        <input type="text" placeholder="Cerca..." class="form-control p-3 rounded-5 flex-grow-1">
+        <div class="position-relative">
+            <button class="loginbtn rounded-circle border-0 p-0"></button>
+            <div class="dropdown rounded-4 flex-column d-flex">
                 <a href="login.html">Accedi</a>
                 <a href="register.html">Registrati</a>
             </div>
