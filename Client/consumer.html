@@ -8,23 +8,14 @@
     <link rel="stylesheet" href="classi.css">
 </head>
 <body>
-    <div class="row gap-2 align-items-center m-auto">
+    <div class="row gap-2 align-items-center m-auto mt-3">
         <form class="justify-content-sm-between">
             <fieldset>
                 <legend>Dati Personali</legend>
-                <div class="d-flex gap-3">
-                    <input type="text" class="form-control w-50 rounded-3" id="name" placeholder="Nome" width="100" required>
-                    <input type="text" class="form-control rounded-3 w-50" id="surname" placeholder="Cognome" required>
-                    <input type="date" class="form-control rounded-3 w-25" id="birthdate" placeholder="Data di Nascita" required>
-                </div>
-
-                <div class="d-flex">
-                    <input type="radio" id="maschio" name="gender" value="Maschio">Maschio
-                    <input type="radio" id="femmina" name="gender" value="Femmina">Femmina
-                    <input type="radio" id="altro" name="gender" value="Altro">Altro
-                </div>
-                
-                <div class="d-flex gap-3">
+                <div class="row align-items-center justify-content-center gap-2 m-auto">
+                    <input type="text" class="form-control rounded-3 col-md-4" id="name" placeholder="Nome" required>
+                    <input type="text" class="form-control rounded-3 col-md-4" id="surname" placeholder="Cognome" required> <br>
+                    
                     <input type="email" class="form-control w-50 rounded-3" id="email" placeholder="E-Mail" required>
                     <input type="password" class="form-control w-25 rounded-3" id="password" placeholder="Password" required>
                     <input type="password" class="form-control w-25 rounded-3" id="confirm_password" placeholder="Conferma Password" required>  
