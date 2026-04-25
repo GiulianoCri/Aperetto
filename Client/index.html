@@ -5,26 +5,35 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Aperetto: aperitivo o cornetto?</title>
     <link rel="icon" type="image/x-icon" href="/Foto/APERETTO (1).png">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"><!--CSS per la mappa-->
     <link rel="stylesheet" href="classi.css">
 </head>
 
 <body class="body-custom">
     <div class="navbar-custom d-flex fixed-top align-items-center gap-3 px-3 bg-primary">
-        <img src="/Foto/APERETTO (1).png" alt="Logo Aperetto" class="col-1">
-        <input type="text" placeholder="Cerca..." class="form-control p-3 rounded-5 flex-grow-1">
+        <img src="/Foto/APERETTO (1).png" alt="Logo Aperetto" class="logo">
+        <input type="text" placeholder="Cerca un locale..." class="form-control rounded-5 flex-grow-1 search-input">
+        <button id="vicinoBtn" class="btn btn-light rounded-4">Vicino a me</button>
         <div class="position-relative">
             <button class="loginbtn rounded-circle border-0 p-0"></button>
             <div class="dropdown rounded-4 flex-column d-flex">
-                <a href="login.html" class="text-bg-info m-auto">Accedi</a>
-                <!-- <a href="register.html">Registrati</a> -->
+                <a href="login.html" class="text-dark m-auto">Accedi</a>
             </div>
         </div>
     </div>
-    <div class="risultati" id="risultati">
-        <!-- I risultati dei luoghi verranno inseriti qui -->
-        
-    </div>
-    
+    <!-- Contenuto principale -->
+    <div class="app-container">
+
+    <div class="lista" id="risultati"></div>
+
+    <div id="map"></div>
+
+</div>
+
+<!--Script per la mappa-->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+
 
 <!-- Script per gestire il menu a tendina -->
 <script>
@@ -42,28 +51,107 @@
         }
     });
 </script>
+
+
+
 <!-- Script per caricare i luoghi dal server -->
 <script>
-    const caricaLuoghi=async () => {
-        try {
-            const response = await fetch('/api/luoghi');
-            if (!response.ok) {
-                throw new Error('Errore nella risposta del server');
-            }
-            const luoghi = await response.json();
-            console.log(luoghi);
-            inserisciLuoghi(luoghi);
-        } catch (error) {
-            console.error('Errore nel caricamento dei luoghi:', error);
+    let tuttiILuoghi = [];
+    let markers = {};
+    const caricaLuoghi = async () => {
+    try {
+        const response = await fetch('/api/luoghi');
+        if (!response.ok) {
+            throw new Error('Errore nella risposta del server');
         }
-    };
+
+        const luoghi = await response.json();
+
+        tuttiILuoghi = luoghi; // SALVO I LUOGHI IN UNA VARIABILE GLOBALE PER FUTURI FILTRI
+        inserisciLuoghi(luoghi);
+        // pulisci marker vecchi dalla mappa
+        Object.values(markers).forEach(m => map.removeLayer(m));
+        markers = {};
+
+        // aggiungi marker
+        luoghi.forEach(luogo => {
+        const marker = L.marker([luogo.lat, luogo.lng]).addTo(map);
+        marker.bindTooltip(`
+            <b>${luogo.nome}</b><br>
+            ${luogo.indirizzo}
+            `, {
+            direction: "top",
+            offset: [0, -10]
+        });
+
+        marker.bindPopup(`
+            <b>${luogo.nome}</b><br>${luogo.indirizzo}
+        `);
+
+        marker.on("click", () => {
+            window.location.href = `/luogo.html?id=${luogo.id}`;
+        });
+
+        markers[luogo.id] = marker;
+    });
+    } catch (error) {
+        console.error('Errore nel caricamento dei luoghi:', error);
+    }
+};
+    
+    const input = document.querySelector("input");
+
+    input.addEventListener("input", () => {
+    const testo = input.value.toLowerCase().trim();
+
+    const filtrati = tuttiILuoghi.filter(l =>
+        l.nome.toLowerCase().includes(testo)
+    );
+
+    aggiornaVista(filtrati);
+});
+
+    //Per mappa
+    let map = L.map('map').setView([41.8932482, 12.4829853], 13); //Roma come centro iniziale
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(map);
+    caricaLuoghi();
+
+
+    //Funzioni ausiliarie
+    function aggiornaVista(luoghi) {
+
+        inserisciLuoghi(luoghi);
+
+        // pulizia marker
+        Object.values(markers).forEach(m => map.removeLayer(m));
+        markers = {};
+
+        luoghi.forEach(luogo => {
+
+            // controllo sicurezza (IMPORTANTISSIMO)
+            if (!luogo.lat || !luogo.lng) return;
+
+            const marker = L.marker([luogo.lat, luogo.lng]).addTo(map);
+
+            marker.bindTooltip(luogo.nome);
+
+            marker.on("click", () => {
+                window.location.href = `/luogo.html?id=${luogo.id}`;
+            });
+
+            markers[luogo.id] = marker;
+        });
+    }
     const inserisciLuoghi=(luoghi) => {
         const container = document.getElementById('risultati');
-        container.className="spazio";
+        container.classList.add("spazio");
         container.innerHTML = ''; // Pulisce il container prima di inserire i nuovi luoghi
         luoghi.forEach(luogo => {
             const div = document.createElement('div');
-            div.className="risultati";
+            div.className="risultato-card";
             div.innerHTML = `
                 <img src="${luogo.immagine}" alt="${luogo.nome}" class="img-fluid">
                 <h2>${luogo.nome}</h2>
@@ -77,9 +165,67 @@
             container.appendChild(div);
         });
     };
-    caricaLuoghi();
+
 </script>
 
+<!-- Script per ottenere la posizione dell'utente -->
+<script>
+function getPosizioneUtente() {
+    return new Promise((resolve, reject) => {
+        navigator.geolocation.getCurrentPosition(
+            pos => {
+                resolve({
+                    lat: pos.coords.latitude,
+                    lng: pos.coords.longitude
+                });
+            },
+            err => reject(err)
+        );
+    });
+}
+//Calcola distanza in km tra due coordinate(Formula Haversine)
+function distanzaKm(lat1, lon1, lat2, lon2) {
+    const R = 6371;
+
+    const dLat = (lat2 - lat1) * Math.PI / 180;
+    const dLon = (lon2 - lon1) * Math.PI / 180;
+
+    const a =
+        Math.sin(dLat/2) * Math.sin(dLat/2) +
+        Math.cos(lat1*Math.PI/180) *
+        Math.cos(lat2*Math.PI/180) *
+        Math.sin(dLon/2) * Math.sin(dLon/2);
+
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+
+    return R * c;
+}
+// Ordina i luoghi in base alla distanza dall'utente e li mostra
+async function mostraVicinoAMe() {
+    const user = await getPosizioneUtente();
+
+    const ordinati = tuttiILuoghi.map(l => {
+        return {
+            ...l,
+            distanza: distanzaKm(user.lat, user.lng, l.lat, l.lng)
+        };
+    }).sort((a, b) => a.distanza - b.distanza);
+
+    inserisciLuoghi(ordinati);
+
+    // centra mappa sull'utente
+    map.setView([user.lat, user.lng], 14);
+
+    // marker utente
+    L.marker([user.lat, user.lng])
+        .addTo(map)
+        .bindPopup("Sei qui")
+        .openPopup();
+}
+document.getElementById("vicinoBtn").addEventListener("click", () => {
+    mostraVicinoAMe();
+});
+</script>
 </body>
 
 </html>

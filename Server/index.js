@@ -83,7 +83,20 @@ app.get('/api/luoghi/:id', async (req, res) => {
 
     res.json(aggiungiUrl(data));
 });
+app.get("/api/luoghi/vicini", (req, res) => {
+    const { lat, lng } = req.query;
 
+    const risultati = luoghi.map(l => {
+        const dist = Math.sqrt(
+            Math.pow(l.lat - lat, 2) +
+            Math.pow(l.lng - lng, 2)
+        );
+
+        return { ...l, dist };
+    }).sort((a, b) => a.dist - b.dist);
+
+    res.json(risultati);
+});
 
 //AVVIO SERVER
 app.listen(PORT,HOST,()=>{
