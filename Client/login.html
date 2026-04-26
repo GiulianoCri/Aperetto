@@ -16,21 +16,34 @@
                 
             <!-- LATO DESTRO -->
                 <div class="col-12 col-md-5 m-auto">
-                    <button class="homebtn border-0 bg-body p-4 mb-3" onclick="window.location.href='index.html'"> </button>
-                    <img src="/Foto/APERETTO.png" id="logoImg" alt="Logo Aperetto" class="img-fluid">
+                    <button class="homebtn border-0 bg-body mt-4 p-4" onclick="window.location.href='index.html'"> </button>
+                    <img src="/Foto/APERETTO.png" id="logoImg" alt="Logo Aperetto" class=" mt-0 img-fluid">
                 </div>
             
             <!-- LATO SINISTRO -->
-                <div class="col-12 col-md-5">
+                <div class="col-12 col-md-5 me-5 mb-2">
                     
-                    <div class="p-5 pb-2 rounded-5 shadow border-black border mx-auto mt-5 me-5" id="formContainer">
+                    <div class="p-5 pb-2 rounded-5 shadow border-black border mx-auto mt-5" id="formContainer">
                         
                         <!-- FORM DI ACCESSO -->
                         <form class="justify-content-sm-between d-flex flex-column" id="formLogin">
                             <!-- campi da compilare -->
                             <div class="d-flex flex-column">
                                 <input type="email" placeholder="E-Mail" class="form-control rounded-3">  <br>
-                                <input type="password" placeholder="Password" class="form-control rounded-3">
+                                
+                                <div class="position-relative d-block w-100">
+                                    <input type="password" placeholder="Password" id="pswField" class="form-control rounded-3 pe-5">
+                                <!-- 
+                                    bottone x mostra / nascondi password (bisogna aggiustare la posizione)
+                                    <button type="button" class="position-absolute top-50 end-0 me-2 translate-middle-y bg-transparent border-0 p-0 lh-custom-0" id="showPsw">
+                                        <img src="/Foto/eye-on.svg" width="18" alt="Mostra password">
+                                    </button>
+                                    <button type="button" class="d-none position-absolute top-50 end-0 me-2 translate-middle-y bg-transparent border-0 p-0 lh-custom-0" id="showPsw">
+                                        <img src="/Foto/eye-off.svg" id="hidePswBtn" width="18" alt="Nascondi password">
+                                    </button>    
+                                -->
+                                </div>
+                                
                                 <a href="#" class="link-info"> Password dimenticata? </a> <br>
                             </div>
 
@@ -43,7 +56,7 @@
                                 <hr class="flex-grow-1 border-black m-0">
                             </div>
 
-                            <a href="#"  id="btnRegistrazione" class="btn btn-danger rounded-3 w-100"> Registrati </a> <br>
+                            <a id="btnRegistrazione" class="btn btn-danger rounded-3 w-100"> Registrati </a> <br>
 
                             <div class="text-start mt-2 mb-1">
                                 <a href="supplier.html"class="d-inline-flex align-items-center gap-2 text-dark">    
@@ -57,6 +70,7 @@
                         
                         <!-- FORM DI REGISTRAZIONE -->
                         <form class="justify-content-sm-between d-flex flex-column d-none" id="formRegistrazione">
+                            <button type="button" id="backLogin" class="arrow-back bg-body d-block my-auto"></button>
                             <h3 class="mb-4 text-center text-bg-info">Crea un account:</h3>
                                 <div class="row g-2 mb-1">
                                     <div class="col-6">
@@ -73,7 +87,7 @@
                                 </div>
 
                                 <div class="row g-2 mb-1">
-                                    <div class="col-12">
+                                    <div class="col-12 input-group">
                                         <input type="password" class="form-control rounded-3" id="password" placeholder="Password" required>
                                     </div>
                                 </div>
@@ -84,8 +98,8 @@
                                 </div>
 
                                 <div>
-                                    <input type="checkbox" id="consensi">
-                                    <label class="text-bg-info">Consenso per il trattamento dei dati</label>
+                                    <input type="checkbox" id="consensi" required>
+                                    <label class="text-bg-info" >Acconsento al trattamento dei dati</label>
                                 </div>
 
                                 <div class="text-start mt-4">
@@ -98,7 +112,7 @@
                                 </div>
                                 
                                 <div class="d-flex gap-3 align-items-center mb-4">
-                                    <button type="submit" class="btn btn-success m-auto w-100 mb-3"> Registrati</btn>
+                                    <button type="submit" id="registrazione" class="btn btn-success m-auto w-100 mb-3"> Registrati</btn>
                                 </div>
                         </form>
                     </div>
@@ -109,23 +123,59 @@
     </div>
 
     <script>
+    // serve a far comparire / scomparire il form per la registrazione
         const formLogin = document.getElementById('formLogin');
         const formRegistrazione = document.getElementById('formRegistrazione');
-        
+
         const btnRegistrazione = document.getElementById('btnRegistrazione');
-        // const btnTornaLogin = document.getElementById('btnTornaLogin');
+        const backLogin = document.getElementById('backLogin');
 
         btnRegistrazione.addEventListener('click', () => {
             formLogin.classList.add('d-none');
             formRegistrazione.classList.remove('d-none');
         });
 
-        // Quando clicco "Annulla" nel form di registrazione
-        btnTornaLogin.addEventListener('click', () => {
-            registerFormContainer.classList.add('d-none'); // Nascondi form
-            logoImg.classList.remove('d-none'); // Mostra logo
+        backLogin.addEventListener('click', () => {
+            formRegistrazione.classList.add('d-none');
+            formLogin.classList.remove('d-none');
         });
     </script>
+
+    <script>
+    // confronto delle password
+        const psw = document.getElementById('password');
+        const pswConfirm = document.getElementById('confirm-psw');
+
+        formRegistrazione.addEventListener('submit', function(e) {
+            if (pswField.value != pswConfirm.value) {
+                e.preventDefault();
+                alert('Password non corrispondenti');
+            }
+        });
+    </script>
+
+
+    <script>
+        // mostra / nascondi password
+        const showPswBtn = document.getElementById('showPswBtn');
+        const hidePswBtn = document.getElementById('hidePswBtn');
+
+        const pswField = document.getElementById('pswField');
+        const changePsw = document.getElementById('changePsw');
+
+        showPsw.addEventListener('click', () => {
+            pswField.type = "text";
+            showPswBtn.classList.add('d-none');
+            hidePswBtn.classList.remove('d-none');
+        });
+
+        hidePsw.addEventListener('click', () => {
+            pswField.type = "text";
+            hidePswBtn.classList.add('d-none');
+            showPswBtn.classList.remove('d-none');
+        });
+    </script>
+
 </body>
 
 </body>

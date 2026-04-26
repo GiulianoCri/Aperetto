@@ -285,7 +285,7 @@ body{
 .homebtn {
     width: 22px;
     height: 22px;
-    background-image: url('/Foto/home.png');
+    background-image: url('/Foto/arrow-back.svg');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -295,6 +295,17 @@ body{
 .supplier {
   width: 30px;
   height: 30px;
+}
+
+.arrow-back {
+    width: 30px;
+    height: 30px;
+    background-image: url('/Foto/arrow-back.svg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    border: none;
+    cursor: pointer;
 }
 
 .dropdown {
@@ -2005,6 +2016,10 @@ body{
 
 .fw-bolder {
   font-weight: bolder !important;
+}
+
+.lh-custom-0 {
+  line-height: 0;
 }
 
 .lh-1 {
