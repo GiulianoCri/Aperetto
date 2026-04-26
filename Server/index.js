@@ -11,6 +11,7 @@ const HOST='0.0.0.0';
 //permetto al server di accedere alla cartella client
 const ROOT = path.join(__dirname,'..','client');
 app.use(express.static(ROOT)); 
+app.use(express.json());
 
 //importo le pagine
 //pagina home
@@ -34,7 +35,7 @@ app.get('/luogo',(req,res)=>{
 //Connesione a supabase
 const { createClient } = require('@supabase/supabase-js');
 const supabaseApi= 'https://ocoztbtixgjdfadqoxtn.supabase.co';
-const supabaseApiKey= 'sb_publishable_YyR37XC53HHN1lm8tmbfMA_zreVDEUU';
+const supabaseApiKey= 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9jb3p0YnRpeGdqZGZhZHFveHRuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU3ODIwMzIsImV4cCI6MjA5MTM1ODAzMn0.K0tLeh1T-2zjCl3WSvtueTKRQWEadmR1gBXgguALov0';
 const supabase = createClient(supabaseApi, supabaseApiKey);
 
 //Funzione per aggiungere l'url dell'immagine a un luogo
@@ -96,6 +97,40 @@ app.get("/api/luoghi/vicini", (req, res) => {
     }).sort((a, b) => a.dist - b.dist);
 
     res.json(risultati);
+});
+
+// Registrazione utente
+app.post('/api/registrazione', async (req, res) => {
+    console.log("Richiesta ricevuta:", req.body);
+    console.log("Tipo password:", typeof req.body.password);
+    const { nome, cognome, email, password } = req.body;
+
+    const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+            data: { nome, cognome } // salvati nei metadati utente
+        }
+    });
+
+    if (error) return res.status(400).json({ errore: error.message });
+
+    res.status(200).json({ messaggio: 'Registrazione avvenuta con successo!', data });
+});
+
+// Login utente
+app.post('/api/login', async (req, res) => {
+    console.log("Login ricevuto:", req.body);
+    const { email, password } = req.body;
+
+    const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password
+    });
+
+    if (error) return res.status(400).json({ errore: error.message });
+
+    res.status(200).json({ messaggio: 'Accesso avvenuto con successo!', data });
 });
 
 //AVVIO SERVER

@@ -245,15 +245,34 @@ body{
     padding: 0 15px;
 }
 .logo {
-    height: 85px;
+    height: 100px;
     width: auto;
+    margin-bottom: 0.5rem;
     object-fit: contain;
+    cursor: pointer;
+}
+.zoom-hover {
+    transition: transform 0.3s ease;
+}
+.zoom-hover:hover {
+    transform: scale(1.1);
 }
 .app-container {
     display: flex;
     gap: 15px;
     padding: 15px;
     margin-top: 90px; /* navbar */
+}
+.profilo-txt {
+  height: 350px;
+  width: auto;
+}
+.locali {
+    background-image: url("/Foto/locali_log.png");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
 }
 
 /* LISTA */
@@ -273,8 +292,8 @@ body{
     height: 45px;
 }
 .loginbtn {
-    width: 44px;
-    height: 44px;
+    height: 50px;
+    width: 50px;
     background-image: url('/Foto/profilo_img.png');
     background-size: cover;
     background-position: center;
@@ -306,6 +325,11 @@ body{
     background-repeat: no-repeat;
     border: none;
     cursor: pointer;
+}
+
+.confirm-success {
+  width: 60px;
+  height: 60px;
 }
 
 .dropdown {

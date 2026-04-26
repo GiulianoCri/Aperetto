@@ -29,7 +29,7 @@
                         <form class="justify-content-sm-between d-flex flex-column" id="formLogin">
                             <!-- campi da compilare -->
                             <div class="d-flex flex-column">
-                                <input type="email" placeholder="E-Mail" class="form-control rounded-3">  <br>
+                                <input type="email" placeholder="E-Mail" id="emailLogin" class="form-control rounded-3">  <br>
                                 
                                 <div class="position-relative d-block w-100">
                                     <input type="password" placeholder="Password" id="pswField" class="form-control rounded-3 pe-5">
@@ -44,7 +44,7 @@
                                 -->
                                 </div>
                                 
-                                <a href="#" class="link-info"> Password dimenticata? </a> <br>
+                                <a href="#" id="forgotPsw" class="link-dark"> Password dimenticata? </a> <br>
                             </div>
 
                             <!-- bottoni -->
@@ -58,7 +58,7 @@
 
                             <a id="btnRegistrazione" class="btn btn-danger rounded-3 w-100"> Registrati </a> <br>
 
-                            <div class="text-start mt-2 mb-1">
+                            <div class="text-start mt-2 mb-3">
                                 <a href="supplier.html"class="d-inline-flex align-items-center gap-2 text-dark">    
                                     <span class="d-inline-flex justify-content-center align-items-center">
                                         <img src="/Foto/supplier.svg" class="supplier d-block" alt="Icona ristoranti">
@@ -67,6 +67,15 @@
                                 </a>
                             </div>
                         </form>
+
+                        <!-- Password dimenticata -->
+                        <div id="pswDimenticata" class="text-center d-none m-auto mb-4">
+                            <button type="button" id="backLogin" class="arrow-back bg-body d-block my-auto"></button>
+                            <div>
+                                <h3 class="text-black d-inline">Hai dimenticato la password?</h3>
+                                <p class="text-black">Fatti in culo</p>
+                            </div>
+                        </div>
                         
                         <!-- FORM DI REGISTRAZIONE -->
                         <form class="justify-content-sm-between d-flex flex-column d-none" id="formRegistrazione">
@@ -115,6 +124,18 @@
                                     <button type="submit" id="registrazione" class="btn btn-success m-auto w-100 mb-3"> Registrati</btn>
                                 </div>
                         </form>
+
+                        <!-- REGISTRAZIONE AVVENUTA -->
+                        <div id="confirm" class="text-center m-auto d-none mb-4">
+                            <img src="/Foto/confirm-log.png" class="confirm-success m-auto">
+                            <div>
+                                <h3 class="text-black d-inline">La tua </h3> 
+                                <h3 class="text-success d-inline">registrazione</h3>
+                                <h3 class="text-black d-inline"> è avvenuta con successo!</h3>
+                            </div>
+
+                            <a href="profilo.html" class="link-dark"> Visita il tuo profilo!</a>
+                        </div>
                     </div>
 
                 </div>  
@@ -130,6 +151,9 @@
         const btnRegistrazione = document.getElementById('btnRegistrazione');
         const backLogin = document.getElementById('backLogin');
 
+        const forgotPsw = document.getElementById('forgotPsw');
+        const pswDimenticata = document.getElementById('pswDimenticata');
+
         btnRegistrazione.addEventListener('click', () => {
             formLogin.classList.add('d-none');
             formRegistrazione.classList.remove('d-none');
@@ -139,21 +163,13 @@
             formRegistrazione.classList.add('d-none');
             formLogin.classList.remove('d-none');
         });
-    </script>
 
-    <script>
-    // confronto delle password
-        const psw = document.getElementById('password');
-        const pswConfirm = document.getElementById('confirm-psw');
-
-        formRegistrazione.addEventListener('submit', function(e) {
-            if (pswField.value != pswConfirm.value) {
-                e.preventDefault();
-                alert('Password non corrispondenti');
-            }
+        // ancora da terminare
+        pswDimenticata.addEventListener('click', () => {
+            formLogin.classList.add('d-none');
+            forgotPsw.classList.remove('d-none');
         });
     </script>
-
 
     <script>
         // mostra / nascondi password
@@ -173,6 +189,67 @@
             pswField.type = "text";
             hidePswBtn.classList.add('d-none');
             showPswBtn.classList.remove('d-none');
+        });
+    </script>
+
+    <script>
+        formRegistrazione.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const password = document.getElementById('password');
+            const confirmPsw = document.getElementById('confirm-psw');
+            const confirm = document.getElementById('confirm');
+
+            // confronto delle password
+            if (password.value !== confirmPsw.value) {
+                alert('Password non coincidenti');
+                password.value = "";
+                confirmPsw.value = "";
+                return;
+            }
+
+            const risposta = await fetch('/api/registrazione', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    nome:     document.getElementById('name').value,
+                    cognome:  document.getElementById('surname').value,
+                    email:    document.getElementById('email').value,
+                    password: password.value
+                })
+            });
+
+            const dati = await risposta.json();
+
+            if (risposta.ok) {
+                formRegistrazione.classList.add('d-none');
+                confirm.classList.remove('d-none');
+            } else {
+                alert('Errore: ' + dati.errore);
+            }
+        });
+    </script>
+
+    <script>
+        formLogin.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const risposta = await fetch('/api/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    email:    document.getElementById('emailLogin').value,
+                    password: document.getElementById('pswField').value
+                })
+            });
+
+            const dati = await risposta.json();
+
+            if (risposta.ok) {
+                window.location.href = '/index.html';
+            } else {
+                alert('Errore: ' + dati.errore);
+            }
         });
     </script>
 
