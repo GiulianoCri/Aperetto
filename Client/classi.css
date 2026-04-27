@@ -252,11 +252,63 @@ body{
     cursor: pointer;
 }
 .zoom-hover {
-    transition: transform 0.3s ease;
+    transition: transform 0.2s ease;
 }
 .zoom-hover:hover {
-    transform: scale(1.1);
+    transform: scale(1.2);
 }
+.loginbtn {
+    height: 50px;
+    width: 50px;
+    background-image: url('/Foto/profilo_img.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    cursor: pointer;
+}
+
+@media (max-width: 576px) {
+    .navbar-custom {
+        height: 64px;
+        gap: 8px;
+        padding: 0 10px;
+    }
+
+    .logo {
+        height: 80px;
+    }
+
+    #vicinoBtn img.logo {
+        height: 40px;
+        padding: 1px !important;
+        margin: 0 !important;
+    }
+
+    .loginbtn {
+        width: 40px;
+        height: 40px;
+    }
+}
+
+@media (max-width: 768px) {
+    /* Riduce il gap tra le due colonne quando si impilano */
+    .row.g-4 {
+        --bs-gutter-y: 0.5rem;
+    }
+
+    /* Azzera il margine top del form */
+    #formContainer {
+        margin-top: 0 !important;
+    }
+
+    /* Rimpicciolisce il logo su mobile */
+    #logoImg {
+        max-width: 90%;
+        display: block;
+        margin: 0 auto;
+    }
+}
+
 .app-container {
     display: flex;
     gap: 15px;
@@ -291,23 +343,20 @@ body{
 .search-input {
     height: 45px;
 }
-.loginbtn {
-    height: 50px;
-    width: 50px;
-    background-image: url('/Foto/profilo_img.png');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    cursor: pointer;
-}
 
-.homebtn {
-    width: 22px;
-    height: 22px;
+.back-black {
     background-image: url('/Foto/arrow-back.svg');
+}
+.back-white {
+    background-image: url('/Foto/arrow-white.svg');
+}
+.backbtn {
+    width: 35px;
+    height: 35px;
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
+    border: none;
     cursor: pointer;
 }
 
