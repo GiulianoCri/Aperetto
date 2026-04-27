@@ -326,10 +326,16 @@ body{
     border: none;
     cursor: pointer;
 }
-
 .confirm-success {
   width: 60px;
   height: 60px;
+}
+.psw-btn{
+    background: none;
+    right: 10px; 
+    top: 60%; 
+    transform: translateY(-50%); 
+    cursor: pointer;
 }
 
 .dropdown {
