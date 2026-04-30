@@ -7,6 +7,8 @@
     <link rel="icon" type="image/x-icon" href="/Foto/APERETTO (1).png">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"><!--CSS per la mappa-->
     <link rel="stylesheet" href="classi.css">
+    <!--Script per la mappa-->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 </head>
 
 <body class="body-custom">
@@ -23,6 +25,29 @@
             </div>
         </div>
     </div>
+    <!-- FILTRI -->
+    <div class="filtri-container px-3 py-2 bg-light d-flex gap-3 align-items-center flex-wrap">
+
+    <!-- Tipo locale -->
+    <select id="filtroTipo" class="form-select w-auto">
+        <option value="">Tutti</option>
+        <option value="Bakery">Bakery</option>
+        <option value="Aperitivo">Aperitivo</option>
+    </select>
+
+    <!-- Distanza -->
+    <select id="filtroDistanza" class="form-select w-auto">
+        <option value="">Qualsiasi distanza</option>
+        <option value="1">Entro 1 km</option>
+        <option value="3">Entro 3 km</option>
+        <option value="5">Entro 5 km</option>
+        <option value="10">Entro 10 km</option>
+    </select>
+
+    <!-- Reset -->
+    <button id="resetFiltri" class="btn btn-secondary">Reset</button>
+
+    </div>
     <!-- Contenuto principale -->
     <div class="app-container">
 
@@ -30,15 +55,16 @@
 
     <div id="map"></div>
 
+    
+
 </div>
 
-<!--Script per la mappa-->
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
-
-
-<!-- Script per gestire il menu a tendina -->
 <script>
+
+    
+
+    //Script per gestire il menu a tendina
     const btn = document.querySelector(".loginbtn");
     const menu = document.querySelector(".dropdown");
 
@@ -52,12 +78,10 @@
             menu.classList.remove("show");
         }
     });
-</script>
 
 
 
-<!-- Script per caricare i luoghi dal server -->
-<script>
+    //Script per caricare i luoghi dal server
     let tuttiILuoghi = [];
     let markers = {};
     const caricaLuoghi = async () => {
@@ -69,7 +93,11 @@
 
         const luoghi = await response.json();
 
+        console.log("Risposta API:", luoghi); // aggiungi questa riga
         tuttiILuoghi = luoghi; // SALVO I LUOGHI IN UNA VARIABILE GLOBALE PER FUTURI FILTRI
+        window.tuttiILuoghi = luoghi; // aggiungi questa riga per rendere tuttiILuoghi accessibile globalmente
+        tuttiILuoghi = luoghi;
+        console.log("Luoghi caricati:", tuttiILuoghi.length, tuttiILuoghi[0]); // aggiungi
         inserisciLuoghi(luoghi);
         // pulisci marker vecchi dalla mappa
         Object.values(markers).forEach(m => map.removeLayer(m));
@@ -167,66 +195,118 @@
             container.appendChild(div);
         });
     };
+    async function applicaFiltri() {
+        let filtrati = [...tuttiILuoghi];
 
-</script>
+        const tipo = filtroTipo.value;
+        const distanzaMax = parseFloat(filtroDistanza.value);
 
-<!-- Script per ottenere la posizione dell'utente -->
-<script>
-function getPosizioneUtente() {
-    return new Promise((resolve, reject) => {
-        navigator.geolocation.getCurrentPosition(
-            pos => {
-                resolve({
-                    lat: pos.coords.latitude,
-                    lng: pos.coords.longitude
+        // filtro tipo
+        if (tipo) {
+            filtrati = filtrati.filter(l => 
+        l.tipologia.toLowerCase() === tipo.toLowerCase()
+        );
+        }
+
+        // filtro distanza (serve posizione utente)
+        if (distanzaMax) {
+            try {
+                const user = await getPosizioneUtente();
+
+                filtrati = filtrati.filter(l => {
+                    const dist = distanzaKm(user.lat, user.lng, l.lat, l.lng);
+                    return dist <= distanzaMax;
                 });
+
+            } catch {
+                alert("Attiva la geolocalizzazione per filtrare per distanza");
+            }
+        }
+
+        aggiornaVista(filtrati);
+    }
+
+
+    //Script per ottenere la posizione dell'utente
+    function getPosizioneUtente() {
+    return new Promise((resolve, reject) => {
+        const id = navigator.geolocation.watchPosition(
+            pos => {
+                navigator.geolocation.clearWatch(id);
+                resolve({ lat: pos.coords.latitude, lng: pos.coords.longitude });
             },
-            err => reject(err)
+            err => {
+                navigator.geolocation.clearWatch(id);
+                reject(err);
+            }
         );
     });
-}
-//Calcola distanza in km tra due coordinate(Formula Haversine)
-function distanzaKm(lat1, lon1, lat2, lon2) {
-    const R = 6371;
+    }
+    //Calcola distanza in km tra due coordinate(Formula Haversine)
+    function distanzaKm(lat1, lon1, lat2, lon2) {
+        const R = 6371;
 
-    const dLat = (lat2 - lat1) * Math.PI / 180;
-    const dLon = (lon2 - lon1) * Math.PI / 180;
+        const dLat = (lat2 - lat1) * Math.PI / 180;
+        const dLon = (lon2 - lon1) * Math.PI / 180;
 
-    const a =
-        Math.sin(dLat/2) * Math.sin(dLat/2) +
-        Math.cos(lat1*Math.PI/180) *
-        Math.cos(lat2*Math.PI/180) *
-        Math.sin(dLon/2) * Math.sin(dLon/2);
+        const a =
+            Math.sin(dLat/2) * Math.sin(dLat/2) +
+            Math.cos(lat1*Math.PI/180) *
+            Math.cos(lat2*Math.PI/180) *
+            Math.sin(dLon/2) * Math.sin(dLon/2);
 
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
 
-    return R * c;
-}
-// Ordina i luoghi in base alla distanza dall'utente e li mostra
-async function mostraVicinoAMe() {
-    const user = await getPosizioneUtente();
+        return R * c;
+    }
+    // Ordina i luoghi in base alla distanza dall'utente e li mostra
+    async function mostraVicinoAMe() {
+        const user = await getPosizioneUtente();
 
-    const ordinati = tuttiILuoghi.map(l => {
-        return {
-            ...l,
-            distanza: distanzaKm(user.lat, user.lng, l.lat, l.lng)
-        };
-    }).sort((a, b) => a.distanza - b.distanza);
+        const ordinati = tuttiILuoghi.map(l => {
+            return {
+                ...l,
+                distanza: distanzaKm(user.lat, user.lng, l.lat, l.lng)
+            };
+        }).sort((a, b) => a.distanza - b.distanza);
 
-    inserisciLuoghi(ordinati);
+        inserisciLuoghi(ordinati);
 
-    // centra mappa sull'utente
-    map.setView([user.lat, user.lng], 14);
+        // centra mappa sull'utente
+        map.setView([user.lat, user.lng], 14);
 
-    // marker utente
-    L.marker([user.lat, user.lng])
-        .addTo(map)
-        .bindPopup("Sei qui")
-        .openPopup();
-}
-document.getElementById("vicinoBtn").addEventListener("click", () => {
-    mostraVicinoAMe();
+
+        // icona personalizzata per l'utente
+        const iconaUtente = L.icon({
+        iconUrl: '/Foto/Logo_user.svg', // metti il percorso del tuo SVG
+        iconSize: [40, 40],           // dimensione in pixel
+        iconAnchor: [20, 40],         // punto dell'icona che corrisponde alla posizione
+        popupAnchor: [0, -40]         // dove appare il popup rispetto all'icona
 });
+        // marker utente
+        L.marker([user.lat, user.lng], { icon: iconaUtente })
+            .addTo(map)
+            .bindPopup("Sei qui")
+            .openPopup();
+    }
+    document.getElementById("vicinoBtn").addEventListener("click", () => {
+        mostraVicinoAMe();
+    });
+
+    //script per i filtri
+    const filtroTipo = document.getElementById("filtroTipo");
+    const filtroDistanza = document.getElementById("filtroDistanza");
+    const resetBtn = document.getElementById("resetFiltri");
+
+    [filtroTipo, filtroDistanza].forEach(f =>
+        f.addEventListener("change", applicaFiltri)
+    );
+
+    resetBtn.addEventListener("click", () => {
+        filtroTipo.value = "";
+        filtroDistanza.value = "";
+        applicaFiltri();
+    });
 </script>
 </body>
 
