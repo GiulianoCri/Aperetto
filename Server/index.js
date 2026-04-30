@@ -31,7 +31,6 @@ app.get('/luogo',(req,res)=>{
 
 
 
-
 //Connesione a supabase
 const { createClient } = require('@supabase/supabase-js');
 const supabaseApi= 'https://ocoztbtixgjdfadqoxtn.supabase.co';
@@ -98,8 +97,9 @@ app.get("/api/luoghi/vicini", (req, res) => {
 
     res.json(risultati);
 });
-//SESSIONI
 
+
+//SESSIONI
 
 const session = require('express-session'); 
 const pgSession = require('connect-pg-simple')(session); 
@@ -128,16 +128,10 @@ app.use(session({
 app.use(express.json()); //consente agli handler di leggere il body (renza questa riga la funzione req.body da errore)
 
 /*
-
 Use serve per creare un middleware, un ulteriore operazione che la richiesta subisce prima di raggiungere destinazione. 
-
 IMPORTANTE: use applica un middleware a tutte le richieste in entrata.
-
 IMPORTANTE: l'ordine in cui i middleware sono scritti nel mio file, sarebbe lo stesso con cui vengono applicati (app.use(espress.static(ROOT)) viene applicato prima di app.use(express.json()) )
-
 IMPORTANTE: è necessario che certi middleware vengano scritti prima di alcine handler (esempio app.use(express.json()) deve essere scritto prima di req.body negli handler)
-
-
 */
 
 const bcrypt = require('bcrypt') //usiamo bcrypt per fare un hashing della password
@@ -166,7 +160,7 @@ app.post("/api/login", async (req,res) =>{
 
     //effettuo una select sul database per cercare l'utente
     const { data: user, error } = await supabase
-        .from('utenti')
+        .from('consumer')
         .select('*')
         .eq('email', email) //lo cerchiamo rispetto alla mail
         .single();
@@ -199,11 +193,11 @@ app.post("/api/login", async (req,res) =>{
 
 
 app.post("/api/register", async (req, res) =>{
-    const {username, email, password} = req.body;  //richiediamo il body dalla richiesta (il body contiene i dati utente)
+    const {email, password} = req.body;  //richiediamo il body dalla richiesta (il body contiene i dati utente)
 
     //console.log("ricevuti: " + username +", "+ email +", " + password)
 
-    if (!username || !email || !password) {
+    if (!email || !password) {
         return res.status(400).json({ error: "Tutti i campi sono obbligatori" });
     }
 
@@ -220,10 +214,9 @@ app.post("/api/register", async (req, res) =>{
 
         
         const { data, error } = await supabase
-            .from('utenti')
+            .from('consumer')
             .insert([
                 { 
-                    username: username, 
                     email: email, 
                     password_hash: hash //noi inseriamo nel database l'hashing della password
                 }
@@ -241,8 +234,7 @@ app.post("/api/register", async (req, res) =>{
 
         //faccio partire una nuova sessione e riempio il campo "sess" con i dati utente di base
         req.session.user = { 
-            id: data[0].id, 
-            username: data[0].username, 
+            id: data[0].id,
             email: data[0].email 
         };
 
@@ -253,7 +245,7 @@ app.post("/api/register", async (req, res) =>{
         });
 
     } catch (err) {
-        console.error("Errore registrazione:", err);
+        console.error("Errore registrazione:", err.message, err.stack);
         res.status(500).json({ error: "Errore interno del server" });
     }
 
