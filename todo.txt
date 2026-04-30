@@ -1,0 +1,6 @@
+COSE FATTE:
+    implementazione registazione e login con passaggio di dati al server
+
+TODO:
+    - una volta fatto l'accesso, sostituire bottone "Accedi" con "Profilo"
+    - raggio di distanza dei locali (stile too good to go)

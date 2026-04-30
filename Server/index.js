@@ -101,26 +101,15 @@ app.get("/api/luoghi/vicini", (req, res) => {
 
 //SESSIONI
 
-const session = require('express-session'); 
-const pgSession = require('connect-pg-simple')(session); 
-const { Pool } = require('pg');
+const session = require('express-session');
 
-const pgPool = new Pool({
-  connectionString: "postgresql://postgres:GiuAlvMicCri@db.ocoztbtixgjdfadqoxtn.supabase.co:5432/postgres"
-});
-
-//setup della gestione delle sessioni
 app.use(session({
-  store: new pgSession({
-    pool: pgPool,
-    tableName: 'session'  //qui è importante specificare il nome giusto
-  }),
-  secret: 'una_stringa_segreta_molto_lunga', 
+  secret: 'una_stringa_segreta_molto_lunga',
   resave: false,
   saveUninitialized: false,
-  cookie: { 
-    maxAge: 1000 * 60 * 60 * 24, //impostiamo la durata del cookie pari a 24 ore
-    httpOnly: true //per non far leggere il cookie nel client (sicurezza)
+  cookie: {
+    maxAge: 1000 * 60 * 60 * 24,
+    httpOnly: true
   }
 }));
 
@@ -150,7 +139,7 @@ app.get('/api/me', (req, res) => {
 });
 
 app.post("/api/login", async (req,res) =>{
-    const {email, password} = req.body; //anche qui passo i dati utente tramite il body
+    const {name, surname, email, password} = req.body; //anche qui passo i dati utente tramite il body
 
     //console.log("ricevuti: " + email + ", " + password)
 
@@ -193,7 +182,7 @@ app.post("/api/login", async (req,res) =>{
 
 
 app.post("/api/register", async (req, res) =>{
-    const {email, password} = req.body;  //richiediamo il body dalla richiesta (il body contiene i dati utente)
+    const {name, surname, email, password} = req.body;  //richiediamo il body dalla richiesta (il body contiene i dati utente)
 
     //console.log("ricevuti: " + username +", "+ email +", " + password)
 
@@ -217,6 +206,8 @@ app.post("/api/register", async (req, res) =>{
             .from('consumer')
             .insert([
                 { 
+                    name: name,
+                    surname: surname,
                     email: email, 
                     password_hash: hash //noi inseriamo nel database l'hashing della password
                 }
