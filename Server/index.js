@@ -168,7 +168,9 @@ app.post("/api/login", async (req,res) =>{
         req.session.user = { 
             id: user.id, 
             username: user.username, 
-            email: user.email 
+            email: user.email,
+            name: user.name,   
+            surname: user.surname
         };
 
         res.json({ message: "Login effettuato!", user: req.session.user});
@@ -209,7 +211,7 @@ app.post("/api/register", async (req, res) =>{
                     name: name,
                     surname: surname,
                     email: email, 
-                    password_hash: hash //noi inseriamo nel database l'hashing della password
+                    password_hash: hash, //noi inseriamo nel database l'hashing della password
                 }
             ])
             .select();
@@ -241,6 +243,22 @@ app.post("/api/register", async (req, res) =>{
     }
 
 })
+// Logout
+app.post('/api/logout', (req, res) => {
+    req.session.destroy();
+    res.json({ message: 'Logout effettuato' });
+});
+
+// Recensioni utente
+app.get('/api/recensioni', async (req, res) => {
+    const { userId } = req.query;
+    const { data, error } = await supabase
+        .from('recensioni')
+        .select('*, Luoghi(nome, tipologia)')
+        .eq('user_id', userId);
+    if (error) return res.status(500).json({ error: error.message });
+    res.json(data);
+});
 //AVVIO SERVER
 app.listen(PORT,HOST,()=>{
     console.log(`Server in ascolto su http://localhost:${PORT}`);

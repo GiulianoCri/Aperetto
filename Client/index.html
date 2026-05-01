@@ -19,11 +19,15 @@
             <img src="/Foto/location.png" class="logo zoom-hover border-0 bg-trasparent mt-4 mb-4 p-4">
         </button>
         <div class="position-relative">
-            <button class="loginbtn rounded-circle border-0 p-0 me-2"></button>
-            <div class="dropdown rounded-4 flex-column d-flex">
-                <a href="login.html" class="text-dark m-auto">Accedi</a>
-            </div>
-        </div>
+    <button class="loginbtn rounded-circle border-0 p-0 me-2"></button>
+    <div class="dropdown rounded-4 flex-column d-flex">
+        <!-- Mostrato se NON loggato -->
+        <a href="login.html" class="text-dark m-auto" id="menuAccedi">Accedi</a>
+        <!-- Mostrati se loggato -->
+        <a href="profilo.html" class="text-dark m-auto d-none" id="menuProfilo">Profilo</a>
+        <a href="#" class="text-dark m-auto d-none" id="menuLogout">Logout</a>
+    </div>
+</div>
     </div>
     <!-- FILTRI -->
     <div class="filtri-container px-3 py-2 bg-light d-flex gap-3 align-items-center flex-wrap">
@@ -292,6 +296,37 @@
     document.getElementById("vicinoBtn").addEventListener("click", () => {
         mostraVicinoAMe();
     });
+
+    //script per il profilo
+    // Controlla se l'utente è loggato e aggiorna il menu
+    async function aggiornaMenu() {
+        try {
+            const res = await fetch('/api/me');
+            const menuAccedi  = document.getElementById('menuAccedi');
+            const menuProfilo = document.getElementById('menuProfilo');
+            const menuLogout  = document.getElementById('menuLogout');
+
+            if (res.ok) {
+                // Utente loggato
+                menuAccedi.classList.add('d-none');
+                menuProfilo.classList.remove('d-none');
+                menuLogout.classList.remove('d-none');
+            }
+            // Se non loggato lascia "Accedi" visibile (default)
+
+        } catch (err) {
+            console.error('Errore controllo sessione:', err);
+        }
+    }
+
+    // Logout
+    document.getElementById('menuLogout').addEventListener('click', async (e) => {
+        e.preventDefault();
+        await fetch('/api/logout', { method: 'POST' });
+        window.location.reload();
+    });
+
+    aggiornaMenu();
 
     //script per i filtri
     const filtroTipo = document.getElementById("filtroTipo");

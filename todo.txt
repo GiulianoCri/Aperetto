@@ -1,6 +1,6 @@
 COSE FATTE:
     implementazione registazione e login con passaggio di dati al server
     fixato bug posizione e implementata barra dei filtri
+    implementata pagina del profilo e sistemati bottoni pagina principale
 
 TODO:
-    - una volta fatto l'accesso, sostituire bottone "Accedi" con "Profilo"

@@ -14,11 +14,136 @@
         <img src="/Foto/profilo_text.png" alt="Profilo" class="mt-3 mb-1 profilo-txt">
     </div>
 
-    <div class="body-custom mx-4 mt-2">
-        <h1 id="nome" class="text-dark d-inline" value=""> Nome </h1>
-        <h1 id="cognome" class="text-dark d-inline" value=""> Cognome </h1>
-        <p id="email" class="text-dark d-inline" value=""> Mail </p>
+    <!-- PAGINA -->
+    <div class="profilo-page">
+        <div class="profilo-grid">
+ 
+            <!-- ── SINISTRA: dati utente ── -->
+            <aside class="profilo-sidebar">
+                <div class="avatar"></div>
+ 
+                <div id="profilo-nome" class="profilo-nome">Caricamento...</div>
+ 
+                <div class="profilo-info">
+                    <div class="info-row">
+                        <label>Nome</label>
+                        <span id="info-nome">–</span>
+                    </div>
+                    <div class="info-row">
+                        <label>Cognome</label>
+                        <span id="info-cognome">–</span>
+                    </div>
+                    <div class="info-row">
+                        <label>Email</label>
+                        <span id="info-email">–</span>
+                    </div>
+                </div>
+ 
+                <button class="btn-logout" id="logoutBtn">Esci dall'account</button>
+            </aside>
+ 
+            <!-- ── DESTRA: recensioni ── -->
+            <section class="profilo-content">
+                <div class="section-title">Le mie recensioni</div>
+                <div id="recensioni-container">
+                    <!-- Verrà popolato da JS -->
+                    <div class="empty-state">
+                        <div class="empty-icon">⭐</div>
+                        <p>Non hai ancora scritto recensioni.</p>
+                    </div>
+                </div>
+            </section>
+ 
+        </div>
     </div>
+ 
+    <script>
+        // ── Carica dati utente dalla sessione ──
+        async function caricaProfilo() {
+            try {
+                const res = await fetch('/api/me');
+                if (!res.ok) {
+                    window.location.href = '/login.html';
+                    return;
+                }
+                const user = await res.json();
+ 
+                document.getElementById('profilo-nome').textContent =
+                    (user.name || '') + ' ' + (user.surname || '');
+                document.getElementById('info-nome').textContent    = user.name    || '–';
+                document.getElementById('info-cognome').textContent = user.surname || '–';
+                document.getElementById('info-email').textContent   = user.email   || '–';
+ 
+                caricaRecensioni(user.id);
+            } catch (err) {
+                console.error('Errore caricamento profilo:', err);
+            }
+        }
+ 
+        // ── Carica recensioni dell'utente ──
+        async function caricaRecensioni(userId) {
+            const container = document.getElementById('recensioni-container');
+            try {
+                const res = await fetch(`/api/recensioni?userId=${userId}`);
+                if (!res.ok) throw new Error();
+                const recensioni = await res.json();
+ 
+                if (!recensioni || recensioni.length === 0) {
+                    container.innerHTML = `
+                        <div class="empty-state">
+                            <div class="empty-icon">⭐</div>
+                            <p>Non hai ancora scritto recensioni.</p>
+                        </div>`;
+                    return;
+                }
+ 
+                container.innerHTML = recensioni.map(r => `
+                    <div class="recensione-card" onclick="window.location.href='/luogo.html?id=${r.luogo_id}'">
+                        <div class="rec-header">
+                            <span class="rec-locale">${r.luogo_nome || 'Locale'}</span>
+                            <span class="rec-data">${formatData(r.created_at)}</span>
+                        </div>
+                        <div class="stelle">${stelle(r.voto)}</div>
+                        <p class="rec-testo">${r.testo || ''}</p>
+                        <span class="rec-tag">${r.tipologia || 'Locale'}</span>
+                    </div>
+                `).join('');
+ 
+            } catch {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon">⭐</div>
+                        <p>Non hai ancora scritto recensioni.</p>
+                    </div>`;
+            }
+        }
+ 
+        // ── Helpers ──
+        function stelle(voto) {
+            const n = Math.round(voto) || 0;
+            return Array.from({ length: 5 }, (_, i) =>
+                `<svg class="stella ${i < n ? '' : 'vuota'}" viewBox="0 0 20 20">
+                    <path d="M10 1l2.4 7.3H20l-6.2 4.5 2.4 7.3L10 15.6l-6.2 4.5 2.4-7.3L0 8.3h7.6z"/>
+                </svg>`
+            ).join('');
+        }
+ 
+        function formatData(iso) {
+            if (!iso) return '';
+            return new Date(iso).toLocaleDateString('it-IT', {
+                day: '2-digit', month: 'long', year: 'numeric'
+            });
+        }
+ 
+        // ── Logout ──
+        document.getElementById('logoutBtn').addEventListener('click', async () => {
+            await fetch('/api/logout', { method: 'POST' });
+            window.location.href = '/login.html';
+        });
+ 
+        // ── Avvio ──
+        caricaProfilo();
+    </script>
     
 </body>
 </html>
