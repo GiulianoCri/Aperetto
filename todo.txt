@@ -1,5 +1,5 @@
 COSE FATTE:
     implementazione recupero password
-
+    implementata pagina per il recupero password
 TODO:
-    - creare pagina x recupero della password
+    implementare miglioramenti grafici per login registrazione e cambio password 

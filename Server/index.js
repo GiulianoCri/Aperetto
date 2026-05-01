@@ -160,7 +160,12 @@ app.post("/api/login", async (req,res) =>{
     }
 
     //a stringhe uguali corrispondono hash uguali
+
+    console.log("PASSWORD RICEVUTA:", JSON.stringify(password));
+    console.log("HASH DAL DB:", user.password_hash);
     const isPasswordCorrect = await bcrypt.compare(password, user.password_hash);
+    console.log("PASSWORD CORRETTA?", isPasswordCorrect);
+
 
     if(isPasswordCorrect){
         
@@ -263,50 +268,120 @@ app.get('/api/recensioni', async (req, res) => {
 const nodemailer = require('nodemailer');
 const crypto = require('crypto');
 
+
 app.post('/api/recover-password', async (req, res) => {
-    const { email } = req.body;
+    try {
+        const { email } = req.body;
 
-    if (!email) return res.status(400).json({ error: "Email obbligatoria" });
+        if (!email) return res.status(400).json({ error: "Email obbligatoria" });
+        // Controllo associazion email - account
+        const { data: user, error } = await supabase
+            .from('consumer')
+            .select('*')
+            .eq('email', email)
+            .single();
 
-    // Controllo associazion email - account
-    const { data: user, error } = await supabase
-        .from('consumer')
-        .select('*')
-        .eq('email', email)
-        .single();
+        if (!user || error) {
+            return res.status(404).json({ error: "Nessun account associato a questa email" });
+        }
+        // Generazione token univoco + scadenza e salvataggio nel db
+        const token = crypto.randomBytes(32).toString('hex');
+        const expiry = new Date(Date.now() + 300000).toISOString();//+5 minuti
 
-    if (!user || error) {
-        return res.status(404).json({ error: "Nessun account associato a questa email" });
+        const { data: insertData, error: insertError } = await supabase
+            .from('password_resets')
+            .insert([{ email, token, expiry }])
+            .select();
+
+        console.log("INSERT DATA:", JSON.stringify(insertData));
+        console.log("INSERT ERROR:", JSON.stringify(insertError));
+
+        if (insertError) {
+            return res.status(500).json({ error: "Errore salvataggio token: " + insertError.message });
+        }
+        //invio mail
+        const transporter = nodemailer.createTransport({
+            service: 'gmail',
+            auth: {
+                user: 'noreply.aperetto@gmail.com',
+                pass: 'tcez yues japg skee'// usa una App Password di Google, non la password normale
+            }
+        });
+
+        const resetLink = `http://localhost:3000/reset-password.html?token=${token}`;
+
+        await transporter.sendMail({
+            from: 'noreply.aperetto@gmail.com',
+            to: email,
+            subject: 'Recupero password - Aperetto',
+            html: `<p>Clicca il link per reimpostare la tua password:</p>
+                   <a href="${resetLink}">${resetLink}</a>
+                   <p>Il link scade tra 5 minuti.</p>`
+        });
+
+        res.json({ message: "Email inviata!" });
+
+    } catch (err) {
+        console.error("ERRORE RECOVER-PASSWORD:", err.message, err.stack);
+        res.status(500).json({ error: "Errore interno: " + err.message });
+    }
+});
+
+app.post('/api/reset-password', async (req, res) => {
+    const { token, newPassword } = req.body;
+
+    if (!token || !newPassword) {
+        return res.status(400).json({ error: "Dati mancanti" });
     }
 
-    // Generazione token univoco + scadenza e salvataggio nel db
-    const token = crypto.randomBytes(32).toString('hex');
-    const expiry = new Date(Date.now() + 300000).toISOString(); // + 5 minuti
-    
-    await supabase.from('password_resets').insert([{ email, token, expiry }]);
+    if (newPassword.length < 8) {
+        return res.status(400).json({ error: "La password deve avere almeno 8 caratteri" });
+    }
 
-    // Invio mail
-    const transporter = nodemailer.createTransport({
-        service: 'gmail',
-        auth: {
-            // bisogna modificare con mail che useremo
-            user: 'noreply.aperetto@gmail.com',
-            pass: 'tcez yues japg skee'   // usa una App Password di Google, non la password normale
-        }
-    });
+    // 1. Recupero il token dal db
+    const { data: reset, error } = await supabase
+        .from('password_resets')
+        .select('*')
+        .eq('token', token)
+        .maybeSingle();
 
-    const resetLink = `http://localhost:3000/reset-password.html?token=${token}`;
+    if (!reset || error) {
+        return res.status(400).json({ error: "Token non valido" });
+    }
 
-    await transporter.sendMail({
-        from: 'noreply.aperetto@gmail.com',
-        to: email,
-        subject: 'Recupero password - Aperetto',
-        html: `<p>Clicca il link per reimpostare la tua password:</p>
-               <a href="${resetLink}">${resetLink}</a>
-               <p>Il link scade tra 5 minuti.</p>`
-    });
+    // 2. Controllo scadenza
+    if (new Date() > new Date(reset.expiry)) {
+        return res.status(400).json({ error: "Il link è scaduto" });
+    }
 
-    res.json({ message: "Email inviata!" });
+    // 3. Hash della nuova password e aggiornamento utente
+    const hash = await bcrypt.hash(newPassword, 10);
+    console.log("NUOVA PASSWORD:", JSON.stringify(newPassword)); // controlla se ha spazi
+    console.log("HASH GENERATO:", hash);
+    const { data: updateData, error: updateError } = await supabase
+    .from('consumer')
+    .update({ password_hash: hash })
+    .eq('email', reset.email)
+    .select(); // <-- aggiunge questo
+
+    console.log("UPDATE DATA:", JSON.stringify(updateData)); // quante righe ha aggiornato?
+    console.log("UPDATE ERROR:", updateError);
+    console.log("EMAIL USATA PER UPDATE:", reset.email);
+
+
+    if (updateError) {
+        return res.status(500).json({ error: "Errore nell'aggiornamento della password" });
+    }
+
+    // 4. Elimino il token usato (così non può essere riusato)
+    await supabase.from('password_resets').delete().eq('token', token);
+
+    res.json({ message: "Password aggiornata con successo!" });
+});
+
+// Serve la pagina di reset
+app.get('/client/reset-password.html', (req, res) => {
+    res.sendFile(path.join(ROOT, 'reset-password.html'));
 });
 
 //AVVIO SERVER
