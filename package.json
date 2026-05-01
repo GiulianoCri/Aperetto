@@ -24,7 +24,8 @@
     "bcrypt": "^6.0.0",
     "connect-pg-simple": "^10.0.0",
     "express": "^5.2.1",
-    "express-session": "^1.19.0"
+    "express-session": "^1.19.0",
+    "nodemailer": "^8.0.7"
   },
   "devDependencies": {
     "prettier": "^3.8.3"

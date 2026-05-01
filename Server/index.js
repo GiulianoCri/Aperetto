@@ -259,6 +259,56 @@ app.get('/api/recensioni', async (req, res) => {
     if (error) return res.status(500).json({ error: error.message });
     res.json(data);
 });
+
+const nodemailer = require('nodemailer');
+const crypto = require('crypto');
+
+app.post('/api/recover-password', async (req, res) => {
+    const { email } = req.body;
+
+    if (!email) return res.status(400).json({ error: "Email obbligatoria" });
+
+    // Controllo associazion email - account
+    const { data: user, error } = await supabase
+        .from('consumer')
+        .select('*')
+        .eq('email', email)
+        .single();
+
+    if (!user || error) {
+        return res.status(404).json({ error: "Nessun account associato a questa email" });
+    }
+
+    // Generazione token univoco + scadenza e salvataggio nel db
+    const token = crypto.randomBytes(32).toString('hex');
+    const expiry = new Date(Date.now() + 300000).toISOString(); // + 5 minuti
+    
+    await supabase.from('password_resets').insert([{ email, token, expiry }]);
+
+    // Invio mail
+    const transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+            // bisogna modificare con mail che useremo
+            user: 'noreply.aperetto@gmail.com',
+            pass: 'tcez yues japg skee'   // usa una App Password di Google, non la password normale
+        }
+    });
+
+    const resetLink = `http://localhost:3000/reset-password.html?token=${token}`;
+
+    await transporter.sendMail({
+        from: 'noreply.aperetto@gmail.com',
+        to: email,
+        subject: 'Recupero password - Aperetto',
+        html: `<p>Clicca il link per reimpostare la tua password:</p>
+               <a href="${resetLink}">${resetLink}</a>
+               <p>Il link scade tra 5 minuti.</p>`
+    });
+
+    res.json({ message: "Email inviata!" });
+});
+
 //AVVIO SERVER
 app.listen(PORT,HOST,()=>{
     console.log(`Server in ascolto su http://localhost:${PORT}`);
