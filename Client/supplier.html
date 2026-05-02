@@ -7,111 +7,327 @@
     <link rel="icon" type="image/x-icon" href="/Foto/APERETTO (1).png">
     <link rel="stylesheet" href="classi.css">
 </head>
-<body class="body-custom">
+
+<body class="body-custom mt-5">
 
     <div class="navbar-custom d-flex fixed-top align-items-center gap-3 px-3 bg-primary">
         <img src="/Foto/APERETTO (1).png" alt="Logo Aperetto" class="logo">
-        
-        
+        <a href="#" class="nav-login align-items-end">Hai già un account? Accedi</a>
     </div>
 
     <div class="container-fluid px-0">
         <div class="row g-0 min-vh-100"> 
             
             <!-- LATO SINISTRO: immagine -->
-            <div class="col-12 col-md-6 position-relative" style="overflow: hidden;">
-                <img src="/Foto/people(1).jpg" class="h-100 w-auto object-fit-cover ogbject-position-center d-block" style="object-position: center;">
+            <div class="col-12 col-md-6 position-relative bg-secondary" style="overflow: hidden;">
+                <h1 class="left-headline mt-5 mx-auto">
+                    Porta il tuo locale in <span>Aperetto</span>!
+                </h1>
+                <!-- <img src="/Foto/people(1).jpg" class="h-100 w-auto object-fit-cover ogbject-position-center d-block" style="object-position: center;"> -->
             </div>
 
             <!-- LATO DESTRO: form -->
             
             <div class="col-12 col-md-6 d-flex align-items-center justify-content-center p-4">
-                <!-- barra di progressione superiore -->
-                <div class="stepper text-center w-75">
-                    <div class="step active">
-                    <div class="step-circle">1</div>
-                    <div class="step-label">Contatti</div>
-                    </div>
-                    <div class="step-line"></div>
-                    <div class="step">
-                    <div class="step-circle">2</div>
-                    <div class="step-label">Il locale</div>
-                    </div>
-                    <div class="step-line"></div>
-                    <div class="step">
-                    <div class="step-circle">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" width="16" height="16">
-                        <polyline points="20 6 9 17 4 12"/>
-                        </svg>
-                    </div>
-                    <div class="step-label">Fatto!</div>
-                    </div>
-                </div>
-
-                <div class="form-title d-flex align-items-center gap-2 fw-bold mb-3">
-                    <form class="justify-content-sm-between d-flex flex-column" id="formRegistrazione">
-                        <h2 class="mb-4 text-center text-bg-info">Benvenuto su Aperetto!</h2>
-                        <div class="row g-2 mb-1">
-                            <div class="col-6">
-                                <input type="text" class="form-control rounded-3" id="name" placeholder="Nome" required>
-                            </div>
-                            <div class="col-6">
-                                <input type="text" class="form-control rounded-3" id="surname" placeholder="Cognome" required>
-                            </div>
+                <!-- DETTAGLI DI CONTATTO -->
+                <div class="form-title d-flex flex-column gap-2 mb-3 mx-auto w-100 mt-5" id="step1">
+                    <!-- barra di progressione superiore -->
+                    <div class="stepper text-center w-75 mb-4 mx-auto">
+                        <div class="step active">
+                            <div class="step-circle">1</div>
+                            <div class="step-label">Contatto</div>
                         </div>
-                        <div class="row g-2 mb-3">
+                        <div class="step-line"></div>
+                        <div class="step">
+                            <div class="step-circle">2</div>
+                            <div class="step-label">Il locale</div>
+                        </div>
+                        <div class="step-line"></div>
+                        <div class="step">
+                            <div class="step-circle">3</div>
+                            <div class="step-label">Social</div>
+                        </div>
+                        <div class="step-line"></div>
+                        <div class="step">
+                        <div class="step-circle">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" width="16" height="16">
+                            <polyline points="20 6 9 17 4 12"/>
+                            </svg>
+                        </div>
+                        <div class="step-label">Fatto!</div>
+                        </div>
+                    </div>
+
+                    <form class="justify-content-sm-between d-flex flex-column" id="formStep1">
+                        <h3 class="mb-3 text-start form-title mx-auto">Dettagli di contatto</h3>
+                        <div class="row g-2 mb-3 d-flex mx-3">
+                            <div class="col-6">
+                                <label for="name" class="form-label-custom">Nome*</label>
+                                <div>
+                                    <input type="text" class="form-control-lg border-0 rounded-3 w-100" id="name" placeholder="Nome" required>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <label for="surname" class="form-label-custom">Cognome*</label>
+                                <div>
+                                    <input type="text" class="form-control-lg border-0 rounded-3 w-100" id="surname" placeholder="Cognome" required>
+                                </div>
+                            </div>
+                            
                             <div class="col-12">
-                                <input type="email" class="form-control rounded-3" id="email" placeholder="E-Mail" required>
+                                <label for="email" class="form-label-custom mt-4">E-Mail*</label>
+                                <input type="email" class="form-control-lg border-0 rounded-3 w-100" id="email" placeholder="E-Mail" required>
+                            </div>
+
+                            <div class="col-12">
+                                <label for="telefono" class="form-label-custom mt-4">Numero di telefono*</label>
+                                <input type="tel" class="form-control-lg border-0 rounded-3 w-100" id="telefono" value="+39" required>
                             </div>
                         </div>
 
-                        <div class="mb-1 position-relative">
-                            <input type="password" placeholder="Password" id="password" class="form-control rounded-3 pe-5">
-                            
-                            <button type="button" id="showPsw-reg" class="position-absolute border-0 p-0 psw-btn">
-                                <img src="/Foto/eye-on.svg" width="18" alt="Mostra password">
-                            </button>
-                            <button type="button" id="hidePsw-reg" class="position-absolute border-0 p-0 psw-btn d-none">
-                                <img src="/Foto/eye-off.svg" width="18" alt="Nascondi password">
-                            </button>
-                        </div>
-
-                        <div class="mb-1 position-relative">
-                            <input type="password" class="form-control rounded-3" id="confirm-psw" placeholder="Conferma Password" required>
-                            
-                            <button type="button" id="showConf" class="position-absolute border-0 p-0 psw-btn">
-                                <img src="/Foto/eye-on.svg" width="18" alt="Mostra password">
-                            </button>
-                            <button type="button" id="hideConf" class="position-absolute border-0 p-0 psw-btn d-none">
-                                <img src="/Foto/eye-off.svg" width="18" alt="Nascondi password">
-                            </button>
-                        </div>
-
-
-                        <div>
+                        <div class="d-flex mt-2 mx-3">
                             <input type="checkbox" id="consensi" required>
-                            <label class="text-bg-info" >Acconsento al trattamento dei dati</label>
-                        </div>
-
-                        <div class="text-start mt-4">
-                        <a href="supplier.html" class="d-inline-flex align-items-center gap-2 text-dark" target="_blank">    
-                            <span class="d-inline-flex justify-content-center align-items-center">
-                                <img src="/Foto/supplier.svg" class="supplier d-block" alt="Icona ristoranti">
-                                <span class="mx-1 text-bg-info">Per i locali</span>
-                            </span>
-                        </a>
+                            <label class="form-label-custom" >Desidero ricevere comunicazioni da Aperetto</label>
                         </div>
                         
-                        <div class="d-flex gap-3 align-items-center mb-4">
-                            <button type="submit" id="registrazione" class="btn btn-success m-auto w-100 mb-3"> Registrati</button>
+                        <div class="d-flex gap-3 align-items-center mb-4 mt-5 mx-3">
+                            <button type="submit" id="okContatto" class="btn btn-lg btn-success m-auto w-100">Avanti</button>
                         </div>
                     </form>
                 </div>
 
-                
-            </div>
+                <!-- IL LOCALE-->
+                <div class="form-title d-flex flex-column gap-2 mb-3 mx-auto w-100 mt-5 d-none" id="step2">
+                    
+                    <!-- barra di progressione superiore -->
+                    <div class="stepper text-center w-75 mb-4 mx-auto">
+                        <div class="step done">
+                        <div class="step-circle done">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" width="16" height="16">
+                            <polyline points="20 6 9 17 4 12"/>
+                            </svg>
+                        </div>
+                            <div class="step-label">Contatto</div>
+                        </div>
+                        <div class="step-line"></div>
 
+                        <div class="step active">
+                            <div class="step-circle">2</div>
+                            <div class="step-label">Il locale</div>
+                        </div>
+                        <div class="step-line"></div>
+
+                        <div class="step">
+                            <div class="step-circle">3</div>
+                            <div class="step-label">Social</div>
+                        </div>
+                        <div class="step-line"></div>
+                        <div class="step">
+                        <div class="step-circle">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" width="16" height="16">
+                            <polyline points="20 6 9 17 4 12"/>
+                            </svg>
+                        </div>
+                        <div class="step-label">Fatto!</div>
+                        </div>
+                    </div>
+
+                    <form class="justify-content-sm-between d-flex flex-column" id="formStep2">
+                        <h3 class="mb-3 text-start form-title mx-auto">Dettagli del locale</h3>
+                        <div class="row g-2 mb-3 d-flex mx-3">
+                            <div class="col-12">
+                                <label for="name" class="form-label-custom">Come si chiama il tuo locale?*</label>
+                                <div>
+                                    <input type="text" class="form-control-lg border-0 rounded-3 w-100" id="nomeLocale" required>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <label for="surname" class="form-label-custom">Qual'è il suo indirizzo?*</label>
+                                <div>
+                                    <input type="text" class="form-control-lg border-0 rounded-3 w-100" id="indirizzoLocale" required>
+                                </div>
+                            </div>
+
+                            <div class="col-12">
+                                <label for="telefono" class="form-label-custom mt-4">Numero di telefono del locale:</label>
+                                <input type="tel" class="form-control-lg border-0 rounded-3 w-100" id="telefonoLocale" value="+39">
+                            </div>
+
+                            <div class="col-12 btn-group"> 
+                                <label for="telefono" class="form-label-custom mt-4">Che servizio offre il tuo locale?</label>
+                                <input type="checkbox" id="aperitivo">
+                                <label for="aperitivo" class="form-label-custom">Aperitivo</label>
+                                <input type="checkbox" id="colazione">
+                                <label for="colazione" class="form-label-custom">Colazione</label>
+                            </div>
+                        </div>
+                        
+                        <div class="d-flex gap-3 align-items-center mb-4 mt-5 mx-3">
+                            <button type="submit" id="okLocale" class="btn btn-lg btn-success m-auto w-100 mb-3">Avanti</button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- SOCIAL -->
+                <div class="form-title d-flex flex-column gap-2 mb-3 mx-auto w-100 mt-5 d-none" id="step3">
+                   
+                    <!-- barra di progressione superiore -->
+                    <div class="stepper text-center w-75 mb-4 mx-auto">
+                        <div class="step done">
+                        <div class="step-circle done">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" width="16" height="16">
+                            <polyline points="20 6 9 17 4 12"/>
+                            </svg>
+                        </div>
+                            <div class="step-label">Contatto</div>
+                        </div>
+                        <div class="step-line"></div>
+
+                        <div class="step done">
+                            <div class="step-circle done">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" width="16" height="16">
+                                <polyline points="20 6 9 17 4 12"/>
+                                </svg>
+                            </div>
+                            <div class="step-label">Il locale</div>
+                        </div>
+                        <div class="step-line"></div>
+
+                        <div class="step active">
+                            <div class="step-circle">3</div>
+                            <div class="step-label">Social</div>
+                        </div>
+                        <div class="step-line"></div>
+                        <div class="step">
+                        <div class="step-circle">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" width="16" height="16">
+                            <polyline points="20 6 9 17 4 12"/>
+                            </svg>
+                        </div>
+                        <div class="step-label">Fatto!</div>
+                        </div>
+                    </div>
+
+                    <form class="justify-content-sm-between d-flex flex-column" id="formStep3">
+                        <h3 class="mb-3 text-start form-title mx-auto">Social del locale</h3>
+                        <div class="row g-2 mb-3 d-flex mx-3">
+                            <div class="col-12">
+                                <label for="name" class="form-label-custom">Avete un sito web?</label>
+                                <div>
+                                    <input type="url" class="form-control-lg border-0 rounded-3 w-100" id="sitoWeb" placeholder="https://www.esempio.it">
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <label for="surname" class="form-label-custom">Instagram</label>
+                                <div>
+                                    <input type="text" class="form-control-lg border-0 rounded-3 w-100" id="instagram" placeholder="@nomeutente">
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <label for="surname" class="form-label-custom">Facebook</label>
+                                <div>
+                                    <input type="text" class="form-control-lg border-0 rounded-3 w-100" id="facebook" placeholder="@nomeutente">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="d-flex gap-3 align-items-center mb-4 mt-5 mx-3">
+                            <button type="submit" id="okSocial" class="btn btn-lg btn-success m-auto w-100 mb-3">Avanti</button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- CONFERMA -->
+                <div class="form-title d-flex flex-column gap-2 mb-3 mx-auto w-100 mt-5 d-none" id="step4">
+                    
+                    <!-- barra di progressione superiore -->
+                    <div class="stepper text-center w-75 mb-4 mx-auto">
+                        <div class="step done">
+                        <div class="step-circle done">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" width="16" height="16">
+                            <polyline points="20 6 9 17 4 12"/>
+                            </svg>
+                        </div>
+                            <div class="step-label">Contatto</div>
+                        </div>
+                        <div class="step-line"></div>
+
+                        <div class="step done">
+                            <div class="step-circle done">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" width="16" height="16">
+                                <polyline points="20 6 9 17 4 12"/>
+                                </svg>
+                            </div>
+                            <div class="step-label">Il locale</div>
+                        </div>
+                        <div class="step-line"></div>
+
+                        <div class="step done">
+                            <div class="step-circle done">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" width="16" height="16">
+                                <polyline points="20 6 9 17 4 12"/>
+                                </svg>
+                            </div>
+                            <div class="step-label">Social</div>
+                        </div>
+                        <div class="step-line"></div>
+                        <div class="step done">
+                        <div class="step-circle">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" width="16" height="16">
+                            <polyline points="20 6 9 17 4 12"/>
+                            </svg>
+                        </div>
+                        <div class="step-label">Fatto!</div>
+                        </div>
+                    </div>
+
+                    <div class="align-items-center d-flex" id="conferma">
+                        <img src="/Foto/confirm-log.png" class="confirm-success m-auto">
+                        <div>
+                            <h3 class="text-black d-inline">La tua </h3> 
+                            <h3 class="text-success d-inline">registrazione</h3>
+                            <h3 class="text-black d-inline"> è avvenuta con successo!</h3>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
         </div>
     </div>
+
+    <script> 
+        // passaggio step1 -> step2
+        const okContatto = document.getElementById('okContatto');
+        const step1 = document.getElementById('step1');
+        const step2 = document.getElementById('step2'); 
+
+        okContatto.addEventListener('click', function(e) {
+            e.preventDefault();
+            step1.classList.add('d-none');
+            step2.classList.remove('d-none');
+        });
+
+        // passaggio step2 -> step3
+        const okLocale = document.getElementById('okLocale');
+        const step3 = document.getElementById('step3');
+
+        okLocale.addEventListener('click', function(e) {
+            e.preventDefault();
+            step2.classList.add('d-none');
+            step3.classList.remove('d-none');
+        });
+
+        // passaggio step3 -> step4
+        const okSocial = document.getElementById('okSocial');
+        const step4 = document.getElementById('step4');
+
+        okSocial.addEventListener('click', function(e) {
+            e.preventDefault();
+            step3.classList.add('d-none');
+            step4.classList.remove('d-none');
+        });
+
+    </script>
+
 </body>
 </html>

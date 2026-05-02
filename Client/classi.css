@@ -536,76 +536,105 @@ body{
 }
 
 /* Stepper */
-    .stepper {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0;
-      margin-bottom: 36px;
-    }
-    .step {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 4px;
-    }
-    .step-circle {
-      width: 36px; height: 36px;
-      border-radius: 50%;
-      border: 2px solid rgba(255,255,255,.45);
-      display: flex; align-items: center; justify-content: center;
-      font-family: 'Fredoka One', cursive;
-      font-size: 16px;
-      color: rgba(255,255,255,.55);
-      background: transparent;
-      transition: all .3s;
-    }
-    .step.active .step-circle {
-      background: var(--yellow);
-      border-color: var(--yellow);
-      color: var(--dark);
-      box-shadow: 0 0 0 4px rgba(245,184,0,.25);
-    }
-    .step.done .step-circle {
-      background: var(--green);
-      border-color: var(--green);
-      color: var(--white);
-    }
-    .step-label {
-      font-size: 11px;
-      font-weight: 800;
-      letter-spacing: .5px;
-      color: rgba(255,255,255,.5);
-      text-transform: uppercase;
-      white-space: nowrap;
-    }
-    .step.active .step-label { color: var(--yellow); }
-    .step.done  .step-label { color: rgba(255,255,255,.75); }
- 
-    .step-line {
-      flex: 1;
-      height: 2px;
-      background: rgba(255,255,255,.2);
-      margin: 0 6px;
-      margin-bottom: 20px;
-      min-width: 40px;
-    }
-    .step-line.done { background: var(--green); }
+.stepper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  margin-bottom: 36px;
+}
+.step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+.step-circle {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  border: 2px solid rgba(255,255,255,.45);
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Fredoka One', cursive;
+  font-size: 16px;
+  color: rgba(255,255,255,.55);
+  background: transparent;
+  transition: all .3s;
+}
+.step.active .step-circle {
+  background: var(--yellow);
+  border-color: var(--yellow);
+  color: var(--dark);
+  box-shadow: 0 0 0 4px rgba(245,184,0,.25);
+}
+.step.done .step-circle {
+  background: var(--green);
+  border-color: var(--green);
+  color: var(--white);
+}
+.step-label {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: .5px;
+  color: rgba(255,255,255,.5);
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.step.active .step-label { color: var(--yellow); }
+.step.done  .step-label { color: rgba(255,255,255,.75); }
 
+.step-line {
+  flex: 1;
+  height: 2px;
+  background: rgba(255,255,255,.2);
+  margin: 0 6px;
+  margin-bottom: 20px;
+  min-width: 40px;
+}
+.step-line.done { background: var(--bs-green); }
 
-    .form-title {
+.nav-login {
+  font-size: 14px; font-weight: 700;
+  color: var(--bs-black);
+  text-decoration: none;
+  border: 2px solid var(--bs-green);
+  padding: 8px 20px;
+  border-radius: 50px;
+  transition: background .2s, color .2s;
+}
+.nav-login:hover { background: var(--purple); color: var(--white); }
+
+.form-title {
   font-size: 20px;
-  color: #ffffff;
+  font-weight: 800;
+  letter-spacing: 0.7px;
+  color: #000000c4;
 }
 
 .form-label-custom {
   font-size: 12px;
   font-weight: 800;
-  color: rgba(255, 255, 255, 0.75);
+  color: rgba(0, 0, 0, 0.75);
   letter-spacing: 0.7px;
   text-transform: uppercase;
-  margin-bottom: 5px;
+  margin-bottom: 3px;
   padding-left: 4px;
+}
+
+.left-headline {
+  font-family: 'Fredoka One', cursive;
+  font-size: 46px;
+  line-height: 1.15;
+  color: var(--dark);
+  margin-bottom: 28px;
+  max-width: 480px;
+}
+.left-headline span {
+  background: linear-gradient(160deg, #D94F00, #E07800);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  -webkit-text-stroke: 1px #1A1A1A;
+  paint-order: stroke fill;
 }
 
 .text-req {
