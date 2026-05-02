@@ -7,37 +7,108 @@
     <link rel="icon" type="image/x-icon" href="/Foto/APERETTO (1).png">
     <link rel="stylesheet" href="classi.css">
 </head>
-<body>
+<body class="body-custom">
+
+    <div class="navbar-custom d-flex fixed-top align-items-center gap-3 px-3 bg-primary">
+        <img src="/Foto/APERETTO (1).png" alt="Logo Aperetto" class="logo">
+        
+        
+    </div>
+
     <div class="container-fluid px-0">
         <div class="row g-0 min-vh-100"> 
             
             <!-- LATO SINISTRO: immagine -->
             <div class="col-12 col-md-6 position-relative" style="overflow: hidden;">
-                <button class="backbtn back-white border-0 bg-transparent position-absolute top-0 start-0 mt-3 ms-3 z-1" 
-                        onclick="window.location.href='login.html'"></button>
                 <img src="/Foto/people(1).jpg" class="h-100 w-auto object-fit-cover ogbject-position-center d-block" style="object-position: center;">
             </div>
 
             <!-- LATO DESTRO: form -->
+            
             <div class="col-12 col-md-6 d-flex align-items-center justify-content-center p-4">
-                <div class="p-5 pb-2 rounded-5 shadow border-0 bg-secondary w-100" 
-                     id="formContainer" style="max-width: 480px;">
-                    <form class="d-flex flex-column" id="formLogin">
-                        <div class="d-flex flex-column">
-                            <input type="email" placeholder="E-Mail" id="emailLogin" class="form-control rounded-3"> <br>
-                            <div class="position-relative">
-                                <input type="password" placeholder="Password" id="pswField" class="form-control rounded-3 pe-5">
-                                <button type="button" id="showPswBtn" class="position-absolute border-0 p-0 psw-btn">
-                                    <img src="/Foto/eye-on.svg" width="18" alt="Mostra password">
-                                </button>
-                                <button type="button" id="hidePswBtn" class="position-absolute border-0 p-0 psw-btn d-none">
-                                    <img src="/Foto/eye-off.svg" width="18" alt="Nascondi password">
-                                </button>
+                <!-- barra di progressione superiore -->
+                <div class="stepper text-center w-75">
+                    <div class="step active">
+                    <div class="step-circle">1</div>
+                    <div class="step-label">Contatti</div>
+                    </div>
+                    <div class="step-line"></div>
+                    <div class="step">
+                    <div class="step-circle">2</div>
+                    <div class="step-label">Il locale</div>
+                    </div>
+                    <div class="step-line"></div>
+                    <div class="step">
+                    <div class="step-circle">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" width="16" height="16">
+                        <polyline points="20 6 9 17 4 12"/>
+                        </svg>
+                    </div>
+                    <div class="step-label">Fatto!</div>
+                    </div>
+                </div>
+
+                <div class="form-title d-flex align-items-center gap-2 fw-bold mb-3">
+                    <form class="justify-content-sm-between d-flex flex-column" id="formRegistrazione">
+                        <h2 class="mb-4 text-center text-bg-info">Benvenuto su Aperetto!</h2>
+                        <div class="row g-2 mb-1">
+                            <div class="col-6">
+                                <input type="text" class="form-control rounded-3" id="name" placeholder="Nome" required>
                             </div>
-                            <a href="#" id="forgotPsw" class="link-dark">Password dimenticata?</a>
+                            <div class="col-6">
+                                <input type="text" class="form-control rounded-3" id="surname" placeholder="Cognome" required>
+                            </div>
+                        </div>
+                        <div class="row g-2 mb-3">
+                            <div class="col-12">
+                                <input type="email" class="form-control rounded-3" id="email" placeholder="E-Mail" required>
+                            </div>
+                        </div>
+
+                        <div class="mb-1 position-relative">
+                            <input type="password" placeholder="Password" id="password" class="form-control rounded-3 pe-5">
+                            
+                            <button type="button" id="showPsw-reg" class="position-absolute border-0 p-0 psw-btn">
+                                <img src="/Foto/eye-on.svg" width="18" alt="Mostra password">
+                            </button>
+                            <button type="button" id="hidePsw-reg" class="position-absolute border-0 p-0 psw-btn d-none">
+                                <img src="/Foto/eye-off.svg" width="18" alt="Nascondi password">
+                            </button>
+                        </div>
+
+                        <div class="mb-1 position-relative">
+                            <input type="password" class="form-control rounded-3" id="confirm-psw" placeholder="Conferma Password" required>
+                            
+                            <button type="button" id="showConf" class="position-absolute border-0 p-0 psw-btn">
+                                <img src="/Foto/eye-on.svg" width="18" alt="Mostra password">
+                            </button>
+                            <button type="button" id="hideConf" class="position-absolute border-0 p-0 psw-btn d-none">
+                                <img src="/Foto/eye-off.svg" width="18" alt="Nascondi password">
+                            </button>
+                        </div>
+
+
+                        <div>
+                            <input type="checkbox" id="consensi" required>
+                            <label class="text-bg-info" >Acconsento al trattamento dei dati</label>
+                        </div>
+
+                        <div class="text-start mt-4">
+                        <a href="supplier.html" class="d-inline-flex align-items-center gap-2 text-dark" target="_blank">    
+                            <span class="d-inline-flex justify-content-center align-items-center">
+                                <img src="/Foto/supplier.svg" class="supplier d-block" alt="Icona ristoranti">
+                                <span class="mx-1 text-bg-info">Per i locali</span>
+                            </span>
+                        </a>
+                        </div>
+                        
+                        <div class="d-flex gap-3 align-items-center mb-4">
+                            <button type="submit" id="registrazione" class="btn btn-success m-auto w-100 mb-3"> Registrati</button>
                         </div>
                     </form>
                 </div>
+
+                
             </div>
 
         </div>

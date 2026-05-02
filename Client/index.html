@@ -19,55 +19,45 @@
             <img src="/Foto/location.png" class="logo zoom-hover border-0 bg-trasparent mt-4 mb-4 p-4">
         </button>
         <div class="position-relative">
-    <button class="loginbtn rounded-circle border-0 p-0 me-2"></button>
-    <div class="dropdown rounded-4 flex-column d-flex">
-        <!-- Mostrato se NON loggato -->
-        <a href="login.html" class="text-dark m-auto" id="menuAccedi">Accedi</a>
-        <!-- Mostrati se loggato -->
-        <a href="profilo.html" class="text-dark m-auto d-none" id="menuProfilo">Profilo</a>
-        <a href="#" class="text-dark m-auto d-none" id="menuLogout">Logout</a>
-    </div>
-</div>
+            <button class="loginbtn rounded-circle border-0 p-0 me-2"></button>
+            <div class="dropdown rounded-4 flex-column d-flex">
+                <!-- Mostrato se NON loggato -->
+                <a href="login.html" class="text-dark m-auto" id="menuAccedi">Accedi</a>
+                <!-- Mostrati se loggato -->
+                <a href="profilo.html" class="text-dark m-auto d-none" id="menuProfilo">Profilo</a>
+                <a href="#" class="text-dark m-auto d-none" id="menuLogout">Logout</a>
+            </div>
+        </div>
     </div>
     <!-- FILTRI -->
     <div class="filtri-container px-3 py-2 bg-light d-flex gap-3 align-items-center flex-wrap">
+        <!-- Tipo locale -->
+        <select id="filtroTipo" class="form-select w-auto">
+            <option value="">Tutti</option>
+            <option value="Bakery">Bakery</option>
+            <option value="Aperitivo">Aperitivo</option>
+        </select>
 
-    <!-- Tipo locale -->
-    <select id="filtroTipo" class="form-select w-auto">
-        <option value="">Tutti</option>
-        <option value="Bakery">Bakery</option>
-        <option value="Aperitivo">Aperitivo</option>
-    </select>
+        <!-- Distanza -->
+        <select id="filtroDistanza" class="form-select w-auto">
+            <option value="">Qualsiasi distanza</option>
+            <option value="1">Entro 1 km</option>
+            <option value="3">Entro 3 km</option>
+            <option value="5">Entro 5 km</option>
+            <option value="10">Entro 10 km</option>
+        </select>
 
-    <!-- Distanza -->
-    <select id="filtroDistanza" class="form-select w-auto">
-        <option value="">Qualsiasi distanza</option>
-        <option value="1">Entro 1 km</option>
-        <option value="3">Entro 3 km</option>
-        <option value="5">Entro 5 km</option>
-        <option value="10">Entro 10 km</option>
-    </select>
-
-    <!-- Reset -->
-    <button id="resetFiltri" class="btn btn-secondary">Reset</button>
+        <!-- Reset -->
+        <button id="resetFiltri" class="btn btn-secondary">Reset</button>
 
     </div>
     <!-- Contenuto principale -->
     <div class="app-container">
-
-    <div class="lista" id="risultati"></div>
-
-    <div id="map"></div>
-
-    
-
-</div>
-
+        <div class="lista" id="risultati"></div>
+        <div id="map"></div>
+    </div>
 
 <script>
-
-    
-
     //Script per gestire il menu a tendina
     const btn = document.querySelector(".loginbtn");
     const menu = document.querySelector(".dropdown");
@@ -82,8 +72,6 @@
             menu.classList.remove("show");
         }
     });
-
-
 
     //Script per caricare i luoghi dal server
     let tuttiILuoghi = [];
