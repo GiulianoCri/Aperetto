@@ -187,10 +187,15 @@
             const div = document.createElement('div');
             div.className="risultato-card";
             div.innerHTML = `
-                <img src="${luogo.immagine}" alt="${luogo.nome}" class="img-fluid">
+                <div class="card-img-wrap">
+                <img src="${luogo.immagine}" alt="${luogo.nome}">
+                <span class="card-badge">${luogo.tipologia || 'Locale'}</span>
+            </div>
+            <div class="card-info">
                 <h2>${luogo.nome}</h2>
-                <p>${luogo.descrizione}</p>
-                <p>Indirizzo: ${luogo.indirizzo}</p>
+                <p class="card-desc">${luogo.descrizione}</p>
+                <p class="card-address">${luogo.indirizzo}</p>
+            </div>
             `;
             //redireziona alla pagina del luogo al click
             div.addEventListener('click', () => {
