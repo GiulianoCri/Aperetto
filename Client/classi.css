@@ -851,8 +851,9 @@ body{
     height: calc(100vh - 140px);
 }
 .profilo-txt {
-  height: 350px;
-  width: auto;
+    max-width: 180px;
+    height: auto;
+    object-fit: contain;
 }
 .locali {
     background-image: url("/Foto/locali_log.png");
@@ -957,6 +958,441 @@ body{
 
 #resetFiltri:active {
     transform: scale(0.97);
+}
+
+/* ══════════════════════════════════════════════════
+   PAGINA LUOGO — aggiungi in fondo a classi.css
+   ══════════════════════════════════════════════════ */
+
+/* ── banner ── */
+.luogo-banner {
+    margin-top: 72px;
+    position: relative;
+    height: 420px;
+    overflow: hidden;
+}
+
+.luogo-banner img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+/* Gradiente scuro in basso per leggibilità del testo */
+.luogo-banner::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to bottom,
+        rgba(0,0,0,0) 35%,
+        rgba(0,0,0,0.70) 100%);
+    pointer-events: none;
+}
+
+.banner-skeleton {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, #f0f0f0 25%, #e8e8e8 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.4s infinite;
+}
+
+@keyframes shimmer {
+    0%   { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+
+.banner-overlay {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    padding: 28px 32px;
+    z-index: 2;
+}
+
+.banner-badge {
+    display: inline-block;
+    background: #FFC107;
+    color: #1a1a1a;
+    font-size: 0.72rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    padding: 4px 14px;
+    border-radius: 20px;
+    margin-bottom: 10px;
+}
+
+.banner-nome {
+    font-family: 'Fredoka One', cursive;
+    font-size: 2.8rem;
+    color: #fff;
+    line-height: 1.1;
+    text-shadow: 0 2px 16px rgba(0,0,0,0.45);
+    margin: 0;
+}
+
+/* Pulsante back sovrapposto all'banner */
+.btn-back-banner {
+    position: absolute;
+    top: 16px;
+    left: 20px;
+    z-index: 3;
+    background: rgba(255,255,255,0.18);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1.5px solid rgba(255,255,255,0.38);
+    color: #fff;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 700;
+    font-size: 0.88rem;
+    padding: 8px 18px;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: background 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+.btn-back-banner:hover { background: rgba(255,255,255,0.32); }
+
+/* ── BODY PAGINA ── */
+.luogo-body {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 28px 20px 80px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.loading-txt {
+    text-align: center;
+    color: #fff;
+    font-weight: 700;
+    padding: 40px 0;
+}
+
+/* ── CARD GENERICA ── */
+.luogo-card {
+    background: #fff;
+    border-radius: 20px;
+    padding: 26px 28px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+}
+
+.luogo-card-title {
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.2rem;
+    color: #1a1a1a;
+    margin: 0 0 18px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* Lineetta decorativa dopo il titolo */
+.luogo-card-title::after {
+    content: '';
+    flex: 1;
+    height: 2px;
+    background: #FFF3CD;
+    border-radius: 2px;
+}
+
+.desc-text {
+    color: #555;
+    font-size: 0.97rem;
+    line-height: 1.75;
+    margin-bottom: 20px;
+}
+
+/* ── GRIGLIA INFO ── */
+.info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.info-pill {
+    background: #f8f9fa;
+    border-radius: 14px;
+    padding: 12px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.info-pill-label {
+    font-size: 0.68rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.09em;
+    color: #bbb;
+}
+
+.info-pill-value {
+    font-size: 0.94rem;
+    font-weight: 700;
+    color: #1a1a1a;
+}
+
+.info-pill-value a {
+    color: #1a1a1a;
+    text-decoration: none;
+    border-bottom: 2px solid #FFC107;
+    transition: color 0.15s;
+}
+.info-pill-value a:hover { color: #a07000; }
+
+/* ── MEDIA STELLE ── */
+.media-voto {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 22px;
+}
+
+.voto-numero {
+    font-family: 'Fredoka One', cursive;
+    font-size: 3.2rem;
+    color: #1a1a1a;
+    line-height: 1;
+}
+
+.stelle-show {
+    display: flex;
+    gap: 3px;
+    margin-bottom: 4px;
+}
+
+.stella-svg {
+    width: 18px;
+    height: 18px;
+}
+
+.voto-count {
+    font-size: 0.82rem;
+    color: #aaa;
+    font-weight: 600;
+}
+
+/* ── STELLE INTERATTIVE ── */
+.stelle-rating {
+    display: flex;
+    gap: 4px;
+    margin: 4px 0 16px;
+}
+
+.stella-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 2px;
+    transition: transform 0.15s;
+    line-height: 0;
+}
+.stella-btn:hover { transform: scale(1.18); }
+
+.stella-btn .stella-svg {
+    width: 34px;
+    height: 34px;
+}
+
+/* path di default grigio */
+.stella-btn .stella-svg path { fill: #e0e0e0; transition: fill 0.12s; }
+/* giallo al hover o selezionata */
+.stella-btn.hov .stella-svg path,
+.stella-btn.sel .stella-svg path { fill: #FFC107; }
+
+.rec-form-label {
+    font-size: 0.8rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #aaa;
+    margin: 0 0 2px;
+}
+
+/* ── FORM RECENSIONE ── */
+.rec-form-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 28px;
+}
+
+.rec-textarea {
+    width: 100%;
+    min-height: 96px;
+    padding: 14px 16px;
+    border-radius: 14px;
+    border: 1.5px solid #e9ecef;
+    font-family: 'Nunito', sans-serif;
+    font-size: 0.95rem;
+    color: #1a1a1a;
+    resize: vertical;
+    background: #f8f9fa;
+    transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+}
+.rec-textarea:focus {
+    outline: none;
+    border-color: #FFC107;
+    box-shadow: 0 0 0 3px rgba(255,193,7,0.18);
+    background: #fff;
+}
+.rec-textarea::placeholder { color: #ccc; }
+
+.btn-invia-rec {
+    align-self: flex-end;
+    background: #1a1a1a;
+    color: #FFC107;
+    font-family: 'Fredoka One', cursive;
+    font-size: 1rem;
+    letter-spacing: 0.5px;
+    border: none;
+    padding: 11px 28px;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: transform 0.15s, opacity 0.15s;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.14);
+}
+.btn-invia-rec:hover:not(:disabled) { transform: translateY(-2px); opacity: 0.88; }
+.btn-invia-rec:disabled { opacity: 0.45; cursor: not-allowed; }
+
+/* ── PROMPT LOGIN ── */
+.login-prompt {
+    background: #FFF3CD;
+    border-radius: 14px;
+    padding: 14px 18px;
+    font-size: 0.92rem;
+    font-weight: 600;
+    color: #7a5100;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 24px;
+}
+.login-prompt a {
+    color: #1a1a1a;
+    font-weight: 800;
+    border-bottom: 2px solid #FFC107;
+    text-decoration: none;
+}
+
+/* ── LISTA RECENSIONI ── */
+.recensioni-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.rec-item {
+    background: #f8f9fa;
+    border-radius: 16px;
+    padding: 16px 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    animation: fadeSlideIn 0.35s ease both;
+}
+@keyframes fadeSlideIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+.rec-item-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.rec-utente {
+    font-weight: 800;
+    font-size: 0.93rem;
+    color: #1a1a1a;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.rec-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: #FFC107;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Fredoka One', cursive;
+    font-size: 0.88rem;
+    color: #1a1a1a;
+    flex-shrink: 0;
+}
+
+.rec-data-txt {
+    font-size: 0.75rem;
+    color: #bbb;
+    font-weight: 600;
+}
+
+.rec-testo-item {
+    font-size: 0.92rem;
+    color: #444;
+    line-height: 1.65;
+    margin: 0;
+}
+
+.rec-empty {
+    text-align: center;
+    padding: 40px 20px;
+    color: #bbb;
+    font-size: 0.95rem;
+    font-weight: 600;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+.rec-empty span { font-size: 2.4rem; }
+
+/* ── notifica ── */
+.notifica-wrap {
+    position: fixed;
+    bottom: 28px;
+    right: 22px;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    pointer-events: none;
+}
+
+.ap-notifica {
+    background: #1a1a1a;
+    color: #FFC107;
+    font-family: 'Fredoka One', cursive;
+    font-size: 0.97rem;
+    padding: 13px 22px;
+    border-radius: 14px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.18);
+    pointer-events: auto;
+    animation: notificaIn 0.3s ease, notificaOut 0.3s ease 2.7s forwards;
+}
+.ap-notifica.error { color: #ff5252; }
+
+@keyframes notificaIn  { from { opacity:0; transform:translateY(14px); } to { opacity:1; transform:translateY(0); } }
+@keyframes notificaOut { to   { opacity:0; transform:translateY(14px); } }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 600px) {
+    .luogo-banner  { height: 280px; }
+    .banner-nome   { font-size: 2rem; }
+    .info-grid   { grid-template-columns: 1fr; }
+    .luogo-card  { padding: 20px 16px; }
+    .voto-numero { font-size: 2.6rem; }
 }
 /* MAPPA */
 #map {

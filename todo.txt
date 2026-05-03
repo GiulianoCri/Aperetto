@@ -1,5 +1,6 @@
 COSE FATTE:
     implementazione recupero password
     implementata pagina per il recupero password
+    Implementate recensioni
 TODO:
     implementare miglioramenti grafici per login registrazione e cambio password 

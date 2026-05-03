@@ -73,19 +73,20 @@
                 document.getElementById('info-cognome').textContent = user.surname || '–';
                 document.getElementById('info-email').textContent   = user.email   || '–';
  
-                caricaRecensioni(user.id);
+                caricaRecensioni();
             } catch (err) {
                 console.error('Errore caricamento profilo:', err);
             }
         }
  
         // ── Carica recensioni dell'utente ──
-        async function caricaRecensioni(userId) {
+        async function caricaRecensioni() {
             const container = document.getElementById('recensioni-container');
             try {
-                const res = await fetch(`/api/recensioni?userId=${userId}`);
-                if (!res.ok) throw new Error();
+                const res = await fetch('/api/recensioni/mie');
                 const recensioni = await res.json();
+                console.log("RECENSIONI:", JSON.stringify(recensioni));
+                console.log("STATUS:", res.status);
  
                 if (!recensioni || recensioni.length === 0) {
                     container.innerHTML = `
@@ -99,12 +100,12 @@
                 container.innerHTML = recensioni.map(r => `
                     <div class="recensione-card" onclick="window.location.href='/luogo.html?id=${r.luogo_id}'">
                         <div class="rec-header">
-                            <span class="rec-locale">${r.luogo_nome || 'Locale'}</span>
+                            <span class="rec-locale">${r.Luoghi?.nome || 'Locale'}</span>
                             <span class="rec-data">${formatData(r.created_at)}</span>
                         </div>
                         <div class="stelle">${stelle(r.voto)}</div>
                         <p class="rec-testo">${r.testo || ''}</p>
-                        <span class="rec-tag">${r.tipologia || 'Locale'}</span>
+                        <span class="rec-tag">${r.Luoghi?.tipologia || 'Locale'}</span>
                     </div>
                 `).join('');
  

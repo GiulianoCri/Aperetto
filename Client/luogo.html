@@ -6,95 +6,356 @@
     <title>Caricamento...</title>
     <link rel="icon" type="image/x-icon" href="/Foto/APERETTO (1).png">
     <link rel="stylesheet" href="classi.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
 </head>
-<body class="body-custom">
-    <!-- La navbar è stata mantenuta per coerenza con il resto del sito -->
-    <div class="navbar-custom d-flex fixed-top align-items-center gap-3 px-3 bg-primary">
+<body>
+
+    <!-- NAVBAR -->
+    <div class="navbar-custom d-flex fixed-top align-items-center gap-3 px-3">
         <img src="/Foto/APERETTO (1).png" alt="Logo Aperetto" class="logo">
-        <input type="text" placeholder="Cerca un locale..." class="form-control rounded-5 flex-grow-1 search-input">
+        <div style="flex:1"></div>
         <div class="position-relative">
             <button class="loginbtn rounded-circle border-0 p-0"></button>
             <div class="dropdown rounded-4 flex-column d-flex">
-                <a href="login.html" class="text-dark m-auto">Accedi</a>
+                <a href="login.html" id="menuAccedi">Accedi</a>
+                <a href="profilo.html" class="d-none" id="menuProfilo">Profilo</a>
+                <a href="#" class="d-none" id="menuLogout">Logout</a>
             </div>
         </div>
     </div>
-    <!-- Caricamento -->
-    <div class="detail-wrap" id="detail-wrap">
-        <p>Caricamento...</p>
+
+    <!-- banner -->
+    <div class="luogo-banner" id="banner">
+        <div class="banner-skeleton"></div>
     </div>
-    <!-- Script menu a tendina -->
+
+    <!-- BODY PAGINA -->
+    <div class="luogo-body" id="luogo-body">
+        <p class="loading-txt">Caricamento...</p>
+    </div>
+
+    <!-- notifica -->
+    <div class="notifica-wrap" id="notificaWrap"></div>
+
     <script>
-        const btn  = document.querySelector(".loginbtn");
-        const menu = document.querySelector(".dropdown");
-        btn.addEventListener("click", () => menu.classList.toggle("show"));
-        document.addEventListener("click", (e) => {
+        /* ── NAVBAR DROPDOWN ── */
+        const btn  = document.querySelector('.loginbtn');
+        const menu = document.querySelector('.dropdown');
+        btn.addEventListener('click', () => menu.classList.toggle('show'));
+        document.addEventListener('click', e => {
             if (!btn.contains(e.target) && !menu.contains(e.target))
-                menu.classList.remove("show");
+                menu.classList.remove('show');
         });
-    </script>
-    <script>
-        const formattaOrario = (orario) => {
-            if (!orario) return 'N/A';
-            const [ore, minuti] = orario.split(':');
-            return `${ore}:${minuti}`;
-        };
-    </script>
-     <!-- Script informazioni -->
-    <script>
-        const wrap = document.getElementById('detail-wrap');
 
-        // Legge l'id dall'URL
-        const params = new URLSearchParams(window.location.search);
-        const id = params.get('id');
+        /* ── SESSIONE ── */
+        let utenteLoggato = null;
 
-        if (!id) {
-            // Nessun ID → torna alla home
-            window.location.href = '/';
+        async function checkLogin() {
+            try {
+                const r = await fetch('/api/me');
+                if (r.ok) {
+                    utenteLoggato = await r.json();
+                    document.getElementById('menuAccedi').classList.add('d-none');
+                    document.getElementById('menuProfilo').classList.remove('d-none');
+                    document.getElementById('menuLogout').classList.remove('d-none');
+                }
+            } catch {}
         }
 
-        const caricaDettaglio = async () => {
+        document.getElementById('menuLogout').addEventListener('click', async e => {
+            e.preventDefault();
+            await fetch('/api/logout', { method: 'POST' });
+            window.location.reload();
+        });
+
+        /* ── UTILS ── */
+        const formattaOrario = o => {
+            if (!o) return 'N/A';
+            const [h, m] = o.split(':');
+            return `${h}:${m}`;
+        };
+
+        const formattaData = iso => new Date(iso).toLocaleDateString('it-IT', {
+            day: '2-digit', month: 'short', year: 'numeric'
+        });
+
+        function stelleSVG(totale, piene) {
+            return Array.from({ length: totale }, (_, i) => `
+                <svg class="stella-svg" viewBox="0 0 24 24">
+                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77
+                             l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"
+                          fill="${i < piene ? '#FFC107' : '#e0e0e0'}"/>
+                </svg>`).join('');
+        }
+
+        function mostranotifica(msg, tipo = 'ok') {
+            const wrap = document.getElementById('notificaWrap');
+            const t = document.createElement('div');
+            t.className = 'ap-notifica' + (tipo === 'error' ? ' error' : '');
+            t.textContent = msg;
+            wrap.appendChild(t);
+            setTimeout(() => t.remove(), 3100);
+        }
+
+        /* ── STELLE INTERATTIVE ── */
+        let votoSelezionato = 0;
+
+        function initStelle() {
+            const btns = document.querySelectorAll('.stella-btn');
+            btns.forEach((b, i) => {
+                b.addEventListener('mouseenter', () =>
+                    btns.forEach((bb, j) => bb.classList.toggle('hov', j <= i))
+                );
+                b.addEventListener('mouseleave', () =>
+                    btns.forEach((bb, j) => {
+                        bb.classList.remove('hov');
+                        bb.classList.toggle('sel', j < votoSelezionato);
+                    })
+                );
+                b.addEventListener('click', () => {
+                    votoSelezionato = i + 1;
+                    btns.forEach((bb, j) => bb.classList.toggle('sel', j < votoSelezionato));
+                });
+            });
+        }
+
+        /* ── RECENSIONI ── */
+        async function caricaRecensioni(idLuogo) {
             try {
-                const res = await fetch(`/api/luoghi/${id}`);
-                if (!res.ok) throw new Error('Luogo non trovato');
-                const luogo = await res.json();
+                const r = await fetch(`/api/recensioni/luogo/${idLuogo}`);
+                return r.ok ? await r.json() : [];
+            } catch { return []; }
+        }
 
-                // Aggiorna il titolo della scheda browser
-                document.title = `${luogo.nome} — Aperetto`;
+        function renderRecensioni(recensioni) {
+            const wrap = document.getElementById('recensioniList');
+            if (!wrap) return;
 
-                // Costruisco il contenuto della pagina
+            if (!recensioni.length) {
                 wrap.innerHTML = `
-                    <button class="btn-back" onclick="history.back()">
-                        &#8592; Torna alla lista
-                    </button>
-                    <img src="${luogo.immagine}" alt="${luogo.nome}" loading="lazy">
-                    <div class="risultati">
-                        <h1>${luogo.nome}</h1>
-                        <p><strong>Indirizzo:</strong> ${luogo.indirizzo}</p>
-                        <h2>Informazioni:</h2>
-                        <p>${luogo.descrizione}</p>
-                        <p><strong>Orari:</strong> ${formattaOrario(luogo.apertura)} – ${formattaOrario(luogo.chiusura)}</p>
-                        <p><strong>Servizi disponibili:</strong> ${luogo.tipologia}</p>
-                        <h2>Contatti:</h2>
-                        <p><strong>Sito web:</strong> <a href="${luogo.sito}" target="_blank" rel="noopener">Visita il sito ↗</a></p>
-                        <p><strong>Telefono:</strong> ${luogo.telefono}</p>
+                    <div class="rec-empty">
+                        <span>💬</span>
+                        Nessuna recensione ancora. Sii il primo!
+                    </div>`;
+                return;
+            }
+
+            wrap.innerHTML = recensioni.map((rec, idx) => {
+                const iniziale = (rec.consumer?.name || 'U').charAt(0).toUpperCase();
+                const nome = rec.consumer
+                    ? `${rec.consumer.name || ''} ${rec.consumer.surname || ''}`.trim()
+                    : 'Utente';
+                return `
+                <div class="rec-item" style="animation-delay:${idx * 0.07}s">
+                    <div class="rec-item-header">
+                        <div class="rec-utente">
+                            <div class="rec-avatar">${iniziale}</div>
+                            ${nome}
+                        </div>
+                        <span class="rec-data-txt">${formattaData(rec.created_at)}</span>
                     </div>
-                `;
+                    <div class="stelle-show">${stelleSVG(5, rec.voto)}</div>
+                    <p class="rec-testo-item">${rec.testo || ''}</p>
+                </div>`;
+            }).join('');
+        }
+
+        function aggiornaMedia(recensioni) {
+            const elNum   = document.getElementById('mediaVoto');
+            const elStel  = document.getElementById('mediaStelle');
+            const elCount = document.getElementById('votoCount');
+            if (!elNum) return;
+
+            if (!recensioni.length) {
+                elNum.textContent  = '—';
+                elStel.innerHTML   = stelleSVG(5, 0);
+                elCount.textContent = '0 recensioni';
+                return;
+            }
+            const media = recensioni.reduce((s, r) => s + r.voto, 0) / recensioni.length;
+            elNum.textContent   = media.toFixed(1);
+            elStel.innerHTML    = stelleSVG(5, Math.round(media));
+            elCount.textContent = `${recensioni.length} recension${recensioni.length === 1 ? 'e' : 'i'}`;
+        }
+
+        async function inviaRecensione(idLuogo) {
+            const testo = document.getElementById('recTesto').value.trim();
+            if (!votoSelezionato) { mostranotifica('Seleziona un voto ⭐', 'error'); return; }
+            if (!testo)           { mostranotifica('Scrivi qualcosa sulla tua esperienza', 'error'); return; }
+
+            const btnInvia = document.getElementById('btnInviaRec');
+            btnInvia.disabled = true;
+            btnInvia.textContent = 'Invio...';
+
+            try {
+                const r = await fetch('/api/recensioni', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ luogo_id: idLuogo, voto: votoSelezionato, testo })
+                });
+                const data = await r.json();
+                if (!r.ok) throw new Error(data.error || 'Errore');
+
+                mostranotifica('Recensione pubblicata! 🎉');
+                document.getElementById('recTesto').value = '';
+                votoSelezionato = 0;
+                document.querySelectorAll('.stella-btn').forEach(b => b.classList.remove('sel'));
+
+                const nuove = await caricaRecensioni(idLuogo);
+                renderRecensioni(nuove);
+                aggiornaMedia(nuove);
 
             } catch (err) {
-                wrap.innerHTML = `
-                    <div class="errore">
-                        <p>Luogo non trovato.</p>
-                        <button class="btn-back" onclick="window.location.href='/'">
-                            &#8592; Torna alla lista
-                        </button>
-                    </div>
-                `;
+                mostranotifica(err.message, 'error');
+            } finally {
+                btnInvia.disabled = false;
+                btnInvia.textContent = 'Pubblica';
             }
-        };
+        }
+
+        /* ── CARICA TUTTO ── */
+        const params = new URLSearchParams(window.location.search);
+        const id = params.get('id');
+        if (!id) window.location.href = '/';
+
+        async function caricaDettaglio() {
+            await checkLogin();
+
+            try {
+                const [resLuogo, recensioni] = await Promise.all([
+                    fetch(`/api/luoghi/${id}`),
+                    caricaRecensioni(id)
+                ]);
+
+                if (!resLuogo.ok) throw new Error();
+                const luogo = await resLuogo.json();
+                document.title = `${luogo.nome} — Aperetto`;
+
+                /* banner */
+                const mediaVal = recensioni.length
+                    ? (recensioni.reduce((s, r) => s + r.voto, 0) / recensioni.length)
+                    : null;
+
+                document.getElementById('banner').innerHTML = `
+                    <button class="btn-back-banner" onclick="history.back()">← Torna alla lista</button>
+                    <img src="${luogo.immagine}" alt="${luogo.nome}" loading="lazy">
+                    <div class="banner-overlay">
+                        <div class="banner-badge">${luogo.tipologia || 'Locale'}</div>
+                        <h1 class="banner-nome">${luogo.nome}</h1>
+                    </div>`;
+
+                /* SEZIONE FORM O PROMPT LOGIN */
+                const formSection = utenteLoggato ? `
+                    <div class="rec-form-wrap">
+                        <p class="rec-form-label">Il tuo voto</p>
+                        <div class="stelle-rating" id="stelleInput">
+                            ${[1,2,3,4,5].map(n => `
+                            <button class="stella-btn" aria-label="${n} stelle">
+                                <svg class="stella-svg" viewBox="0 0 24 24">
+                                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88
+                                             L12 17.77l-6.18 3.25L7 14.14 2 9.27
+                                             l6.91-1.01L12 2z"/>
+                                </svg>
+                            </button>`).join('')}
+                        </div>
+                        <textarea class="rec-textarea" id="recTesto"
+                            placeholder="Racconta la tua esperienza…"></textarea>
+                        <button class="btn-invia-rec" id="btnInviaRec">Pubblica</button>
+                    </div>` : `
+                    <div class="login-prompt">
+                        <span>🔐</span>
+                        <span><a href="/login.html">Accedi</a> per lasciare una recensione</span>
+                    </div>`;
+
+                /* BODY */
+                document.getElementById('luogo-body').innerHTML = `
+
+                    <!-- INFO -->
+                    <div class="luogo-card">
+                        <h2 class="luogo-card-title">📍 Informazioni</h2>
+                        <p class="desc-text">${luogo.descrizione || ''}</p>
+                        <div class="info-grid">
+                            <div class="info-pill">
+                                <span class="info-pill-label">Indirizzo</span>
+                                <span class="info-pill-value">${luogo.indirizzo}</span>
+                            </div>
+                            <div class="info-pill">
+                                <span class="info-pill-label">Orari</span>
+                                <span class="info-pill-value">${formattaOrario(luogo.apertura)} – ${formattaOrario(luogo.chiusura)}</span>
+                            </div>
+                            <div class="info-pill">
+                                <span class="info-pill-label">Tipologia</span>
+                                <span class="info-pill-value">${luogo.tipologia}</span>
+                            </div>
+                            <div class="info-pill">
+                                <span class="info-pill-label">Telefono</span>
+                                <span class="info-pill-value">${luogo.telefono || 'N/A'}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- CONTATTI -->
+                    <div class="luogo-card">
+                        <h2 class="luogo-card-title">🔗 Contatti</h2>
+                        <div class="info-grid">
+                            <div class="info-pill">
+                                <span class="info-pill-label">Sito web</span>
+                                <span class="info-pill-value">
+                                    ${luogo.sito
+                                        ? `<a href="${luogo.sito}" target="_blank" rel="noopener">Visita il sito ↗</a>`
+                                        : 'N/A'}
+                                </span>
+                            </div>
+                            <div class="info-pill">
+                                <span class="info-pill-label">Telefono</span>
+                                <span class="info-pill-value">${luogo.telefono || 'N/A'}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- RECENSIONI -->
+                    <div class="luogo-card">
+                        <h2 class="luogo-card-title">⭐ Recensioni</h2>
+
+                        <div class="media-voto">
+                            <span class="voto-numero" id="mediaVoto">${mediaVal ? mediaVal.toFixed(1) : '—'}</span>
+                            <div>
+                                <div class="stelle-show" id="mediaStelle">
+                                    ${stelleSVG(5, mediaVal ? Math.round(mediaVal) : 0)}
+                                </div>
+                                <div class="voto-count" id="votoCount">
+                                    ${recensioni.length} recension${recensioni.length === 1 ? 'e' : 'i'}
+                                </div>
+                            </div>
+                        </div>
+
+                        ${formSection}
+
+                        <div id="recensioniList" class="recensioni-list"></div>
+                    </div>`;
+
+                renderRecensioni(recensioni);
+
+                if (utenteLoggato) {
+                    initStelle();
+                    document.getElementById('btnInviaRec')
+                        .addEventListener('click', () => inviaRecensione(id));
+                }
+
+            } catch {
+                document.getElementById('banner').innerHTML = '';
+                document.getElementById('luogo-body').innerHTML = `
+                    <div class="luogo-card" style="text-align:center;padding:60px 20px">
+                        <p style="font-size:3rem;margin-bottom:12px">😕</p>
+                        <p style="font-weight:700;color:#555;margin-bottom:20px">Luogo non trovato.</p>
+                        <button class="btn-back-banner" style="position:static;display:inline-flex"
+                            onclick="window.location.href='/'">← Torna alla lista</button>
+                    </div>`;
+            }
+        }
 
         caricaDettaglio();
     </script>
-
 </body>
 </html>

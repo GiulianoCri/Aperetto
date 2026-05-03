@@ -171,8 +171,6 @@ app.post("/api/login", async (req,res) =>{
         
         //faccio partire una sessione e anche qui salvo i dati utente di base
         req.session.user = { 
-            id: user.id, 
-            username: user.username, 
             email: user.email,
             name: user.name,   
             surname: user.surname
@@ -379,6 +377,93 @@ app.post('/api/reset-password', async (req, res) => {
     res.json({ message: "Password aggiornata con successo!" });
 });
 
+// ── 1. GET tutte le recensioni di un luogo (pubblica, senza login) ──
+app.get('/api/recensioni/luogo/:id', async (req, res) => {
+    const { id } = req.params;
+ 
+    const { data, error } = await supabase
+        .from('recensioni')
+        .select(`
+            id,
+            voto,
+            testo,
+            created_at,
+            consumer!recensioni_user_id_fkey ( name, surname )
+        `)
+        .eq('luogo_id', id)
+        .order('created_at', { ascending: false });
+
+        console.log("RECENSIONI DATA:", JSON.stringify(data));
+        console.log("RECENSIONI ERROR:", JSON.stringify(error));
+ 
+    if (error) return res.status(500).json({ error: error.message });
+    res.json(data);
+});
+ 
+ 
+// ── 2. POST crea una recensione (solo utenti loggati) ──
+app.post('/api/recensioni', async (req, res) => {
+ 
+    // blocca se non loggato
+    if (!req.session.user) {
+        return res.status(401).json({ error: 'Devi essere loggato per recensire' });
+    }
+ 
+    const { luogo_id, voto, testo } = req.body;
+    const user_id = req.session.user.email;
+    // validazione base
+    if (!luogo_id || !voto) {
+        return res.status(400).json({ error: 'luogo_id e voto sono obbligatori' });
+    }
+    if (voto < 1 || voto > 5) {
+        return res.status(400).json({ error: 'Il voto deve essere tra 1 e 5' });
+    }
+ 
+    const { data, error } = await supabase
+        .from('recensioni')
+        .insert([{ luogo_id, user_id, voto, testo: testo || '' }])
+        .select('id, voto, testo, created_at, user_id')
+        .single();
+ 
+    if (error) {
+        // codice 23505 = unique violato → utente ha già recensito questo locale
+        if (error.code === '23505') {
+            return res.status(409).json({ error: 'Hai già recensito questo locale' });
+        }
+        return res.status(500).json({ error: error.message });
+    }
+ 
+    res.status(201).json(data);
+});
+ 
+ 
+// ── 3. GET recensioni dell'utente loggato (per la pagina profilo) ──
+//    Sostituisce la tua rotta GET /api/recensioni esistente
+//    (quella vecchia usava ?userId=... dalla query, questa usa la sessione)
+app.get('/api/recensioni/mie', async (req, res) => {
+ 
+    if (!req.session.user) {
+        return res.status(401).json({ error: 'Non autorizzato' });
+    }
+ 
+    const user_id = req.session.user.email;
+ 
+    const { data, error } = await supabase
+        .from('recensioni')
+        .select(`
+            id,
+            voto,
+            testo,
+            created_at,
+            Luoghi:luogo_id ( nome, tipologia )
+        `)
+        .eq('user_id', user_id)
+        .order('created_at', { ascending: false });
+ 
+    if (error) return res.status(500).json({ error: error.message });
+    res.json(data);
+});
+ 
 // Serve la pagina di reset
 app.get('/client/reset-password.html', (req, res) => {
     res.sendFile(path.join(ROOT, 'reset-password.html'));
