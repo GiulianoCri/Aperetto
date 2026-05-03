@@ -72,6 +72,33 @@
             menu.classList.remove("show");
         }
     });
+    //Funzione per ottenere l'icona corretta in base alla tipologia del locale
+    function getIconaPerTipologia(tipologia) {
+    const tipo = (tipologia || '').toLowerCase();
+    
+    if (tipo === 'bakery') {
+        return L.icon({
+            iconUrl: '/Foto/cornetto.png', 
+            iconSize: [36, 36],
+            iconAnchor: [18, 36],
+            popupAnchor: [0, -36]
+        });
+    } else if (tipo === 'aperitivo') {
+        return L.icon({
+            iconUrl: '/Foto/aperitivo.png', 
+            iconSize: [36, 36],
+            iconAnchor: [18, 36],
+            popupAnchor: [0, -36]
+        });
+    } else {
+        return L.icon({
+            iconUrl: '/Foto/location.png', // ← fallback generico
+            iconSize: [36, 36],
+            iconAnchor: [18, 36],
+            popupAnchor: [0, -36]
+        });
+    }
+}
 
     //Script per caricare i luoghi dal server
     let tuttiILuoghi = [];
@@ -97,7 +124,7 @@
 
         // aggiungi marker
         luoghi.forEach(luogo => {
-        const marker = L.marker([luogo.lat, luogo.lng]).addTo(map);
+        const marker = L.marker([luogo.lat, luogo.lng], { icon: getIconaPerTipologia(luogo.tipologia) }).addTo(map);
         marker.bindTooltip(`
             <b>${luogo.nome}</b><br>
             ${luogo.indirizzo}
@@ -156,7 +183,7 @@
             // controllo sicurezza (IMPORTANTISSIMO)
             if (!luogo.lat || !luogo.lng) return;
 
-            const marker = L.marker([luogo.lat, luogo.lng]).addTo(map);
+            const marker = L.marker([luogo.lat, luogo.lng], { icon: getIconaPerTipologia(luogo.tipologia) }).addTo(map);
 
             marker.bindTooltip(luogo.nome);
 
