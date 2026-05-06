@@ -1,5 +1,5 @@
 COSE FATTE:
-    implementazione modifiche form registrazione locali e immagini per locali
+    modifiche alla schermata dei luoghi
 
 TODO:
     - profilo supplier + sessioni

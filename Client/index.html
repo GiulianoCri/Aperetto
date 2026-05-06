@@ -34,7 +34,7 @@
         <!-- Tipo locale -->
         <select id="filtroTipo" class="form-select w-auto">
             <option value="">Tutti</option>
-            <option value="Bakery">Bakery</option>
+            <option value="Colazione">Colazione</option>
             <option value="Aperitivo">Aperitivo</option>
         </select>
 
@@ -194,11 +194,16 @@
         if (close < open) return now >= open || now < close;
         return now >= open && now < close;
     }
-
+    
     const inserisciLuoghi = (luoghi) => {
         const container = document.getElementById('risultati');
         container.classList.add("spazio");
         container.innerHTML = '';
+
+        luoghi.forEach(luogo => {
+            console.log(luogo.nome_locale, "| aperitivo:", luogo.aperitivo, "| colazione:", luogo.colazione);
+        });
+
         luoghi.forEach(luogo => {
             const div = document.createElement('div');
             div.className = "risultato-card";
@@ -210,10 +215,17 @@
                     ? `<span class="badge-aperto text-center col-2">Aperto ora</span>`
                     : `<span class="badge-chiuso text-center col-2">Chiuso</span>`;
 
+            const badges = [];
+            if (luogo.aperitivo) badges.push(`<span class="card-badge">Aperitivo</span>`);
+            if (luogo.colazione) badges.push(`<span class="card-badge">Colazione</span>`);
+            const badgesHtml = badges.length ? badges.join('') : `<span class="card-badge">Locale</span>`;
+
             div.innerHTML = `
                 <div class="card-img-wrap">
                     <img src="${luogo.immagine}" alt="${luogo.nome_locale}">
-                    <span class="card-badge">${luogo.aperitivo ? 'Aperitivo' : luogo.colazione ? 'Colazione' : 'Locale'}</span>
+                    <div class="badges-wrap">
+                        ${badgesHtml}
+                    </div>
                 </div>
                 <div class="card-info">
                     <h2>${luogo.nome_locale}</h2>
@@ -238,7 +250,7 @@
         if (tipo) {
             filtrati = filtrati.filter(l => {
                 if (tipo === 'Aperitivo') return l.aperitivo === true;
-                if (tipo === 'Bakery')    return l.colazione === true;
+                if (tipo === 'Colazione') return l.colazione === true;
                 return true;
             });
         }

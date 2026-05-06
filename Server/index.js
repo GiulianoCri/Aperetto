@@ -401,7 +401,7 @@ app.post('/api/reset-password', async (req, res) => {
     res.json({ message: "Password aggiornata con successo!" });
 });
 
-// ── 1. GET tutte le recensioni di un luogo (pubblica, senza login) ──
+// 1. GET tutte le recensioni di un luogo (pubblica, senza login)
 app.get('/api/recensioni/luogo/:id', async (req, res) => {
     const { id } = req.params;
  
@@ -425,7 +425,7 @@ app.get('/api/recensioni/luogo/:id', async (req, res) => {
 });
  
  
-// ── 2. POST crea una recensione (solo utenti loggati) ──
+// 2. POST crea una recensione (solo utenti loggati)
 app.post('/api/recensioni', async (req, res) => {
  
     // blocca se non loggato
@@ -450,7 +450,7 @@ app.post('/api/recensioni', async (req, res) => {
         .single();
  
     if (error) {
-        // codice 23505 = unique violato → utente ha già recensito questo locale
+        // codice 23505 = unique violato -> utente ha già recensito questo locale
         if (error.code === '23505') {
             return res.status(409).json({ error: 'Hai già recensito questo locale' });
         }
@@ -493,12 +493,12 @@ app.get('/client/reset-password.html', (req, res) => {
     res.sendFile(path.join(ROOT, 'reset-password.html'));
 });
 
-// ── REGISTRAZIONE SUPPLIER ──
+// REGISTRAZIONE SUPPLIER
 app.post('/api/register-supplier', upload.single('immagineLocale'), async (req, res) => {
     const {
         name, surname, email, ruolo,
         nomeLocale, indirizzoLocale, telefonoFinale, orarioApertura, orarioChiusura, aperitivo, colazione, giornoChiusura,
-        sitoWeb, instagram, facebook
+        sitoWeb, instagram
     } = req.body;
 
     if (!name || !surname || !email || !ruolo || !nomeLocale || !indirizzoLocale || !orarioApertura || !orarioChiusura) {
@@ -535,7 +535,6 @@ app.post('/api/register-supplier', upload.single('immagineLocale'), async (req, 
                 colazione: colazione === 'true' || colazione === true,
                 sito_web: sitoWeb || null,
                 instagram: instagram || null,
-                facebook: facebook || null,
                 lat,
                 lng,
                 immagine: nomeFile  // ← salviamo il path nel DB
@@ -554,7 +553,7 @@ app.post('/api/register-supplier', upload.single('immagineLocale'), async (req, 
     }
 });
 
-//AVVIO SERVER
+// AVVIO SERVER
 app.listen(PORT,HOST,()=>{
     console.log(`Server in ascolto su http://localhost:${PORT}`);
 });

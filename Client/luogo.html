@@ -98,7 +98,7 @@
             setTimeout(() => t.remove(), 3100);
         }
 
-        /* ── STELLE INTERATTIVE ── */
+        // STELLE INTERATTIVE
         let votoSelezionato = 0;
 
         function initStelle() {
@@ -120,7 +120,7 @@
             });
         }
 
-        /* ── RECENSIONI ── */
+        // RECENSIONI 
         async function caricaRecensioni(idLuogo) {
             try {
                 const r = await fetch(`/api/recensioni/luogo/${idLuogo}`);
@@ -162,14 +162,14 @@
         }
 
         function aggiornaMedia(recensioni) {
-            const elNum   = document.getElementById('mediaVoto');
-            const elStel  = document.getElementById('mediaStelle');
+            const elNum = document.getElementById('mediaVoto');
+            const elStel = document.getElementById('mediaStelle');
             const elCount = document.getElementById('votoCount');
             if (!elNum) return;
 
             if (!recensioni.length) {
-                elNum.textContent  = '—';
-                elStel.innerHTML   = stelleSVG(5, 0);
+                elNum.textContent = '—';
+                elStel.innerHTML = stelleSVG(5, 0);
                 elCount.textContent = '0 recensioni';
                 return;
             }
@@ -214,7 +214,7 @@
             }
         }
 
-        /* ── CARICA TUTTO ── */
+        // CARICA TUTTO
         const params = new URLSearchParams(window.location.search);
         const id = params.get('id');
         if (!id) window.location.href = '/';
@@ -272,8 +272,29 @@
                     </div>`;
 
                 /* BODY */
-                document.getElementById('luogo-body').innerHTML = `
 
+                const socials = [];
+                if (luogo.sito_web) socials.push(`    
+                    <span class="info-pill-value">
+                        ${luogo.sito_web
+                            ? `<a href="${luogo.sito_web}" target="_blank" rel="noopener" class="d-inline-flex align-items-center gap-1">
+                                    <img src="/Foto/web.svg" alt="Sito Web" class="info-icons">
+                                    Visita il sito
+                                </a>` : 'N/A'}
+                    </span>`);
+                    
+                if (luogo.instagram) socials.push(`
+                    <span class="info-pill-value">
+                        ${luogo.instagram
+                            ? `<a href="https://www.instagram.com/${luogo.instagram}/" target="_blank" rel="noopener" class="d-inline-flex align-items-center gap-1">
+                                    <img src="/Foto/instagram-icon.svg" alt="Instagram" class="info-icons">
+                                    Instagram
+                                </a>` : 'N/A'}
+                    </span>`);
+
+                const socialLocation = socials.length ? socials.join('') : `<span class="info-pill-value">N/A</span>`;
+
+                document.getElementById('luogo-body').innerHTML = `
                     <!-- INFO -->
                     <div class="luogo-card">
                         <h2 class="luogo-card-title">📍 Informazioni</h2>
@@ -284,13 +305,18 @@
                                 <span class="info-pill-value">${luogo.indirizzo}</span>
                             </div>
                             <div class="info-pill">
+                                <span class="info-pill-label">Telefono</span>
+                                <span class="info-pill-value">${luogo.telefono || 'N/A'}</span>
+                            </div>
+                            <div class="info-pill">
                                 <span class="info-pill-label">Orari</span>
                                 <span class="info-pill-value">${formattaOrario(luogo.apertura)} – ${formattaOrario(luogo.chiusura)}</span>
                             </div>
                             <div class="info-pill">
-                                <span class="info-pill-label">Telefono</span>
-                                <span class="info-pill-value">${luogo.telefono || 'N/A'}</span>
+                                <span class="info-pill-label">Giorno di chiusura</span>
+                                <span class="info-pill-value">${luogo.giorno_chiusura || 'N/A'}</span>
                             </div>
+                            
                         </div>
                     </div>
 
@@ -298,14 +324,7 @@
                     <div class="luogo-card">
                         <h2 class="luogo-card-title">🔗 Contatti</h2>
                         <div class="info-grid">
-                            <div class="info-pill">
-                                <span class="info-pill-label">Sito web</span>
-                                <span class="info-pill-value">
-                                    ${luogo.sito_web
-                                        ? `<a href="${luogo.sito_web}" target="_blank" rel="noopener">Visita il sito ↗</a>`
-                                        : 'N/A'}
-                                </span>
-                            </div>
+                            ${socialLocation}
                         </div>
                     </div>
 

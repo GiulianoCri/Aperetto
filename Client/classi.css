@@ -518,9 +518,8 @@ body{
     font-size: 0.75rem;
 }
 
-/*Badege tipologia*/
+/*Badge tipologia*/
 .risultato-card .card-badge {
-    position: absolute;
     top: 10px;
     left: 10px;
     background: #FFC107;
@@ -533,6 +532,16 @@ body{
     border-radius: 20px;
     z-index: 2;
     box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+}
+
+.badges-wrap {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  z-index: 2;
 }
 
 /* STEPPER */
@@ -1217,6 +1226,19 @@ body{
     letter-spacing: 0.09em;
     color: #bbb;
 }
+
+.info-icon .text {
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+}
+
+.info-icons {
+  width:16px;
+  height:16px;
+}
+
+
 
 .info-pill-value {
     font-size: 0.94rem;

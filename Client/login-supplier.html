@@ -191,12 +191,6 @@
                                         <input type="text" class="form-control-lg border-0 rounded-3 w-100" id="instagram" placeholder="@nomeutente">
                                     </div>
                                 </div>
-                                <div class="col-12">
-                                    <label for="surname" class="form-label-custom">Facebook</label>
-                                    <div>
-                                        <input type="text" class="form-control-lg border-0 rounded-3 w-100" id="facebook" placeholder="@nomeutente">
-                                    </div>
-                                </div>
                             </div>
                             
                             <div class="d-flex gap-3 align-items-center mb-4 mt-5 mx-3">
@@ -354,7 +348,6 @@
             const immagineFile = document.getElementById('immagineLocale').files[0];
             const sitoWeb = document.getElementById('sitoWeb').value;
             const instagram = document.getElementById('instagram').value;
-            const facebook = document.getElementById('facebook').value;
 
             try {
                 const formData = new FormData();
@@ -374,7 +367,6 @@
                 formData.append('colazione', colazione);
                 formData.append('sitoWeb', sitoWeb);
                 formData.append('instagram', instagram);
-                formData.append('facebook', facebook);
 
                 if (immagineFile) {
                     formData.append('immagineLocale', immagineFile);
