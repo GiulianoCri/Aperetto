@@ -78,29 +78,12 @@
         const aperitivo = luogo.aperitivo;
         const colazione = luogo.colazione;
 
-        if (aperitivo) {
-            return L.icon({
-                iconUrl: '/Foto/aperitivo.png', 
-                iconSize: [36, 36],
-                iconAnchor: [18, 36],
-                popupAnchor: [0, -36]
-            });
-
-        } else if (colazione) {
-            return L.icon({
-                iconUrl: '/Foto/cornetto.png', 
-                iconSize: [36, 36],
-                iconAnchor: [18, 36],
-                popupAnchor: [0, -36]
-            });
-        } else {
-            return L.icon({
-                iconUrl: '/Foto/location.png', // ← fallback generico
-                iconSize: [36, 36],
-                iconAnchor: [18, 36],
-                popupAnchor: [0, -36]
-            });
-        }
+        return L.icon({
+            iconUrl: '/Foto/position-marker.png', 
+            iconSize: [36, 36],
+            iconAnchor: [18, 36],
+            popupAnchor: [0, -36]
+        });
     }
 
     //Script per caricare i luoghi dal server

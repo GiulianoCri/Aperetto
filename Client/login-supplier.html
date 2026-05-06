@@ -13,7 +13,7 @@
     <div class="navbar-custom d-flex fixed-top align-items-center gap-3 px-3 bg-primary">
         <img src="/Foto/APERETTO (1).png" alt="Logo Aperetto" class="logo">
         <div class="col"></div>
-        <a href="profilo-supplier.html" class="nav-login-link">Hai già un account? Accedi</a>
+        <a href="#" class="nav-login-link" id="loginLink">Hai già un account? Accedi</a>
     </div>
 
     <div class="container-fluid px-0">
@@ -132,6 +132,19 @@
                                     <label for="chiusura" class="form-label-custom">Orario di chiusura*</label>
                                     <input type="time" class="form-control-lg border-0 rounded-3 w-100" id="chiusura" required>
                                 </div>
+                                <div class="col-12">
+                                    <label for="giornoChiusura" class="form-label-custom mt-4">Giorno di chiusura</label>
+                                    <select class="form-select-lg border-0 rounded-3 w-100" id="giornoChiusura">
+                                        <option value="" disabled selected></option>
+                                        <option value="lunedì">Lunedì</option>
+                                        <option value="martedì">Martedì</option>
+                                        <option value="mercoledì">Mercoledì</option>
+                                        <option value="giovedì">Giovedì</option>
+                                        <option value="venerdì">Venerdì</option>
+                                        <option value="sabato">Sabato</option>
+                                        <option value="domenica">Domenica</option>
+                                    </select>
+                                </div>
 
                                 <div class="col-12 btn-group"> 
                                     <label for="telefono" class="form-label-custom mt-4">Che servizio offre il tuo locale?</label>
@@ -154,6 +167,18 @@
                         <form class="justify-content-sm-between d-flex flex-column" id="formStep3">
                             <h3 class="mb-3 text-start form-title mx-auto">Social del locale</h3>
                             <div class="row g-2 mb-3 d-flex mx-3">
+                                
+                                <div class="col-12">
+                                    <label for="immagineLocale" class="form-label-custom mt-4">Immagine di sfondo del locale</label>
+                                    <input type="file" class="form-control-lg border-0 rounded-3 w-100"
+                                        id="immagineLocale" accept="image/*">
+                                    <small class="text-muted">Formati accettati: JPG, PNG, WebP. Max 5MB.</small>
+                                    
+                                    <!-- Anteprima opzionale -->
+                                    <img id="anteprima" src="" alt="Anteprima"
+                                        class="mt-2 rounded-3 d-none" style="max-height: 150px; object-fit: cover; width: 100%;">
+                                </div>
+
                                 <div class="col-12">
                                     <label for="name" class="form-label-custom">Avete un sito web?</label>
                                     <div>
@@ -194,6 +219,52 @@
                         </div>
                     </div>
 
+                    <!-- LOGIN -->
+                      <div class="p-5 pb-2 rounded-4 border-0 mx-auto mt-5 w-100 d-none" id="formLogin">
+                        
+                        <!-- FORM DI ACCESSO -->
+                        <form class="justify-content-sm-between d-flex flex-column">
+                            <!-- campi da compilare -->
+                            <div class="d-flex flex-column">
+                                <input type="email" placeholder="E-Mail" id="emailLogin" class="form-control rounded-3">  <br>
+                                <div class="position-relative">
+                                    <input type="password" placeholder="Password" id="pswField" class="form-control rounded-3 pe-5">
+                                    
+                                    <button type="button" id="showPswBtn" class="position-absolute border-0 p-0 psw-btn">
+                                        <img src="/Foto/eye-on.svg" width="18" alt="Mostra password">
+                                    </button>
+                                    <button type="button" id="hidePswBtn" class="position-absolute border-0 p-0 psw-btn d-none">
+                                        <img src="/Foto/eye-off.svg" width="18" alt="Nascondi password">
+                                    </button>
+                                </div>
+                                
+                                <a href="#" id="forgotPsw" class="link-dark"> Password dimenticata? </a> <br>
+                            </div>
+                            <!-- bottoni -->
+                            <button type="submit" class="btn btn-success mt-auto rounded-3 w-100 mb-2"> Accedi </button>
+                        </form>
+                        <!-- Password dimenticata -->
+                        <div id="pswDimenticata" class="text-center d-none m-auto mb-4">
+                            <h1 class="text-black d-inline">Hai dimenticato la password?</h3>
+                            <div class id="recuperoForm">
+                                <p class="text-end"> Nessun problema, basta inserire di seguito il tuo indirizzo e-mail e ti invieremo un link per reimpostarla </p>
+                                <div class="d-flex flex-column mt-4">
+                                    <label class="text-start"> Inserisci la tua e-mail:</label>
+                                    <input type="email" placeholder="E-Mail" id="emailRec" class="form-control rounded-3" required>  <br>
+                                </div>
+                                <button type="submit" id="recuperaPsw" class="text-center btn btn-success mb-3 rounded-3 w-75"> Recupera Password</button>
+                            </div>
+                            <div class="d-none" id="successMsg">
+                                <h3 class="text-success fw-bold mt-3"> Ti abbiamo inviato un'e-mail con il link per reimpostare la password. </h3>
+                                <p class="text-muted small">Controlla anche la cartella spam.</p>
+                                <button class="btn btn-outline-dark mt-2" id="backToLogin">
+                                    <label class="fw-bold"> Torna al login </label>
+                                </button>
+                            </div>
+                        </div>
+
+                    </div>  
+
                 </div>
 
                 <div class="d-flex flex-column w-100 d-none">
@@ -208,6 +279,17 @@
         const svgCheck = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
             stroke-linecap="round" stroke-linejoin="round" width="16" height="16">
             <polyline points="20 6 9 17 4 12"/></svg>`;
+
+        document.getElementById('immagineLocale').addEventListener('change', function () {
+            const file = this.files[0];
+            const anteprima = document.getElementById('anteprima');
+            if (file) {
+                anteprima.src = URL.createObjectURL(file);
+                anteprima.classList.remove('d-none');
+            } else {
+                anteprima.classList.add('d-none');
+            }
+        });
 
         function goTo(n) {
             ['step1','step2','step3','step4'].forEach((id, i) => {
@@ -231,19 +313,19 @@
                 document.getElementById('l' + i).classList.toggle('done', i < n);
         }
 
-        // ── Step 1 → 2: la validazione dei campi required avviene automaticamente
+        // Step 1 -> 2: la validazione dei campi required avviene automaticamente
         document.getElementById('formStep1').addEventListener('submit', e => {
             e.preventDefault();
             goTo(2);
         });
 
-        // ── Step 2 → 3: idem
+        // Step 2 -> 3: idem
         document.getElementById('formStep2').addEventListener('submit', e => {
             e.preventDefault();
             goTo(3);
         });
 
-        // ── Step 3 → invio API
+        // Step 3 -> invio API
         document.getElementById('formStep3').addEventListener('submit', async (e) => {
             e.preventDefault();
 
@@ -264,40 +346,160 @@
             const telefonoFinale = telefonoRaw === '+39' ? '' : telefonoRaw;
             const orarioApertura = document.getElementById('apertura').value;
             const orarioChiusura = document.getElementById('chiusura').value;
+            const giornoChiusura = document.getElementById('giornoChiusura').value;
             const aperitivo = document.getElementById('aperitivo').checked;
             const colazione = document.getElementById('colazione').checked;
             
             // SOCIAL
+            const immagineFile = document.getElementById('immagineLocale').files[0];
             const sitoWeb = document.getElementById('sitoWeb').value;
             const instagram = document.getElementById('instagram').value;
             const facebook = document.getElementById('facebook').value;
 
             try {
-                const response = await fetch('/api/register-supplier', {  // ← corretto
+                const formData = new FormData();
+                
+                // Campi testo
+                formData.append('name', name);
+                formData.append('surname', surname);
+                formData.append('email', email);
+                formData.append('ruolo', ruolo);
+                formData.append('nomeLocale', nomeLocale);
+                formData.append('indirizzoLocale', indirizzoLocale);
+                formData.append('telefonoFinale', telefonoFinale);
+                formData.append('orarioApertura', orarioApertura);
+                formData.append('orarioChiusura', orarioChiusura);
+                formData.append('giornoChiusura', giornoChiusura);
+                formData.append('aperitivo', aperitivo);
+                formData.append('colazione', colazione);
+                formData.append('sitoWeb', sitoWeb);
+                formData.append('instagram', instagram);
+                formData.append('facebook', facebook);
+
+                if (immagineFile) {
+                    formData.append('immagineLocale', immagineFile);
+                }
+                
+                const response = await fetch('/api/register-supplier', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const data = await response.json();
+                if (response.ok) { goTo(4); } else { alert(data.error); }
+            } catch (err) {
+                console.error("Errore di rete:", err);
+                alert("Errore di connessione al server");
+            }
+        });
+
+        // LOGIN FORM
+        const loginLink = document.getElementById('loginLink');
+        loginLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            loginLink.classList.add('d-none');
+            stepper.classList.add('d-none');
+            if (!step1.classList.contains('d-none')) step1.classList.add('d-none');
+            if (!step2.classList.contains('d-none')) step2.classList.add('d-none');
+            if (!step3.classList.contains('d-none')) step3.classList.add('d-none');
+            if (!step4.classList.contains('d-none')) step4.classList.add('d-none');
+
+            const loginForm = document.getElementById('formLogin');
+            loginForm.classList.remove('d-none');
+        });
+
+        // MOSTRA / NASCONDI PASSWORD
+        const showPswBtn = document.getElementById('showPswBtn');
+        const hidePswBtn = document.getElementById('hidePswBtn');
+        const pswField   = document.getElementById('pswField');
+
+        showPswBtn.addEventListener('click', () => {
+            pswField.type = 'text';
+            showPswBtn.classList.add('d-none');
+            hidePswBtn.classList.remove('d-none');
+            hidePswBtn.classList.add('d-block');
+        });
+
+        hidePswBtn.addEventListener('click', () => {
+            pswField.type = 'password';
+            hidePswBtn.classList.add('d-none');
+            showPswBtn.classList.remove('d-none');
+            showPswBtn.classList.add('d-block');
+        });
+
+        // LOGIN
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault(); 
+
+            const email = document.getElementById('emailLogin').value.toLowerCase().trim();
+            const password = document.getElementById('pswField').value;
+
+            console.log("sto per fare una richiesta per: " + email +", " + password)
+
+            try {
+                
+                const response = await fetch('/api/login', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        name, surname, email, ruolo,
-                        nomeLocale, indirizzoLocale, telefonoFinale, orarioApertura, orarioChiusura, aperitivo, colazione,
-                        sitoWeb, instagram, facebook
-                    })
-                });
+                    body: JSON.stringify({ email, password })
+                }); //anche qua per il login uso una richiesta POST
 
                 const data = await response.json();
 
                 if (response.ok) {
-                    goTo(4);
+                    window.location.href = '/index.html'
                 } else {
-                    alert(data.error);
+                alert(data.error)
                 }
             } catch (err) {
                 console.error("Errore di rete:", err);
-                alert("Errore di connessione al server");
-            } finally {
-                btn.disabled = false;
-                btn.textContent = 'Avanti';
+                alert("Errore di connessione al server")
             }
         });
+
+        const forgotPsw = document.getElementById('forgotPsw');
+        const pswDimenticata = document.getElementById('pswDimenticata');
+
+        forgotPsw.addEventListener('click', (e) => {
+            e.preventDefault();
+            loginForm.classList.add('d-none');
+            pswDimenticata.classList.remove('d-none');
+        });
+
+        // PASSWORD DIMENTICATA
+        const recuperaPsw = document.getElementById('recuperaPsw');
+        recuperaPsw.addEventListener('click', async () => {
+            const emailRec = document.getElementById('emailRec').value.trim();
+
+            try {
+                // chiamata del server con mail inserita per il recupero
+                const response = await fetch('/api/recover-password', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email: emailRec })
+                });
+                
+                console.log("richiesta recupero password per: " + emailRec);
+                const data = await response.json();
+
+                if (response.ok) {
+                    // Sostituisci il contenuto con un messaggio di successo
+                    document.getElementById('recuperoForm').classList.add('d-none');
+                    document.getElementById('successMsg').classList.remove('d-none');
+
+                    document.getElementById('backToLogin').addEventListener('click', () => {
+                        pswDimenticata.classList.add('d-none');
+                        formLogin.classList.remove('d-none');
+                    });
+                } else {
+                    alert(data.error || "Errore durante il recupero della password");
+                }
+
+            } catch (err) {
+                console.error("Errore di rete:", err);
+                alert("Errore di connessione al server");
+            }
+        })
     </script>
 
 </body>

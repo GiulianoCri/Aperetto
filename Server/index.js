@@ -2,6 +2,8 @@
 //Inizailizzazione del server
 const express=require('express');
 const path = require("path");
+const multer = require('multer');
+const upload = multer({ storage: multer.memoryStorage() });
 const app=express();
 
 //Impostiamo la porta
@@ -492,10 +494,10 @@ app.get('/client/reset-password.html', (req, res) => {
 });
 
 // ── REGISTRAZIONE SUPPLIER ──
-app.post('/api/register-supplier', async (req, res) => {
+app.post('/api/register-supplier', upload.single('immagineLocale'), async (req, res) => {
     const {
         name, surname, email, ruolo,
-        nomeLocale, indirizzoLocale, telefonoFinale, orarioApertura, orarioChiusura, aperitivo, colazione,
+        nomeLocale, indirizzoLocale, telefonoFinale, orarioApertura, orarioChiusura, aperitivo, colazione, giornoChiusura,
         sitoWeb, instagram, facebook
     } = req.body;
 
@@ -504,6 +506,15 @@ app.post('/api/register-supplier', async (req, res) => {
     }
 
     try {
+        let nomeFile = null;
+        if (req.file) {
+            nomeFile = `locali/${Date.now()}_${req.file.originalname}`;
+            const { error: uploadError } = await supabase.storage
+                .from('foto')
+                .upload(nomeFile, req.file.buffer, { contentType: req.file.mimetype });
+
+            if (uploadError) throw uploadError;
+        }
 
         const { lat, lng } = await geocodifica(indirizzoLocale);
 
@@ -513,25 +524,25 @@ app.post('/api/register-supplier', async (req, res) => {
                 email: email.toLowerCase().trim(),
                 nome: name,
                 cognome: surname,
-                ruolo: ruolo,
+                ruolo,
                 nome_locale: nomeLocale,
                 indirizzo: indirizzoLocale,
                 telefono: telefonoFinale || null,
                 apertura: orarioApertura,
                 chiusura: orarioChiusura,
-                aperitivo: aperitivo || false,
-                colazione: colazione || false,
+                giorno_chiusura: giornoChiusura || null,
+                aperitivo: aperitivo === 'true' || aperitivo === true,
+                colazione: colazione === 'true' || colazione === true,
                 sito_web: sitoWeb || null,
                 instagram: instagram || null,
                 facebook: facebook || null,
-                lat: lat,  
-                lng: lng,
+                lat,
+                lng,
+                immagine: nomeFile  // ← salviamo il path nel DB
             }]);
 
         if (error) {
-            if (error.code === '23505') {
-                return res.status(400).json({ error: "Questa email è già registrata" });
-            }
+            if (error.code === '23505') return res.status(400).json({ error: "Questa email è già registrata" });
             throw error;
         }
 

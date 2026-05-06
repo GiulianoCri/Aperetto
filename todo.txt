@@ -1,9 +1,10 @@
 COSE FATTE:
-    collegamento form registrazione supplier con db e relative modifiche
-    aggiunti pin mappa
+    implementazione modifiche form registrazione locali e immagini per locali
+
 TODO:
-    - profilo supplier
-    - login supplier
-    - grafico fornitura
-    - cambiare recensioni (aggiungere livello fornitura - 1 to 5)
-    - modificare interno pagina luoghi
+    - profilo supplier + sessioni
+    - login supplier - DA TERMINARE (fixare psw dim e login con db)
+    - grafico fornitura x locali
+    - cambiare recensioni (possibilità di aggiungere immagini + aggiungere livello fornitura - 1 to 5)
+    - gallery immagini da recensioni
+    - modificare interno pagina luoghi (informazioni)
