@@ -24,7 +24,7 @@ app.get('/login',(req,res)=>{
     res.sendFile(path.join(ROOT,'login.html'));
 });
 
-//pagina Luoghi
+//pagina location
 app.get('/luogo',(req,res)=>{
     res.sendFile(path.join(ROOT,'luogo.html'));
 });
@@ -39,6 +39,7 @@ const supabase = createClient(supabaseApi, supabaseApiKey);
 
 //Funzione per aggiungere l'url dell'immagine a un luogo
 const aggiungiUrl = (luogo) => {
+    if (!luogo.immagine) return luogo; // se non c'è immagine, restituisce il luogo com'è
     const { data: urlData } = supabase.storage
         .from('foto')
         .getPublicUrl(luogo.immagine);
@@ -51,11 +52,10 @@ const aggiungiUrl = (luogo) => {
 
 //API
 
-
 //Ottengo tutti i luoghi dal database
-app.get('/api/luoghi', async (req, res) => {
+app.get('/api/location', async (req, res) => {
     const { data, error } = await supabase
-        .from('Luoghi')
+        .from('location')
         .select('*');
     if (error) {
         return res.status(500).json({ error: error.message });
@@ -68,10 +68,10 @@ app.get('/api/luoghi', async (req, res) => {
     res.json(data.map(aggiungiUrl));
 });
 //Ottengo un luogo specifico dal database
-app.get('/api/luoghi/:id', async (req, res) => {
+app.get('/api/location/:id', async (req, res) => {
     const id = req.params.id;
     const { data, error } = await supabase
-        .from('Luoghi')
+        .from('location')
         .select('*')
         .eq('id', id)
         .maybeSingle(); // restituisce oggetto singolo, non array     
@@ -86,7 +86,7 @@ app.get('/api/luoghi/:id', async (req, res) => {
 app.get("/api/luoghi/vicini", (req, res) => {
     const { lat, lng } = req.query;
 
-    const risultati = luoghi.map(l => {
+    const risultati = location.map(l => {
         const dist = Math.sqrt(
             Math.pow(l.lat - lat, 2) +
             Math.pow(l.lng - lng, 2)
@@ -257,7 +257,7 @@ app.get('/api/recensioni', async (req, res) => {
     const { userId } = req.query;
     const { data, error } = await supabase
         .from('recensioni')
-        .select('*, Luoghi(nome, tipologia)')
+        .select('*, location(nome, tipologia)')
         .eq('user_id', userId);
     if (error) return res.status(500).json({ error: error.message });
     res.json(data);
@@ -455,7 +455,7 @@ app.get('/api/recensioni/mie', async (req, res) => {
             voto,
             testo,
             created_at,
-            Luoghi:luogo_id ( nome, tipologia )
+            location:luogo_id ( nome, tipologia )
         `)
         .eq('user_id', user_id)
         .order('created_at', { ascending: false });
@@ -467,6 +467,53 @@ app.get('/api/recensioni/mie', async (req, res) => {
 // Serve la pagina di reset
 app.get('/client/reset-password.html', (req, res) => {
     res.sendFile(path.join(ROOT, 'reset-password.html'));
+});
+
+// ── REGISTRAZIONE SUPPLIER ──
+app.post('/api/register-supplier', async (req, res) => {
+    const {
+        name, surname, email, ruolo,
+        nomeLocale, indirizzoLocale, telefonoFinale, orarioApertura, orarioChiusura, aperitivo, colazione,
+        sitoWeb, instagram, facebook
+    } = req.body;
+
+    if (!name || !surname || !email || !ruolo || !nomeLocale || !indirizzoLocale || !orarioApertura || !orarioChiusura) {
+        return res.status(400).json({ error: "Tutti i campi obbligatori devono essere compilati" });
+    }
+
+    try {
+        const { error } = await supabase
+            .from('location')
+            .insert([{
+                email: email.toLowerCase().trim(),
+                nome: name,
+                cognome: surname,
+                ruolo: ruolo,
+                nome_locale: nomeLocale,
+                indirizzo: indirizzoLocale,
+                telefono: telefonoFinale || null,
+                apertura: orarioApertura,
+                chiusura: orarioChiusura,
+                aperitivo: aperitivo || false,
+                colazione: colazione || false,
+                sito_web: sitoWeb || null,
+                instagram: instagram || null,
+                facebook: facebook || null,
+            }]);
+
+        if (error) {
+            if (error.code === '23505') {
+                return res.status(400).json({ error: "Questa email è già registrata" });
+            }
+            throw error;
+        }
+
+        res.status(201).json({ message: "Registrazione completata con successo!" });
+
+    } catch (err) {
+        console.error("Errore registrazione supplier:", err.message, err.stack);
+        res.status(500).json({ error: "Errore interno del server" });
+    }
 });
 
 //AVVIO SERVER

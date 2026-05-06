@@ -59,21 +59,18 @@
                     </div>
                     
                     <!-- STEP 1: DETTAGLI DI CONTATTO -->
-                    <div class="form-title d-flex flex-column gap-2 mb-3 mx-auto w-100" id="step1">
+                    <div class="form-title d-flex flex-column gap-2 mx-auto w-100" id="step1">
+                        
                         <form class="justify-content-sm-between d-flex flex-column" id="formStep1">
                             <h3 class="mb-3 text-start form-title mx-auto">Dettagli di contatto</h3>
                             <div class="row g-2 mb-3 d-flex mx-3">
                                 <div class="col-6">
                                     <label for="name" class="form-label-custom">Nome*</label>
-                                    <div>
-                                        <input type="text" class="form-control-lg border-0 rounded-3 w-100" id="name" placeholder="Nome" required>
-                                    </div>
+                                    <input type="text" class="form-control-lg border-0 rounded-3 w-100" id="name" placeholder="Nome" required>
                                 </div>
                                 <div class="col-6">
                                     <label for="surname" class="form-label-custom">Cognome*</label>
-                                    <div>
-                                        <input type="text" class="form-control-lg border-0 rounded-3 w-100" id="surname" placeholder="Cognome" required>
-                                    </div>
+                                    <input type="text" class="form-control-lg border-0 rounded-3 w-100" id="surname" placeholder="Cognome" required>
                                 </div>
                                 
                                 <div class="col-12">
@@ -82,8 +79,13 @@
                                 </div>
 
                                 <div class="col-12">
-                                    <label for="telefono" class="form-label-custom mt-4">Numero di telefono*</label>
-                                    <input type="tel" class="form-control-lg border-0 rounded-3 w-100" id="telefono" value="+39" required>
+                                    <label for="ruolo" class="form-label-custom mt-4">Ruolo*</label>
+                                    <select class="form-select-lg border-0 rounded-3 w-100" id="ruolo" required>
+                                        <option value="" disabled selected></option>
+                                        <option value="proprietario">Proprietario</option>
+                                        <option value="gestore">Gestore</option>
+                                        <option value="altro">Altro</option>
+                                    </select>
                                 </div>
                             </div>
 
@@ -99,7 +101,8 @@
                     </div>
 
                     <!-- STEP 2: IL LOCALE-->
-                    <div class="form-title d-flex flex-column gap-2 mb-3 mx-auto w-100 mt-5 d-none" id="step2">                   
+                    <div class="form-title d-flex flex-column gap-2 mb-3 mx-auto w-100 d-none" id="step2">                   
+                        
                         <form class="justify-content-sm-between d-flex flex-column" id="formStep2">
                             <h3 class="mb-3 text-start form-title mx-auto">Dettagli del locale</h3>
                             <div class="row g-2 mb-3 d-flex mx-3">
@@ -121,6 +124,15 @@
                                     <input type="tel" class="form-control-lg border-0 rounded-3 w-100" id="telefonoLocale" value="+39">
                                 </div>
 
+                                <div class="col-6">
+                                    <label for="apertura" class="form-label-custom">Orario di apertura*</label>
+                                    <input type="time" class="form-control-lg border-0 rounded-3 w-100" id="apertura" required>
+                                </div>
+                                <div class="col-6">
+                                    <label for="chiusura" class="form-label-custom">Orario di chiusura*</label>
+                                    <input type="time" class="form-control-lg border-0 rounded-3 w-100" id="chiusura" required>
+                                </div>
+
                                 <div class="col-12 btn-group"> 
                                     <label for="telefono" class="form-label-custom mt-4">Che servizio offre il tuo locale?</label>
                                     <input type="checkbox" id="aperitivo">
@@ -137,7 +149,8 @@
                     </div>
 
                     <!-- STEP 3: SOCIAL -->
-                    <div class="form-title d-flex flex-column gap-2 mb-3 mx-auto w-100 mt-5 d-none" id="step3">
+                    <div class="form-title d-flex flex-column gap-2 mb-3 mx-auto w-100 d-none" id="step3">
+                        
                         <form class="justify-content-sm-between d-flex flex-column" id="formStep3">
                             <h3 class="mb-3 text-start form-title mx-auto">Social del locale</h3>
                             <div class="row g-2 mb-3 d-flex mx-3">
@@ -191,18 +204,15 @@
         </div>
     </div>
 
-    <script> 
+    <script>
         const svgCheck = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
             stroke-linecap="round" stroke-linejoin="round" width="16" height="16">
             <polyline points="20 6 9 17 4 12"/></svg>`;
 
         function goTo(n) {
-            // mostra/nasconde gli step
             ['step1','step2','step3','step4'].forEach((id, i) => {
                 document.getElementById(id).classList.toggle('d-none', i + 1 !== n);
             });
-
-            // aggiorna cerchi
             for (let i = 1; i <= 4; i++) {
                 const s    = document.getElementById('s' + i);
                 const circ = s.querySelector('.step-circle');
@@ -217,16 +227,77 @@
                     if (i < 4) circ.textContent = i;
                 }
             }
-
-            // aggiorna linee
             for (let i = 1; i <= 3; i++)
                 document.getElementById('l' + i).classList.toggle('done', i < n);
         }
 
-        document.getElementById('okContatto').addEventListener('click', e => { e.preventDefault(); goTo(2); });
-        document.getElementById('okLocale')  .addEventListener('click', e => { e.preventDefault(); goTo(3); });
-        document.getElementById('okSocial')  .addEventListener('click', e => { e.preventDefault(); goTo(4); });
+        // ── Step 1 → 2: la validazione dei campi required avviene automaticamente
+        document.getElementById('formStep1').addEventListener('submit', e => {
+            e.preventDefault();
+            goTo(2);
+        });
 
+        // ── Step 2 → 3: idem
+        document.getElementById('formStep2').addEventListener('submit', e => {
+            e.preventDefault();
+            goTo(3);
+        });
+
+        // ── Step 3 → invio API
+        document.getElementById('formStep3').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const btn = document.getElementById('okSocial');
+            btn.disabled = true;
+            btn.textContent = 'Invio in corso...';
+
+            // CONTATTO
+            const name  = document.getElementById('name').value;
+            const surname  = document.getElementById('surname').value;
+            const email = document.getElementById('email').value.toLowerCase().trim();
+            const ruolo = document.getElementById('ruolo').value;
+
+            // LOCALE
+            const nomeLocale = document.getElementById('nomeLocale').value;
+            const indirizzoLocale = document.getElementById('indirizzoLocale').value;
+            const telefonoRaw = document.getElementById('telefonoLocale').value.trim();
+            const telefonoFinale = telefonoRaw === '+39' ? '' : telefonoRaw;
+            const orarioApertura = document.getElementById('apertura').value;
+            const orarioChiusura = document.getElementById('chiusura').value;
+            const aperitivo = document.getElementById('aperitivo').checked;
+            const colazione = document.getElementById('colazione').checked;
+            
+            // SOCIAL
+            const sitoWeb = document.getElementById('sitoWeb').value;
+            const instagram = document.getElementById('instagram').value;
+            const facebook = document.getElementById('facebook').value;
+
+            try {
+                const response = await fetch('/api/register-supplier', {  // ← corretto
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        name, surname, email, ruolo,
+                        nomeLocale, indirizzoLocale, telefonoFinale, orarioApertura, orarioChiusura, aperitivo, colazione,
+                        sitoWeb, instagram, facebook
+                    })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    goTo(4);
+                } else {
+                    alert(data.error);
+                }
+            } catch (err) {
+                console.error("Errore di rete:", err);
+                alert("Errore di connessione al server");
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Avanti';
+            }
+        });
     </script>
 
 </body>

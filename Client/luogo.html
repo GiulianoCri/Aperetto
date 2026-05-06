@@ -224,13 +224,13 @@
 
             try {
                 const [resLuogo, recensioni] = await Promise.all([
-                    fetch(`/api/luoghi/${id}`),
+                    fetch(`/api/location/${id}`),
                     caricaRecensioni(id)
                 ]);
 
                 if (!resLuogo.ok) throw new Error();
                 const luogo = await resLuogo.json();
-                document.title = `${luogo.nome} — Aperetto`;
+                document.title = `${luogo.nome_locale} - Aperetto`;
 
                 /* banner */
                 const mediaVal = recensioni.length
@@ -239,10 +239,13 @@
 
                 document.getElementById('banner').innerHTML = `
                     <button class="btn-back-banner" onclick="history.back()">← Torna alla lista</button>
-                    <img src="${luogo.immagine}" alt="${luogo.nome}" loading="lazy">
+                    <img src="${luogo.immagine}" alt="${luogo.nome_locale}" loading="lazy">
                     <div class="banner-overlay">
-                        <div class="banner-badge">${luogo.tipologia || 'Locale'}</div>
-                        <h1 class="banner-nome">${luogo.nome}</h1>
+                        <div class="banner-badge-wrap">
+                            ${luogo.aperitivo ? `<div class="banner-badge">Aperitivo</div>` : ''}
+                            ${luogo.colazione ? `<div class="banner-badge">Colazione</div>` : ''}
+                        </div>
+                        <h1 class="banner-nome">${luogo.nome_locale}</h1>
                     </div>`;
 
                 /* SEZIONE FORM O PROMPT LOGIN */
@@ -285,10 +288,6 @@
                                 <span class="info-pill-value">${formattaOrario(luogo.apertura)} – ${formattaOrario(luogo.chiusura)}</span>
                             </div>
                             <div class="info-pill">
-                                <span class="info-pill-label">Tipologia</span>
-                                <span class="info-pill-value">${luogo.tipologia}</span>
-                            </div>
-                            <div class="info-pill">
                                 <span class="info-pill-label">Telefono</span>
                                 <span class="info-pill-value">${luogo.telefono || 'N/A'}</span>
                             </div>
@@ -302,14 +301,10 @@
                             <div class="info-pill">
                                 <span class="info-pill-label">Sito web</span>
                                 <span class="info-pill-value">
-                                    ${luogo.sito
-                                        ? `<a href="${luogo.sito}" target="_blank" rel="noopener">Visita il sito ↗</a>`
+                                    ${luogo.sito_web
+                                        ? `<a href="${luogo.sito_web}" target="_blank" rel="noopener">Visita il sito ↗</a>`
                                         : 'N/A'}
                                 </span>
-                            </div>
-                            <div class="info-pill">
-                                <span class="info-pill-label">Telefono</span>
-                                <span class="info-pill-value">${luogo.telefono || 'N/A'}</span>
                             </div>
                         </div>
                     </div>

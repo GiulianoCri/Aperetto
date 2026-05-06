@@ -73,39 +73,42 @@
         }
     });
     //Funzione per ottenere l'icona corretta in base alla tipologia del locale
-    function getIconaPerTipologia(tipologia) {
-    const tipo = (tipologia || '').toLowerCase();
-    
-    if (tipo === 'bakery') {
-        return L.icon({
-            iconUrl: '/Foto/cornetto.png', 
-            iconSize: [36, 36],
-            iconAnchor: [18, 36],
-            popupAnchor: [0, -36]
-        });
-    } else if (tipo === 'aperitivo') {
-        return L.icon({
-            iconUrl: '/Foto/aperitivo.png', 
-            iconSize: [36, 36],
-            iconAnchor: [18, 36],
-            popupAnchor: [0, -36]
-        });
-    } else {
-        return L.icon({
-            iconUrl: '/Foto/location.png', // ← fallback generico
-            iconSize: [36, 36],
-            iconAnchor: [18, 36],
-            popupAnchor: [0, -36]
-        });
+    function getIconaPerTipologia(luogo) {
+
+        const aperitivo = luogo.aperitivo;
+        const colazione = luogo.colazione;
+
+        if (aperitivo) {
+            return L.icon({
+                iconUrl: '/Foto/aperitivo.png', 
+                iconSize: [36, 36],
+                iconAnchor: [18, 36],
+                popupAnchor: [0, -36]
+            });
+
+        } else if (colazione) {
+            return L.icon({
+                iconUrl: '/Foto/cornetto.png', 
+                iconSize: [36, 36],
+                iconAnchor: [18, 36],
+                popupAnchor: [0, -36]
+            });
+        } else {
+            return L.icon({
+                iconUrl: '/Foto/location.png', // ← fallback generico
+                iconSize: [36, 36],
+                iconAnchor: [18, 36],
+                popupAnchor: [0, -36]
+            });
+        }
     }
-}
 
     //Script per caricare i luoghi dal server
     let tuttiILuoghi = [];
     let markers = {};
     const caricaLuoghi = async () => {
     try {
-        const response = await fetch('/api/luoghi');
+        const response = await fetch('/api/location');
         if (!response.ok) {
             throw new Error('Errore nella risposta del server');
         }
@@ -116,33 +119,35 @@
         tuttiILuoghi = luoghi; // SALVO I LUOGHI IN UNA VARIABILE GLOBALE PER FUTURI FILTRI
         window.tuttiILuoghi = luoghi; // aggiungi questa riga per rendere tuttiILuoghi accessibile globalmente
         tuttiILuoghi = luoghi;
-        console.log("Luoghi caricati:", tuttiILuoghi.length, tuttiILuoghi[0]); // aggiungi
+        console.log("Luoghi caricati:", tuttiILuoghi.length, tuttiILuoghi[0]);
         inserisciLuoghi(luoghi);
         // pulisci marker vecchi dalla mappa
         Object.values(markers).forEach(m => map.removeLayer(m));
         markers = {};
 
         // aggiungi marker
-        luoghi.forEach(luogo => {
-        const marker = L.marker([luogo.lat, luogo.lng], { icon: getIconaPerTipologia(luogo.tipologia) }).addTo(map);
-        marker.bindTooltip(`
-            <b>${luogo.nome}</b><br>
-            ${luogo.indirizzo}
-            `, {
-            direction: "top",
-            offset: [0, -10]
-        });
+        /*luoghi.forEach(luogo => {
+            if (!luogo.lat || !luogo.lng) return;
+            const marker = L.marker([luogo.lat, luogo.lng], { icon: getIconaPerTipologia(luogo) }).addTo(map);
 
-        marker.bindPopup(`
-            <b>${luogo.nome}</b><br>${luogo.indirizzo}
-        `);
+            marker.bindTooltip(`
+                <b>${luogo.nome_locale}</b><br>
+                ${luogo.indirizzo}
+                `, {
+                direction: "top",
+                offset: [0, -10]
+            });
 
-        marker.on("click", () => {
-            window.location.href = `/luogo.html?id=${luogo.id}`;
-        });
+            marker.bindPopup(`
+                <b>${luogo.nome_locale}</b><br>${luogo.indirizzo}
+            `);
 
-        markers[luogo.id] = marker;
-    });
+            marker.on("click", () => {
+                window.location.href = `/luogo.html?id=${luogo.id}`;
+            });
+
+            markers[luogo.id] = marker;
+    });*/
     } catch (error) {
         console.error('Errore nel caricamento dei luoghi:', error);
     }
@@ -154,7 +159,7 @@
     const testo = input.value.toLowerCase().trim();
 
     const filtrati = tuttiILuoghi.filter(l =>
-        l.nome.toLowerCase().includes(testo)
+        l.nome_locale.toLowerCase().includes(testo)
     );
 
     aggiornaVista(filtrati);
@@ -178,41 +183,62 @@
         Object.values(markers).forEach(m => map.removeLayer(m));
         markers = {};
 
-        luoghi.forEach(luogo => {
+        /*luoghi.forEach(luogo => {
 
             // controllo sicurezza (IMPORTANTISSIMO)
             if (!luogo.lat || !luogo.lng) return;
 
-            const marker = L.marker([luogo.lat, luogo.lng], { icon: getIconaPerTipologia(luogo.tipologia) }).addTo(map);
+            const marker = L.marker([luogo.lat, luogo.lng], { icon: getIconaPerTipologia(luogo) }).addTo(map);
 
-            marker.bindTooltip(luogo.nome);
+            marker.bindTooltip(luogo.nome_locale);
 
             marker.on("click", () => {
                 window.location.href = `/luogo.html?id=${luogo.id}`;
             });
 
             markers[luogo.id] = marker;
-        });
+        });*/
     }
-    const inserisciLuoghi=(luoghi) => {
+
+    function isAperto(apertura, chiusura) {
+        if (!apertura || !chiusura) return null;
+        const ora = new Date();
+        const [hA, mA] = apertura.split(':').map(Number);
+        const [hC, mC] = chiusura.split(':').map(Number);
+        const now   = ora.getHours() * 60 + ora.getMinutes();
+        const open  = hA * 60 + mA;
+        const close = hC * 60 + mC;
+        if (close < open) return now >= open || now < close;
+        return now >= open && now < close;
+    }
+
+    const inserisciLuoghi = (luoghi) => {
         const container = document.getElementById('risultati');
         container.classList.add("spazio");
-        container.innerHTML = ''; // Pulisce il container prima di inserire i nuovi luoghi
+        container.innerHTML = '';
         luoghi.forEach(luogo => {
             const div = document.createElement('div');
-            div.className="risultato-card";
+            div.className = "risultato-card";
+
+            const aperto = isAperto(luogo.apertura, luogo.chiusura);
+            const badgeAperto = aperto === null
+                ? ''
+                : aperto
+                    ? `<span class="badge-aperto text-center col-2">Aperto ora</span>`
+                    : `<span class="badge-chiuso text-center col-2">Chiuso</span>`;
+
             div.innerHTML = `
                 <div class="card-img-wrap">
-                <img src="${luogo.immagine}" alt="${luogo.nome}">
-                <span class="card-badge">${luogo.tipologia || 'Locale'}</span>
-            </div>
-            <div class="card-info">
-                <h2>${luogo.nome}</h2>
-                <p class="card-desc">${luogo.descrizione}</p>
-                <p class="card-address">${luogo.indirizzo}</p>
-            </div>
+                    <img src="${luogo.immagine}" alt="${luogo.nome_locale}">
+                    <span class="card-badge">${luogo.aperitivo ? 'Aperitivo' : luogo.colazione ? 'Colazione' : 'Locale'}</span>
+                </div>
+                <div class="card-info">
+                    <h2>${luogo.nome_locale}</h2>
+                    ${badgeAperto}
+                    <p class="card-address">${luogo.indirizzo}</p>
+                </div>
             `;
-            //redireziona alla pagina del luogo al click
+
             div.addEventListener('click', () => {
                 window.location.href = `/luogo.html?id=${luogo.id}`;
             });
@@ -227,9 +253,11 @@
 
         // filtro tipo
         if (tipo) {
-            filtrati = filtrati.filter(l => 
-        l.tipologia.toLowerCase() === tipo.toLowerCase()
-        );
+            filtrati = filtrati.filter(l => {
+                if (tipo === 'Aperitivo') return l.aperitivo === true;
+                if (tipo === 'Bakery')    return l.colazione === true;
+                return true;
+            });
         }
 
         // filtro distanza (serve posizione utente)

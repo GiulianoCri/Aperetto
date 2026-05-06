@@ -1,6 +1,9 @@
 COSE FATTE:
-    implementazione recupero password
-    implementata pagina per il recupero password
-    Implementate recensioni
+    collegamento form registrazione supplier con db e relative modifiche
 TODO:
-    implementare miglioramenti grafici per login registrazione e cambio password 
+    - profilo supplier
+    - login supplier
+    - grafico fornitura
+    - cambiare recensioni (aggiungere livello fornitura - 1 to 5)
+    - modificare interno pagina luoghi
+    - aggiungere pin alla mappa (tramite lat e lng)
