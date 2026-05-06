@@ -126,7 +126,7 @@
         markers = {};
 
         // aggiungi marker
-        /*luoghi.forEach(luogo => {
+        luoghi.forEach(luogo => {
             if (!luogo.lat || !luogo.lng) return;
             const marker = L.marker([luogo.lat, luogo.lng], { icon: getIconaPerTipologia(luogo) }).addTo(map);
 
@@ -147,7 +147,7 @@
             });
 
             markers[luogo.id] = marker;
-    });*/
+    });
     } catch (error) {
         console.error('Errore nel caricamento dei luoghi:', error);
     }
@@ -183,7 +183,7 @@
         Object.values(markers).forEach(m => map.removeLayer(m));
         markers = {};
 
-        /*luoghi.forEach(luogo => {
+        luoghi.forEach(luogo => {
 
             // controllo sicurezza (IMPORTANTISSIMO)
             if (!luogo.lat || !luogo.lng) return;
@@ -197,7 +197,7 @@
             });
 
             markers[luogo.id] = marker;
-        });*/
+        });
     }
 
     function isAperto(apertura, chiusura) {

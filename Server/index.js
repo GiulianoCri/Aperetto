@@ -50,6 +50,28 @@ const aggiungiUrl = (luogo) => {
 };
 
 
+//Funzione per geocodificare un indirizzo (usata in fase di inserimento nuovo luogo da parte del supplier)
+async function geocodifica(indirizzo) {
+    const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(indirizzo)}&limit=1`;
+    
+    console.log("URL geocodifica:", url);
+    
+    const res = await fetch(url, {
+        headers: { 'User-Agent': 'Aperetto/1.0 (noreply.aperetto@gmail.com)' }
+    });
+    
+    const risultato = await res.json(); // ← rinominato da "data" a "risultato"
+    console.log("Risposta Nominatim:", JSON.stringify(risultato));
+    
+    if (!risultato || risultato.length === 0) return { lat: null, lng: null };
+    
+    return {
+        lat: parseFloat(risultato[0].lat),
+        lng: parseFloat(risultato[0].lon)
+    };
+}
+
+
 //API
 
 //Ottengo tutti i luoghi dal database
@@ -482,6 +504,9 @@ app.post('/api/register-supplier', async (req, res) => {
     }
 
     try {
+
+        const { lat, lng } = await geocodifica(indirizzoLocale);
+
         const { error } = await supabase
             .from('location')
             .insert([{
@@ -499,6 +524,8 @@ app.post('/api/register-supplier', async (req, res) => {
                 sito_web: sitoWeb || null,
                 instagram: instagram || null,
                 facebook: facebook || null,
+                lat: lat,  
+                lng: lng,
             }]);
 
         if (error) {
