@@ -217,6 +217,7 @@
         // CARICA TUTTO
         const params = new URLSearchParams(window.location.search);
         const id = params.get('id');
+        const from = params.get('from');
         if (!id) window.location.href = '/';
 
         async function caricaDettaglio() {
@@ -238,7 +239,7 @@
                     : null;
 
                 document.getElementById('banner').innerHTML = `
-                    <button class="btn-back-banner" onclick="history.back()">← Torna alla lista</button>
+                    ${from === 'index' ? `<button class="btn-back-banner" onclick="history.back()">← Torna alla lista</button>` : ''}
                     <img src="${luogo.immagine}" alt="${luogo.nome_locale}" loading="lazy">
                     <div class="banner-overlay">
                         <div class="banner-badge-wrap">

@@ -126,7 +126,7 @@
             `);
 
             marker.on("click", () => {
-                window.location.href = `/luogo.html?id=${luogo.id}`;
+                window.location.href = `/luogo.html?id=${luogo.id}&from=index`;
             });
 
             markers[luogo.id] = marker;
@@ -176,7 +176,7 @@
             marker.bindTooltip(luogo.nome_locale);
 
             marker.on("click", () => {
-                window.location.href = `/luogo.html?id=${luogo.id}`;
+                window.location.href = `/luogo.html?id=${luogo.id}&from=index`;
             });
 
             markers[luogo.id] = marker;
@@ -212,8 +212,8 @@
             const badgeAperto = aperto === null
                 ? ''
                 : aperto
-                    ? `<span class="badge-aperto text-center col-2">Aperto ora</span>`
-                    : `<span class="badge-chiuso text-center col-2">Chiuso</span>`;
+                    ? `<span class="badge-aperto text-center">Aperto</span>`
+                    : `<span class="badge-chiuso text-center">Chiuso</span>`;
 
             const badges = [];
             if (luogo.aperitivo) badges.push(`<span class="card-badge">Aperitivo</span>`);
@@ -228,14 +228,14 @@
                     </div>
                 </div>
                 <div class="card-info">
-                    <h2>${luogo.nome_locale}</h2>
                     ${badgeAperto}
+                    <h2>${luogo.nome_locale}</h2>
                     <p class="card-address">${luogo.indirizzo}</p>
                 </div>
             `;
 
             div.addEventListener('click', () => {
-                window.location.href = `/luogo.html?id=${luogo.id}`;
+                window.location.href = `/luogo.html?id=${luogo.id}&from=index`;
             });
             container.appendChild(div);
         });

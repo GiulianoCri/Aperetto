@@ -1,18 +1,492 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="it">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aperetto: aperitivo o cornetto?</title>
+    <title>Gestione Locale – Aperetto</title>
     <link rel="icon" type="image/x-icon" href="/Foto/APERETTO (1).png">
     <link rel="stylesheet" href="classi.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
 </head>
+<body>
 
-<body class="body-custom">
-    <div class="navbar-custom d-flex fixed-top align-items-center gap-3 px-3 bg-primary">
-        <img src="/Foto/APERETTO (1).png" alt="Logo Aperetto" class="logo" onclick="window.location.href='index.html'">
-        <img src="/Foto/profilo_text.png" alt="Profilo" class="mt-3 mb-1 profilo-txt">
+<!-- NAVBAR -->
+<div class="navbar-custom d-flex fixed-top align-items-center gap-3 px-3">
+    <img src="/Foto/APERETTO (1).png" alt="Logo Aperetto" class="logo" onclick="window.location.href='index.html'">
+    <div class="col"></div>
+    <a href="login-supplier.html" class="nav-login-link logout" id="loginLink">Logout</a>
+</div>
+
+<!-- NOTIFICA -->
+<div class="notifica-wrap" id="notificaWrap"></div>
+
+<!-- PAGE -->
+<div class="locale-page">
+    <div class="locale-grid" id="localeGrid">
+        <!-- Skeleton loading -->
+        <div class="locale-sidebar">
+            <div class="lc-card" style="height:340px">
+                <div class="skeleton" style="height:160px;border-radius:16px;margin-bottom:14px"></div>
+                <div class="skeleton" style="height:24px;width:70%;margin-bottom:8px"></div>
+                <div class="skeleton" style="height:16px;width:40%;margin-bottom:16px"></div>
+                <div class="skeleton" style="height:14px;margin-bottom:6px"></div>
+                <div class="skeleton" style="height:14px;width:80%"></div>
+            </div>
+        </div>
+        <div>
+            <div class="lc-card" style="height:400px">
+                <div class="skeleton" style="height:40px;border-radius:14px;margin-bottom:20px"></div>
+                <div class="skeleton" style="height:180px;border-radius:18px;margin-bottom:14px"></div>
+                <div class="skeleton" style="height:180px;border-radius:18px"></div>
+            </div>
+        </div>
     </div>
+</div>
+
+<script>
+    const params   = new URLSearchParams(window.location.search);
+    const idLuogo  = params.get('id');
+    if (!idLuogo) window.location.href = '/';
     
+    let utenteLoggato = null;
+    let luogoCorrente = null;
+    
+    function mostraNotifica(msg, tipo = 'ok') {
+        const wrap = document.getElementById('notificaWrap');
+        const t = document.createElement('div');
+        t.className = 'ap-notifica' + (tipo === 'error' ? ' error' : '');
+        t.textContent = msg;
+        wrap.appendChild(t);
+        setTimeout(() => t.remove(), 3100);
+    }
+    
+    function stelleSVG(totale, piene) {
+        return Array.from({ length: totale }, (_, i) => `
+            <svg class="stella-r" viewBox="0 0 24 24">
+                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77
+                        l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"
+                    fill="${i < piene ? '#FFC107' : '#e0e0e0'}"/>
+            </svg>`).join('');
+    }
+    function stelleMini(piene) {
+        return Array.from({ length: 5 }, (_, i) => `
+            <svg class="stella-mini" viewBox="0 0 24 24">
+                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77
+                        l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"
+                    fill="${i < piene ? '#FFC107' : '#e0e0e0'}"/>
+            </svg>`).join('');
+    }
+    
+    const fmt = iso => new Date(iso).toLocaleDateString('it-IT', { day:'2-digit', month:'short', year:'numeric' });
+    const fmtOrario = o => { if(!o) return 'N/A'; const [h,m]=o.split(':'); return `${h}:${m}`; };
+    
+    // AUTENTICAZIONE
+    async function checkLogin() {
+        try {
+            const r = await fetch('/api/me');
+            if (r.ok) {
+                utenteLoggato = await r.json();
+            }
+        } catch {}
+    }
+        
+
+    function renderSidebar(luogo, recensioni) {
+        const media = recensioni.length
+            ? (recensioni.reduce((s,r) => s+r.voto,0) / recensioni.length)
+            : null;
+    
+        return `
+        <!-- IDENTITÀ -->
+        <div class="lc-card" id="cardIdentita">
+            <img src="${luogo.immagine || '/Foto/placeholder.png'}"
+                alt="${luogo.nome_locale}"
+                class="locale-cover"
+                id="coverPreview">
+            <div class="locale-nome">${luogo.nome_locale}</div>
+            ${luogo.aperitivo ? `<span class="locale-tipo">Aperitivo</span>` : ''}
+            ${luogo.colazione ? `<span class="locale-tipo">Colazione</span>` : ''}
+            <div class="locale-meta">
+                <div class="locale-meta-row">
+                    <span>📍</span>
+                    <span>${luogo.indirizzo}</span>
+                </div>
+                ${luogo.telefono ? `
+                <div class="locale-meta-row">
+                    <span>📞</span>
+                    <span>${luogo.telefono}</span>
+                </div>` : ''}
+                <div class="locale-meta-row">
+                    <span>🕐</span>
+                    <span>${fmtOrario(luogo.apertura)} – ${fmtOrario(luogo.chiusura)}</span>
+                </div>
+                ${luogo.giorno_chiusura ? `
+                <div class="locale-meta-row">
+                    <span>🚫</span>
+                    <span>${luogo.giorno_chiusura} chiuso</span>
+                </div>` : ''}
+            </div>
+            <a href="/luogo.html?id=${idLuogo}" target="_blank"
+            style="display:flex;align-items:center;gap:10px;text-decoration:none;
+                    color:#1a1a1a;font-weight:700;font-size:0.9rem;padding:8px 0;">
+                <span style="font-size:1.2rem">🔗</span> Vedi pagina pubblica
+            </a>
+        </div>
+
+        <!-- STATISTICHE -->
+        <div class="lc-card mt-2">
+            <p class="lc-card-title">📊 Statistiche</p>
+            <div class="stats-grid">
+                <div class="stat-box voto-big">
+                    <div class="stat-num">${media ? media.toFixed(1) : '—'}</div>
+                    <div class="stelle-mini">${stelleMini(media ? Math.round(media) : 0)}</div>
+                    <div class="stat-label">Voto medio</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-num">${recensioni.length}</div>
+                    <div class="stat-label">Recensioni</div>
+                </div>
+            </div>
+        </div>
+    
+        `;
+    }
+    
+    // RECENSIONI
+    function renderRecensioni(recensioni) {
+        if (!recensioni.length) return `
+            <div class="empty-state">
+                <div class="empty-icon">💬</div>
+                <p>Nessuna recensione ancora.</p>
+            </div>`;
+    
+        return recensioni.map((rec, idx) => {
+            const iniziale = (rec.consumer?.name || 'U').charAt(0).toUpperCase();
+            const nome = rec.consumer
+                ? `${rec.consumer.name||''} ${rec.consumer.surname||''}`.trim()
+                : 'Utente';
+    
+            const rispostaHtml = rec.risposta ? `
+                <div class="risposta-box">
+                    <div class="risposta-label">💬 Risposta del locale</div>
+                    <div class="risposta-testo">${rec.risposta}</div>
+                </div>` : `
+                <button class="btn-rispondi-trigger"
+                        onclick="toggleRispostaForm(${rec.id})">
+                    ✏️ Rispondi
+                </button>
+                <div class="risposta-form" id="formRisposta-${rec.id}">
+                    <textarea class="risposta-textarea" id="testoRisposta-${rec.id}"
+                        placeholder="Scrivi una risposta pubblica…"></textarea>
+                    <div class="risposta-actions">
+                        <button class="btn-annulla" onclick="toggleRispostaForm(${rec.id})">
+                            Annulla
+                        </button>
+                        <button class="btn-rispondi-send"
+                                id="btnInviaRisposta-${rec.id}"
+                                onclick="inviaRisposta(${rec.id})">
+                            Pubblica risposta
+                        </button>
+                    </div>
+                </div>`;
+    
+            return `
+            <div class="rec-card" style="animation-delay:${idx*0.06}s; animation: fadeSlideIn 0.35s ease both;">
+                <div class="rec-header-row">
+                    <div class="rec-user-info">
+                        <div class="rec-avatar">${iniziale}</div>
+                        <div>
+                            <div class="rec-user-name">${nome}</div>
+                            <div class="rec-data">${fmt(rec.created_at)}</div>
+                        </div>
+                    </div>
+                    <div class="stelle-row">${stelleSVG(5, rec.voto)}</div>
+                </div>
+                <p class="rec-testo">${rec.testo || ''}</p>
+                ${rispostaHtml}
+            </div>`;
+        }).join('');
+    }
+    
+    function toggleRispostaForm(recId) {
+        const form = document.getElementById(`formRisposta-${recId}`);
+        if (form) form.classList.toggle('open');
+    }
+    
+    async function inviaRisposta(recId) {
+        const testo = document.getElementById(`testoRisposta-${recId}`).value.trim();
+        if (!testo) { mostraNotifica('Scrivi una risposta prima di pubblicare', 'error'); return; }
+    
+        const btn = document.getElementById(`btnInviaRisposta-${recId}`);
+        btn.disabled = true;
+        btn.textContent = 'Invio…';
+    
+        try {
+            const r = await fetch(`/api/recensioni/${recId}/risposta`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ risposta: testo })
+            });
+            const data = await r.json();
+            if (!r.ok) throw new Error(data.error || 'Errore');
+    
+            mostraNotifica('Risposta pubblicata! 🎉');
+            await ricaricaRecensioni();
+        } catch(err) {
+            mostraNotifica(err.message, 'error');
+            btn.disabled = false;
+            btn.textContent = 'Pubblica risposta';
+        }
+    }
+    
+    async function ricaricaRecensioni() {
+        const wrap = document.getElementById('recListWrap');
+        if (!wrap) return;
+        try {
+            const r = await fetch(`/api/recensioni/luogo/${idLuogo}`);
+            const recs = r.ok ? await r.json() : [];
+            wrap.innerHTML = renderRecensioni(recs);
+            // aggiorna sidebar stats
+            const sidebar = document.getElementById('sidebarWrap');
+            if (sidebar) sidebar.innerHTML = renderSidebar(luogoCorrente, recs);
+        } catch {}
+    }
+    
+    // MODIFICA INFO
+    function renderFormModifica(luogo) {
+        const giorni = ['Lunedì','Martedì','Mercoledì','Giovedì','Venerdì','Sabato','Domenica','Nessuno'];
+    
+        return `
+        <div class="edit-form" id="editForm">
+    
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Nome locale *</label>
+                    <input type="text" id="edit-nome" value="${luogo.nome_locale||''}" placeholder="Nome del locale">
+                </div>
+                <div class="form-group">
+                    <label>Telefono</label>
+                    <input type="tel" id="edit-telefono" value="${luogo.telefono||''}" placeholder="+39 000 0000000">
+                </div>
+            </div>
+            
+            <!--
+            <div class="form-row single">
+                <div class="form-group">
+                    <label>Descrizione</label>
+                    <textarea id="edit-descrizione" placeholder="Descrivi il locale…">${luogo.descrizione||''}</textarea>
+                </div>
+            </div>
+            -->
+
+            <div class="form-row single">
+                <div class="form-group">
+                    <label>Indirizzo *</label>
+                    <input type="text" id="edit-indirizzo" value="${luogo.indirizzo||''}" placeholder="Via Roma 1, Città">
+                </div>
+            </div>
+    
+            <p class="form-section-title">📞 Contatti</p>
+            <div class="form-row">
+                
+                <div class="form-group">
+                    <label>Sito web</label>
+                    <input type="url" id="edit-sito" value="${luogo.sito_web||''}" placeholder="https://…">
+                </div>
+                <div class="form-group">
+                    <label>Instagram (solo username)</label>
+                    <input type="text" id="edit-instagram" value="${luogo.instagram||''}" placeholder="nomepagina">
+                </div>
+            </div>
+    
+            <p class="form-section-title">🕐 Orari</p>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Apertura</label>
+                    <input type="time" id="edit-apertura" value="${luogo.apertura||''}">
+                </div>
+                <div class="form-group">
+                    <label>Chiusura</label>
+                    <input type="time" id="edit-chiusura" value="${luogo.chiusura||''}">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Giorno di chiusura</label>
+                    <select id="edit-giorno-chiusura">
+                        ${giorni.map(g => `<option value="${g}" ${luogo.giorno_chiusura===g?'selected':''}>${g}</option>`).join('')}
+                    </select>
+                </div>
+            </div>
+    
+            <p class="form-section-title">🍸 Servizi</p>
+            <div style="display:flex;flex-direction:column;gap:10px">
+                <div class="toggle-row">
+                    <span class="toggle-label">🌅 Aperitivo</span>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="edit-aperitivo" ${luogo.aperitivo?'checked':''}>
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+                <div class="toggle-row">
+                    <span class="toggle-label">☕ Colazione</span>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="edit-colazione" ${luogo.colazione?'checked':''}>
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+            </div>
+    
+            <button class="btn-salva" id="btnSalva" onclick="salvaModifiche()">
+                💾 Salva modifiche
+            </button>
+        </div>`;
+    }
+    
+    function aggiornaPreviewCover(url) {
+        const img = document.getElementById('coverPreview');
+        if (img && url) img.src = url;
+    }
+    
+    async function salvaModifiche() {
+        const btnSalva = document.getElementById('btnSalva');
+        btnSalva.disabled = true;
+        btnSalva.textContent = 'Salvataggio…';
+    
+        const payload = {
+            nome_locale:     document.getElementById('edit-nome')?.value.trim(),
+            tipologia:       document.getElementById('edit-tipologia')?.value,
+            descrizione:     document.getElementById('edit-descrizione')?.value.trim(),
+            indirizzo:       document.getElementById('edit-indirizzo')?.value.trim(),
+            telefono:        document.getElementById('edit-telefono')?.value.trim(),
+            sito_web:        document.getElementById('edit-sito')?.value.trim(),
+            instagram:       document.getElementById('edit-instagram')?.value.trim(),
+            apertura:        document.getElementById('edit-apertura')?.value,
+            chiusura:        document.getElementById('edit-chiusura')?.value,
+            giorno_chiusura: document.getElementById('edit-giorno-chiusura')?.value,
+            immagine:        document.getElementById('edit-immagine')?.value.trim(),
+            aperitivo:       document.getElementById('edit-aperitivo')?.checked || false,
+            colazione:       document.getElementById('edit-colazione')?.checked || false,
+        };
+    
+        if (!payload.nome_locale || !payload.indirizzo) {
+            mostraNotifica('Nome e indirizzo sono obbligatori', 'error');
+            btnSalva.disabled = false;
+            btnSalva.textContent = '💾 Salva modifiche';
+            return;
+        }
+    
+        try {
+            const r = await fetch(`/api/location/${idLuogo}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+            const data = await r.json();
+            if (!r.ok) throw new Error(data.error || 'Errore durante il salvataggio');
+    
+            mostraNotifica('Modifiche salvate! ✅');
+            luogoCorrente = { ...luogoCorrente, ...payload };
+    
+            // aggiorna sidebar
+            const recs = await (await fetch(`/api/recensioni/luogo/${idLuogo}`)).json();
+            document.getElementById('sidebarWrap').innerHTML = renderSidebar(luogoCorrente, recs);
+    
+        } catch(err) {
+            mostraNotifica(err.message, 'error');
+        } finally {
+            btnSalva.disabled = false;
+            btnSalva.textContent = '💾 Salva modifiche';
+        }
+    }
+    
+    function initTabs() {
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+                btn.classList.add('active');
+                const target = btn.dataset.tab;
+                document.getElementById(target).classList.add('active');
+            });
+        });
+    }
+    
+    async function init() {
+        await checkLogin();
+    
+        try {
+            const [resLuogo, resRec] = await Promise.all([
+                fetch(`/api/location/${idLuogo}`),
+                fetch(`/api/recensioni/luogo/${idLuogo}`)
+            ]);
+    
+            if (!resLuogo.ok) throw new Error('Locale non trovato');
+    
+            luogoCorrente = await resLuogo.json();
+            const recensioni = resRec.ok ? await resRec.json() : [];
+    
+            document.title = `Gestione – ${luogoCorrente.nome_locale} – Aperetto`;
+    
+            document.getElementById('localeGrid').innerHTML = `
+            <!-- SIDEBAR -->
+            <div class="locale-sidebar">
+                <div id="sidebarWrap">
+                    ${renderSidebar(luogoCorrente, recensioni)}
+                </div>
+            </div>
+    
+            <!-- CONTENT -->
+            <div>
+                <div class="lc-card">
+                    <!-- TABS -->
+                    <div class="tab-nav">
+                        <button class="tab-btn active" data-tab="tabRecensioni">
+                            ⭐ Recensioni
+                            <span style="background:#FFC107;color:#1a1a1a;
+                                        font-size:0.7rem;padding:1px 7px;
+                                        border-radius:20px;margin-left:4px;">
+                                ${recensioni.length}
+                            </span>
+                        </button>
+                        <button class="tab-btn" data-tab="tabModifica">
+                            ✏️ Modifica info
+                        </button>
+                    </div>
+    
+                    <!-- TAB RECENSIONI -->
+                    <div class="tab-panel active" id="tabRecensioni">
+                        <div class="rec-list" id="recListWrap">
+                            ${renderRecensioni(recensioni)}
+                        </div>
+                    </div>
+    
+                    <!-- TAB MODIFICA -->
+                    <div class="tab-panel" id="tabModifica">
+                        ${renderFormModifica(luogoCorrente)}
+                    </div>
+                </div>
+            </div>`;
+    
+            initTabs();
+    
+        } catch(err) {
+            document.getElementById('localeGrid').innerHTML = `
+                <div class="lc-card" style="grid-column:1/-1;text-align:center;padding:60px 20px">
+                    <p style="font-size:3rem;margin-bottom:12px">😕</p>
+                    <p style="font-weight:700;color:#555;margin-bottom:20px">Locale non trovato.</p>
+                    <a href="index.html"
+                    style="background:#1a1a1a;color:#FFC107;font-family:'Fredoka One',cursive;
+                            padding:12px 28px;border-radius:50px;text-decoration:none;display:inline-block;">
+                        ← Torna alla lista
+                    </a>
+                </div>`;
+        }
+    }
+    
+    init();
+</script>
+
 </body>
 </html>

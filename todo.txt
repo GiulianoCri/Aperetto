@@ -1,10 +1,11 @@
 COSE FATTE:
-    modifiche alla schermata dei luoghi
+    implementazione profilo supplier
 
 TODO:
-    - profilo supplier + sessioni
+    - sessioni x supplier
     - login supplier - DA TERMINARE (fixare psw dim e login con db)
     - grafico fornitura x locali
     - cambiare recensioni (possibilità di aggiungere immagini + aggiungere livello fornitura - 1 to 5)
     - gallery immagini da recensioni
     - modificare interno pagina luoghi (informazioni)
+    - aggiustamenti ai pin della mappa
