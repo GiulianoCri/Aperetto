@@ -8,6 +8,8 @@
     <link rel="stylesheet" href="classi.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Chart.js è una libreria JavaScript per la creazione di grafici-->
 </head>
 <body>
 
@@ -48,7 +50,7 @@
                 menu.classList.remove('show');
         });
 
-        /* ── SESSIONE ── */
+        // SESSIONE
         let utenteLoggato = null;
 
         async function checkLogin() {
@@ -156,6 +158,8 @@
                         <span class="rec-data-txt">${formattaData(rec.created_at)}</span>
                     </div>
                     <div class="stelle-show">${stelleSVG(5, rec.voto)}</div>
+                    <div> ${rec.fascia_oraria ? `<strong>Fascia oraria:</strong> ${rec.fascia_oraria}` : ''}</div>
+                    <div> ${rec.fornitura ? `<strong>Livello fornitura:</strong> ${rec.fornitura} su 5` : ''}</div>
                     <p class="rec-testo-item">${rec.testo || ''}</p>
                 </div>`;
             }).join('');
@@ -179,6 +183,10 @@
             elCount.textContent = `${recensioni.length} recension${recensioni.length === 1 ? 'e' : 'i'}`;
         }
 
+        let aperturaCorrente = null;
+        let chiusuraColazioneCorrente = null;
+        let chartFornituraInstance = null;
+
         async function inviaRecensione(idLuogo) {
             const testo = document.getElementById('recTesto').value.trim();
             if (!votoSelezionato) { mostranotifica('Seleziona un voto ⭐', 'error'); return; }
@@ -196,22 +204,29 @@
                         luogo_id: idLuogo,
                         voto: votoSelezionato,
                         fornitura: parseInt(document.getElementById('fornituraSlider')?.value ?? 0),
+                        fascia_oraria: document.querySelector('.fascia-btn.selected')?.getAttribute('data-fascia') || null,
                         testo
                     })
                 });
                 const data = await r.json();
                 if (!r.ok) throw new Error(data.error || 'Errore');
 
+                // RESET SLIDER E FASCIA ORARIA
                 mostranotifica('Recensione pubblicata! 🎉');
                 document.getElementById('recTesto').value = '';
                 const slider = document.getElementById('fornituraSlider');
                 slider.value = 0;
                 slider.style.background = 'linear-gradient(to right, #FFC107 0%, #e9ecef 0%)';
                 document.getElementById('fornituraValore').textContent = '0';
+                document.querySelectorAll('.fascia-btn').forEach(b => b.classList.remove('selected'));
 
                 const nuove = await caricaRecensioni(idLuogo);
                 renderRecensioni(nuove);
                 aggiornaMedia(nuove);
+                renderChartFornitura(nuove, aperturaCorrente, chiusuraColazioneCorrente);
+
+                votoSelezionato = 0;
+                document.querySelectorAll('.stella-btn').forEach(b => b.classList.remove('sel', 'hov'));
 
             } catch (err) {
                 mostranotifica(err.message, 'error');
@@ -221,11 +236,102 @@
             }
         }
 
+        // CREA FASCE ORARIE
+        function generaFasceOrarie(apertura, chiusura) {
+            if (!apertura || !chiusura) return [];
+
+            const fasce = [];
+            let [hA, mA] = apertura.split(':').map(Number);
+            let [hC, mC] = chiusura.split(':').map(Number);
+
+            // Gestisce orari a cavallo della mezzanotte (es. 18:00 → 02:00)
+            if (hC < hA || (hC === hA && mC <= mA)) hC += 24;
+
+            let current = hA * 60 + mA;
+            const end = hC * 60 + mC;
+
+            while (current + 60 <= end) {
+                const hStart = Math.floor(current / 60) % 24;
+                const hEnd   = Math.floor((current + 60) / 60) % 24;
+                fasce.push(`${String(hStart).padStart(2,'0')}:00 – ${String(hEnd).padStart(2,'0')}:00`);
+                current += 60;
+            }
+
+            return fasce;
+        }
+
         // CARICA TUTTO
         const params = new URLSearchParams(window.location.search);
         const id = params.get('id');
         const from = params.get('from');
         if (!id) window.location.href = '/';
+
+        function renderChartFornitura(recensioni, apertura, chiusuraColazione) {
+            // controllo esistenza del canvas
+            const canvas = document.getElementById('chartFornitura');
+            if (!canvas) return;
+
+            console.log('apertura:', apertura, '| chiusura:', chiusuraColazione);
+            console.log('fasce generate:', generaFasceOrarie(apertura, chiusuraColazione));
+
+            if (chartFornituraInstance) {
+                chartFornituraInstance.destroy();
+                chartFornituraInstance = null;
+            }
+
+            const fasce = generaFasceOrarie(apertura, chiusuraColazione);
+
+            // raggruppa per fascia oraria e calcola la media fornitura
+            const gruppi = {};
+            recensioni.forEach(r => {
+                if (!r.fascia_oraria || r.fornitura == null) return;
+                if (!gruppi[r.fascia_oraria]) gruppi[r.fascia_oraria] = { somma: 0, count: 0 };
+                gruppi[r.fascia_oraria].somma += r.fornitura;
+                gruppi[r.fascia_oraria].count += 1;
+            });
+
+            // Ordina le fasce cronologicamente
+            const labels = fasce;
+            const valori = labels.map(f => gruppi[f] ? (gruppi[f].somma / gruppi[f].count).toFixed(1) : null);
+            const conteggi = labels.map(f => gruppi[f]?.count ?? 0);
+
+            chartFornituraInstance = new Chart(canvas, {
+                type: 'bar',
+                data: {
+                    labels,
+                    datasets: [{
+                        label: 'Media fornitura',
+                        data: valori,
+                        backgroundColor: labels.map(f => gruppi[f] ? 'rgba(255, 193, 7, 0.3)' : 'rgba(233, 236, 239, 0.25)'),
+                        borderColor: labels.map(f => gruppi[f] ? '#FFC107' : '#e9ecef'),
+                        borderWidth: 2,
+                        borderRadius: 8,
+                        borderSkipped: false,
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { display: false }, // nasconde legenda
+                        tooltip: {
+                            callbacks: {
+                                label: (ctx) => ctx.raw !== null ? `Media: ${ctx.raw}/5` : 'Nessuna recensione',
+                                afterLabel: (ctx) => conteggi[ctx.dataIndex] > 0 ? `Recensioni: ${conteggi[ctx.dataIndex]}` : ''
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            min: 0,
+                            max: 5,
+                            ticks: { stepSize: 1, callback: v => `${v}` },
+                            grid: { color: 'rgba(0,0,0,0.05)' }
+                        },
+                        x: { grid: { display: false } }
+                    }
+                }
+            });
+        }
 
         async function caricaDettaglio() {
             await checkLogin();
@@ -256,6 +362,20 @@
                         <h1 class="banner-nome">${luogo.nome_locale}</h1>
                     </div>`;
 
+                const chiusuraColazione = (() => {
+                    const h = parseInt(luogo.chiusura.split(':')[0], 10);
+                    console.log('chiusura dal DB:', luogo.chiusura, '| h parsed:', h);
+                    return h < 14 ? '14:00' : luogo.chiusura.substring(0,5);
+                })();
+
+                chiusuraColazioneCorrente = chiusuraColazione;
+                aperturaCorrente = luogo.apertura.substring(0, 5);
+
+                const fasce = generaFasceOrarie(aperturaCorrente, chiusuraColazioneCorrente);
+                const fasceOrarie = fasce.length
+                    ? fasce.map(f => `<button type="button" class="fascia-btn" data-fascia="${f}">${f}</button>`).join('')
+                    : `<span style="font-size:0.82rem;color:#bbb;">Orari non disponibili</span>`;
+
                 /* SEZIONE FORM O PROMPT LOGIN */
                 const formSection = utenteLoggato ? `
                     <div class="voto-fornitura-row">
@@ -281,9 +401,7 @@
                             <div>
                                 <p class="rec-form-label">Fascia oraria</p>
                                 <div class="fascia-grid mt-2">
-                                    ${['Mattina','Pranzo','Pomeriggio','Aperitivo','Sera'].map(f => `
-                                    <button type="button" class="fascia-btn" data-fascia="${f}">${f}</button>
-                                    `).join('')}
+                                    ${fasceOrarie}
                                 </div>
                             </div>
                             <div class="fornitura-wrap">
@@ -302,9 +420,12 @@
                         </div>
                     </div>` : ''}
 
-                    <textarea class="rec-textarea" id="recTesto"
+                    <textarea class="rec-textarea mt-2" id="recTesto"
                         placeholder="Racconta la tua esperienza…"></textarea>
-                    <button class="btn-invia-rec" id="btnInviaRec">Pubblica</button>
+                        <div class="d-flex justify-content-end">
+                            <button class="btn-invia-rec mt-1 mb-3" id="btnInviaRec">Pubblica</button>
+                        </div>
+                    
                 ` : `
                     <div class="login-prompt">
                         <span>🔐</span>
@@ -312,7 +433,6 @@
                     </div>`;
 
                 /* BODY */
-
                 const socials = [];
                 if (luogo.sito_web) socials.push(`    
                     <span class="info-pill-value">
@@ -366,6 +486,15 @@
                             ${socialLocation}
                         </div>
                     </div>
+                    
+                    ${luogo.colazione ? `
+                        <!-- FORNITURA PER FASCIA -->
+                        <div class="luogo-card">
+                            <h2 class="luogo-card-title">Fornitura per fascia oraria</h2>
+                            <canvas id="chartFornitura" height="120"></canvas>
+                        </div>` 
+                    : ''}
+
 
                     <!-- RECENSIONI -->
                     <div class="luogo-card">
@@ -389,9 +518,18 @@
                     </div>`;
 
                 renderRecensioni(recensioni);
+                renderChartFornitura(recensioni, aperturaCorrente, chiusuraColazione);
 
                 if (utenteLoggato) {
                     initStelle();
+
+                    document.querySelectorAll('.fascia-btn').forEach(btn => {
+                        btn.addEventListener('click', () => {
+                            document.querySelectorAll('.fascia-btn').forEach(b => b.classList.remove('selected'));
+                            btn.classList.add('selected');
+                        });
+                    });
+
                     document.getElementById('btnInviaRec')
                         .addEventListener('click', () => inviaRecensione(id));
 
@@ -405,10 +543,12 @@
                             slider.style.background =
                                 `linear-gradient(to right, #FFC107 ${pct}%, #e9ecef ${pct}%)`;
                         });
-                    }
+                    }     
+                               
                 }
 
-            } catch {
+            } catch (err) {
+                console.error('Errore caricaDettaglio:', err);
                 document.getElementById('banner').innerHTML = '';
                 document.getElementById('luogo-body').innerHTML = `
                     <div class="luogo-card" style="text-align:center;padding:60px 20px">

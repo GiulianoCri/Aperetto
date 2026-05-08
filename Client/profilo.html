@@ -57,7 +57,7 @@
     </div>
  
     <script>
-        // ── Carica dati utente dalla sessione ──
+        // Carica dati utente dalla sessione
         async function caricaProfilo() {
             try {
                 const res = await fetch('/api/me');
@@ -79,7 +79,7 @@
             }
         }
  
-        // ── Carica recensioni dell'utente ──
+        // Carica recensioni dell'utente
         async function caricaRecensioni() {
             const container = document.getElementById('recensioni-container');
             try {
@@ -100,12 +100,15 @@
                 container.innerHTML = recensioni.map(r => `
                     <div class="recensione-card" onclick="window.location.href='/luogo.html?id=${r.luogo_id}'">
                         <div class="rec-header">
-                            <span class="rec-locale">${r.Luoghi?.nome || 'Locale'}</span>
+                            <span class="rec-locale">${r.location?.nome_locale || 'Locale'}</span>
                             <span class="rec-data">${formatData(r.created_at)}</span>
                         </div>
                         <div class="stelle">${stelle(r.voto)}</div>
+                        <div> ${r.fascia_oraria ? `<strong>Fascia oraria:</strong> ${r.fascia_oraria}` : ''}</div>
+                        <div> ${r.fornitura ? `<strong>Livello fornitura:</strong> ${r.fornitura} su 5` : ''}</div>
                         <p class="rec-testo">${r.testo || ''}</p>
-                        <span class="rec-tag">${r.Luoghi?.tipologia || 'Locale'}</span>
+                        ${r.location?.aperitivo ? `<span class="rec-tag">Aperitivo</span>` : ''}
+                        ${r.location?.colazione ? `<span class="rec-tag">Colazione</span>` : ''}
                     </div>
                 `).join('');
  

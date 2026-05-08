@@ -1,11 +1,10 @@
 COSE FATTE:
-    implementazione livello di fornitura per locali (solo colazione)
+    
 
 TODO:
     - sessioni x supplier
+    - sistemare bug sessioni utente
     - login supplier - DA TERMINARE (fixare psw dim e login con db)
-    - grafico fornitura x locali
-    - cambiare recensioni (possibilità di aggiungere immagini)
-    - gallery immagini da recensioni
     - modificare interno pagina luoghi (informazioni)
     - aggiustamenti ai pin della mappa
+    - recensioni in profilo consumer

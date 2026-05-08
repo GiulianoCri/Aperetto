@@ -411,6 +411,8 @@ app.get('/api/recensioni/luogo/:id', async (req, res) => {
             id,
             voto,
             testo,
+            fornitura,
+            fascia_oraria,
             created_at,
             consumer!recensioni_user_id_fkey ( name, surname )
         `)
@@ -433,7 +435,7 @@ app.post('/api/recensioni', async (req, res) => {
         return res.status(401).json({ error: 'Devi essere loggato per recensire' });
     }
  
-    const { luogo_id, voto, testo } = req.body;
+    const { luogo_id, voto, fornitura, fascia_oraria, testo } = req.body;
     const user_id = req.session.user.email;
     // validazione base
     if (!luogo_id || !voto) {
@@ -445,8 +447,8 @@ app.post('/api/recensioni', async (req, res) => {
  
     const { data, error } = await supabase
         .from('recensioni')
-        .insert([{ luogo_id, user_id, voto, testo: testo || '' }])
-        .select('id, voto, testo, created_at, user_id')
+        .insert([{ luogo_id, user_id, voto, testo: testo || '', fornitura: fornitura ?? null, fascia_oraria: fascia_oraria ?? null }])
+        .select('id, voto, testo, fornitura, fascia_oraria, created_at, user_id')
         .single();
  
     if (error) {
