@@ -20,9 +20,11 @@
         <div class="position-relative">
             <button class="loginbtn rounded-circle border-0 p-0"></button>
             <div class="dropdown rounded-4 flex-column d-flex">
-                <a href="login.html" id="menuAccedi">Accedi</a>
-                <a href="profilo.html" class="d-none" id="menuProfilo">Profilo</a>
-                <a href="#" class="d-none" id="menuLogout">Logout</a>
+                <!-- Mostrato se NON loggato -->
+                <a href="login.html" class="text-dark m-auto" id="menuAccedi">Accedi</a>
+                <!-- Mostrati se loggato -->
+                <a href="profilo.html" class="text-dark m-auto d-none" id="menuProfilo">Profilo</a>
+                <a href="#" class="text-dark m-auto d-none" id="menuLogout">Logout</a>
             </div>
         </div>
     </div>
@@ -152,7 +154,7 @@
                 <div class="rec-item" style="animation-delay:${idx * 0.07}s">
                     <div class="rec-item-header">
                         <div class="rec-utente">
-                            <div class="rec-avatar">${iniziale}</div>
+                            <div class="rec-avatar avatar-size">${iniziale}</div>
                             ${nome}
                         </div>
                         <span class="rec-data-txt">${formattaData(rec.created_at)}</span>
@@ -190,7 +192,6 @@
         async function inviaRecensione(idLuogo) {
             const testo = document.getElementById('recTesto').value.trim();
             if (!votoSelezionato) { mostranotifica('Seleziona un voto ⭐', 'error'); return; }
-            if (!testo)           { mostranotifica('Scrivi qualcosa sulla tua esperienza', 'error'); return; }
 
             const btnInvia = document.getElementById('btnInviaRec');
             btnInvia.disabled = true;
@@ -215,9 +216,11 @@
                 mostranotifica('Recensione pubblicata! 🎉');
                 document.getElementById('recTesto').value = '';
                 const slider = document.getElementById('fornituraSlider');
-                slider.value = 0;
-                slider.style.background = 'linear-gradient(to right, #FFC107 0%, #e9ecef 0%)';
-                document.getElementById('fornituraValore').textContent = '0';
+                if(slider) {
+                    slider.value = 0;
+                    slider.style.background = 'linear-gradient(to right, #FFC107 0%, #e9ecef 0%)';
+                    document.getElementById('fornituraValore').textContent = '0';
+                }
                 document.querySelectorAll('.fascia-btn').forEach(b => b.classList.remove('selected'));
 
                 const nuove = await caricaRecensioni(idLuogo);
@@ -396,7 +399,7 @@
 
                     ${luogo.colazione ? `
                     <div class="colazione-sub">
-                        <p class="colazione-sub-title">Colazione</p>
+                        <p class="colazione-sub-title">COLAZIONE</p>
                         <div class="colazione-sub-row">
                             <div>
                                 <p class="rec-form-label">Fascia oraria</p>
@@ -455,66 +458,78 @@
                 const socialLocation = socials.length ? socials.join('') : `<span class="info-pill-value">N/A</span>`;
 
                 document.getElementById('luogo-body').innerHTML = `
-                    <!-- INFO -->
-                    <div class="luogo-card">
-                        <h2 class="luogo-card-title">📍 Informazioni</h2>
-                        <div class="info-grid">
-                            <div class="info-pill">
-                                <span class="info-pill-label">Indirizzo</span>
-                                <span class="info-pill-value">${luogo.indirizzo}</span>
-                            </div>
-                            <div class="info-pill">
-                                <span class="info-pill-label">Telefono</span>
-                                <span class="info-pill-value">${luogo.telefono || 'N/A'}</span>
-                            </div>
-                            <div class="info-pill">
-                                <span class="info-pill-label">Orari</span>
-                                <span class="info-pill-value">${formattaOrario(luogo.apertura)} – ${formattaOrario(luogo.chiusura)}</span>
-                            </div>
-                            <div class="info-pill">
-                                <span class="info-pill-label">Giorno di chiusura</span>
-                                <span class="info-pill-value">${luogo.giorno_chiusura || 'N/A'}</span>
-                            </div>
-                            
-                        </div>
-                    </div>
+                <div class="profilo-page">    
+                    <div class="profilo-grid">
 
-                    <!-- CONTATTI -->
-                    <div class="luogo-card">
-                        <h2 class="luogo-card-title">🔗 Contatti</h2>
-                        <div class="info-grid">
-                            ${socialLocation}
-                        </div>
-                    </div>
-                    
-                    ${luogo.colazione ? `
-                        <!-- FORNITURA PER FASCIA -->
-                        <div class="luogo-card">
-                            <h2 class="luogo-card-title">Fornitura per fascia oraria</h2>
-                            <canvas id="chartFornitura" height="120"></canvas>
-                        </div>` 
-                    : ''}
+                            <!-- COLONNA SINISTRA -->
+                            <div class="profilo-sidebar" style="border-radius:0; background:transparent; box-shadow:none; padding:0; gap:18px; align-items:stretch;">
 
+                                <!-- INFO -->
+                                <div class="luogo-card">
+                                    <h2 class="luogo-card-title">📍 Informazioni</h2>
+                                    <div class="info-grid">
+                                        <div class="info-pill">
+                                            <span class="info-pill-label">Indirizzo</span>
+                                            <span class="info-pill-value">${luogo.indirizzo}</span>
+                                        </div>
+                                        <div class="info-pill">
+                                            <span class="info-pill-label">Telefono</span>
+                                            <span class="info-pill-value">${luogo.telefono || 'N/A'}</span>
+                                        </div>
+                                        <div class="info-pill">
+                                            <span class="info-pill-label">Orari</span>
+                                            <span class="info-pill-value">${formattaOrario(luogo.apertura)} – ${formattaOrario(luogo.chiusura)}</span>
+                                        </div>
+                                        <div class="info-pill">
+                                            <span class="info-pill-label">Giorno di chiusura</span>
+                                            <span class="info-pill-value">${luogo.giorno_chiusura || 'Siamo sempre aperti!'}</span>
+                                        </div>
+                                    </div>
 
-                    <!-- RECENSIONI -->
-                    <div class="luogo-card">
-                        <h2 class="luogo-card-title">⭐ Recensioni</h2>
-
-                        <div class="media-voto">
-                            <span class="voto-numero" id="mediaVoto">${mediaVal ? mediaVal.toFixed(1) : '—'}</span>
-                            <div>
-                                <div class="stelle-show" id="mediaStelle">
-                                    ${stelleSVG(5, mediaVal ? Math.round(mediaVal) : 0)}
+                                    <!-- CONTATTI -->
+                                    <h2 class="luogo-card-title mt-4">🔗 Contatti</h2>
+                                    <div class="info-grid">
+                                        <div class="info-pill gap-3">${socialLocation}</div>
+                                    </div>
+    
                                 </div>
-                                <div class="voto-count" id="votoCount">
-                                    ${recensioni.length} recension${recensioni.length === 1 ? 'e' : 'i'}
-                                </div>
+
                             </div>
+
+                            <!-- COLONNA DESTRA -->
+                            <div class="profilo-content">
+
+                                ${luogo.colazione ? `
+                                    <div class="luogo-card">
+                                        <h2 class="luogo-card-title">Fornitura per fascia oraria</h2>
+                                        <canvas id="chartFornitura" height="120"></canvas>
+                                    </div>`
+                                : ''}
+
+                                <!-- RECENSIONI -->
+                                <div class="luogo-card">
+                                    <h2 class="luogo-card-title">⭐ Recensioni</h2>
+
+                                    <div class="media-voto">
+                                        <span class="voto-numero" id="mediaVoto">${mediaVal ? mediaVal.toFixed(1) : '—'}</span>
+                                        <div>
+                                            <div class="stelle-show" id="mediaStelle">
+                                                ${stelleSVG(5, mediaVal ? Math.round(mediaVal) : 0)}
+                                            </div>
+                                            <div class="voto-count" id="votoCount">
+                                                ${recensioni.length} recension${recensioni.length === 1 ? 'e' : 'i'}
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    ${formSection}
+
+                                    <div id="recensioniList" class="recensioni-list"></div>
+                                </div>
+
+                            </div>
+
                         </div>
-
-                        ${formSection}
-
-                        <div id="recensioniList" class="recensioni-list"></div>
                     </div>`;
 
                 renderRecensioni(recensioni);

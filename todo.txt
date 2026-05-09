@@ -1,11 +1,11 @@
 COSE FATTE:
-    implementazione fasce orarie e fornitura luoghi
+    miglioramenti pagina luoghi, inserimento grafico in profilo supplier e recensioni in consumer
 
 TODO:
-    - sessioni x supplier
-    - sistemare bug sessioni utente
-    - login supplier - DA TERMINARE (fixare psw dim e login con db)
-    - modificare interno pagina luoghi (informazioni)
-    - problemi fase orarie da risolvere
-    - aggiustamenti ai pin della mappa
-    - recensioni in profilo consumer
+    - sessioni supplier
+    - sessioni utente       -> sistemare bug
+    - login supplier        -> DA TERMINARE (fixare psw dim e login con db)
+    - problemi fasce orarie
+    - pin mappa             -> lat e lng non trovati in alcuni casi
+    - profilo supplier      -> modifiche locale
+    - luogo                 -> aggiustare responsive 

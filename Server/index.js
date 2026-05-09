@@ -281,7 +281,7 @@ app.get('/api/recensioni', async (req, res) => {
     const { userId } = req.query;
     const { data, error } = await supabase
         .from('recensioni')
-        .select('*, location(nome, tipologia)')
+        .select('*, location(nome_locale)')
         .eq('user_id', userId);
     if (error) return res.status(500).json({ error: error.message });
     res.json(data);
@@ -462,10 +462,11 @@ app.post('/api/recensioni', async (req, res) => {
     res.status(201).json(data);
 });
  
- 
-// ── 3. GET recensioni dell'utente loggato (per la pagina profilo) ──
+
+// 3. GET recensioni dell'utente loggato (per la pagina profilo)
 //    Sostituisce la tua rotta GET /api/recensioni esistente
 //    (quella vecchia usava ?userId=... dalla query, questa usa la sessione)
+
 app.get('/api/recensioni/mie', async (req, res) => {
  
     if (!req.session.user) {
@@ -477,11 +478,13 @@ app.get('/api/recensioni/mie', async (req, res) => {
     const { data, error } = await supabase
         .from('recensioni')
         .select(`
-            id,
+            luogo_id,
             voto,
             testo,
             created_at,
-            location:luogo_id ( nome, tipologia )
+            fornitura,
+            fascia_oraria,
+            location:luogo_id ( nome_locale )
         `)
         .eq('user_id', user_id)
         .order('created_at', { ascending: false });

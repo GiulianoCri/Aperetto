@@ -328,8 +328,10 @@ body{
 }
 
 .section-title {
-    font-size: 1.25rem;
-    font-weight: 700;
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.5rem;
+    line-height: 1.2;
+    font-weight: bold;
 }
 
 .recensione-card {
@@ -547,8 +549,11 @@ body{
 
 .stats-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr;
     gap: 10px;
+}
+.grid-colazione {
+  grid-template-columns: 1fr 1fr;
 }
 .stat-box {
     background: #f8f9fa;
@@ -810,7 +815,7 @@ body{
 .form-section-title {
     font-family: 'Fredoka One', cursive;
     font-size: 1rem;
-    color: #888;
+    color: #5d5d5d;
     margin: 4px 0 -4px;
     padding-bottom: 8px;
     border-bottom: 1.5px dashed #f0f0f0;
@@ -1562,7 +1567,7 @@ body{
 
 /* ── BODY PAGINA ── */
 .luogo-body {
-    max-width: 860px;
+    /*max-width: 860px;*/
     margin: 0 auto;
     padding: 28px 20px 80px;
     display: flex;
@@ -1600,7 +1605,7 @@ body{
     content: '';
     flex: 1;
     height: 2px;
-    background: #FFF3CD;
+    background: #f9e195;
     border-radius: 2px;
 }
 
@@ -1614,7 +1619,7 @@ body{
 /* ── GRIGLIA INFO ── */
 .info-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr;
     gap: 12px;
 }
 
@@ -1985,17 +1990,24 @@ body{
 }
 
 .rec-avatar {
-    width: 32px;
-    height: 32px;
     border-radius: 50%;
     background: #FFC107;
     display: flex;
     align-items: center;
     justify-content: center;
     font-family: 'Fredoka One', cursive;
-    font-size: 0.88rem;
     color: #1a1a1a;
     flex-shrink: 0;
+}
+.avatar-size{
+    width: 32px;
+    height: 32px;
+    font-size: 0.88rem;
+}
+.avatar-profilo {
+    width: 45px;
+    height: 45px;
+    font-size: 1.3rem;
 }
 
 .rec-data-txt {

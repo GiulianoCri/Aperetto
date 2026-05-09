@@ -41,7 +41,7 @@
                 <button class="btn-logout" id="logoutBtn">Esci dall'account</button>
             </aside>
  
-            <!-- ── DESTRA: recensioni ── -->
+            <!-- DESTRA: recensioni -->
             <section class="profilo-content">
                 <div class="section-title">Le mie recensioni</div>
                 <div id="recensioni-container">
@@ -66,14 +66,21 @@
                     return;
                 }
                 const user = await res.json();
- 
-                document.getElementById('profilo-nome').textContent =
-                    (user.name || '') + ' ' + (user.surname || '');
+                
+                const iniziale = (user?.name || 'U').charAt(0).toUpperCase();
+                const nome = user
+                    ? `${user.name || ''} ${user.surname || ''}`.trim()
+                    : 'Utente';
+                
+                document.getElementById('profilo-nome').innerHTML = `
+                    <div class="rec-avatar avatar-profilo">${iniziale}</div> `
+                
                 document.getElementById('info-nome').textContent    = user.name    || '–';
                 document.getElementById('info-cognome').textContent = user.surname || '–';
                 document.getElementById('info-email').textContent   = user.email   || '–';
  
                 caricaRecensioni();
+
             } catch (err) {
                 console.error('Errore caricamento profilo:', err);
             }
@@ -97,22 +104,25 @@
                     return;
                 }
  
-                container.innerHTML = recensioni.map(r => `
-                    <div class="recensione-card" onclick="window.location.href='/luogo.html?id=${r.luogo_id}'">
+                container.innerHTML = recensioni.map(r => 
+                    console.log("RECENSIONE:", JSON.stringify(r)) ||
+                    ` <div class="recensione-card mb-2" onclick="window.location.href='/luogo.html?id=${r.luogo_id}&from=index'">
                         <div class="rec-header">
                             <span class="rec-locale">${r.location?.nome_locale || 'Locale'}</span>
                             <span class="rec-data">${formatData(r.created_at)}</span>
                         </div>
-                        <div class="stelle">${stelle(r.voto)}</div>
-                        <div> ${r.fascia_oraria ? `<strong>Fascia oraria:</strong> ${r.fascia_oraria}` : ''}</div>
-                        <div> ${r.fornitura ? `<strong>Livello fornitura:</strong> ${r.fornitura} su 5` : ''}</div>
+                        <div class="flex-column">
+                            <div> ${stelle(r.voto)}</div>
+                            <div> ${r.fascia_oraria ? `<strong>Fascia oraria:</strong> ${r.fascia_oraria}` : ''}</div>
+                            <div> ${r.fornitura ? `<strong>Livello fornitura:</strong> ${r.fornitura} su 5` : ''}</div>
+                        </div>
                         <p class="rec-testo">${r.testo || ''}</p>
                         ${r.location?.aperitivo ? `<span class="rec-tag">Aperitivo</span>` : ''}
                         ${r.location?.colazione ? `<span class="rec-tag">Colazione</span>` : ''}
-                    </div>
-                `).join('');
+                    </div> `).join('');
  
-            } catch {
+            } catch (err) {
+                console.error('Errore caricaRecensioni:', err);
                 container.innerHTML = `
                     <div class="empty-state">
                         <div class="empty-icon">⭐</div>
@@ -121,7 +131,7 @@
             }
         }
  
-        // ── Helpers ──
+        // Helpers
         function stelle(voto) {
             const n = Math.round(voto) || 0;
             return Array.from({ length: 5 }, (_, i) =>

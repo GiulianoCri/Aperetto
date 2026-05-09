@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="classi.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
 
@@ -47,6 +48,7 @@
 <script>
     const params   = new URLSearchParams(window.location.search);
     const idLuogo  = params.get('id');
+    const from = params.get('from');
     if (!idLuogo) window.location.href = '/';
     
     let utenteLoggato = null;
@@ -132,87 +134,198 @@
                     color:#1a1a1a;font-weight:700;font-size:0.9rem;padding:8px 0;">
                 <span style="font-size:1.2rem">🔗</span> Vedi pagina pubblica
             </a>
-        </div>
-
-        <!-- STATISTICHE -->
-        <div class="lc-card mt-2">
-            <p class="lc-card-title">📊 Statistiche</p>
-            <div class="stats-grid">
-                <div class="stat-box voto-big">
-                    <div class="stat-num">${media ? media.toFixed(1) : '—'}</div>
-                    <div class="stelle-mini">${stelleMini(media ? Math.round(media) : 0)}</div>
-                    <div class="stat-label">Voto medio</div>
-                </div>
-                <div class="stat-box">
-                    <div class="stat-num">${recensioni.length}</div>
-                    <div class="stat-label">Recensioni</div>
-                </div>
-            </div>
-        </div>
-    
-        `;
+        </div> `;
     }
     
+    // CREA FASCE ORARIE
+    function generaFasceOrarie(apertura, chiusura) {
+        if (!apertura || !chiusura) return [];
+
+        const fasce = [];
+        let [hA, mA] = apertura.split(':').map(Number);
+        let [hC, mC] = chiusura.split(':').map(Number);
+
+        // Gestisce orari a cavallo della mezzanotte (es. 18:00 → 02:00)
+        if (hC < hA || (hC === hA && mC <= mA)) hC += 24;
+
+        let current = hA * 60 + mA;
+        const end = hC * 60 + mC;
+
+        while (current + 60 <= end) {
+            const hStart = Math.floor(current / 60) % 24;
+            const hEnd   = Math.floor((current + 60) / 60) % 24;
+            fasce.push(`${String(hStart).padStart(2,'0')}:00 – ${String(hEnd).padStart(2,'0')}:00`);
+            current += 60;
+        }
+
+        return fasce;
+    }
+
+    // CARICA TUTTO
+    let chartFornituraInstance = null;
+    function renderChartFornitura(recensioni, apertura, chiusuraColazione) {
+        // controllo esistenza del canvas
+        const canvas = document.getElementById('chartFornitura');
+        if (!canvas) return;
+
+        console.log('apertura:', apertura, '| chiusura:', chiusuraColazione);
+        console.log('fasce generate:', generaFasceOrarie(apertura, chiusuraColazione));
+
+        if (chartFornituraInstance) {
+            chartFornituraInstance.destroy();
+            chartFornituraInstance = null;
+        }
+
+        const fasce = generaFasceOrarie(apertura, chiusuraColazione);
+
+        // raggruppa per fascia oraria e calcola la media fornitura
+        const gruppi = {};
+        recensioni.forEach(r => {
+            if (!r.fascia_oraria || r.fornitura == null) return;
+            if (!gruppi[r.fascia_oraria]) gruppi[r.fascia_oraria] = { somma: 0, count: 0 };
+            gruppi[r.fascia_oraria].somma += r.fornitura;
+            gruppi[r.fascia_oraria].count += 1;
+        });
+
+        // Ordina le fasce cronologicamente
+        const labels = fasce;
+        const valori = labels.map(f => gruppi[f] ? (gruppi[f].somma / gruppi[f].count).toFixed(1) : null);
+        const conteggi = labels.map(f => gruppi[f]?.count ?? 0);
+
+        chartFornituraInstance = new Chart(canvas, {
+            type: 'bar',
+            data: {
+                labels,
+                datasets: [{
+                    label: 'Media fornitura',
+                    data: valori,
+                    backgroundColor: labels.map(f => gruppi[f] ? 'rgba(255, 193, 7, 0.3)' : 'rgba(233, 236, 239, 0.25)'),
+                    borderColor: labels.map(f => gruppi[f] ? '#FFC107' : '#e9ecef'),
+                    borderWidth: 2,
+                    borderRadius: 8,
+                    borderSkipped: false,
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { display: false }, // nasconde legenda
+                    tooltip: {
+                        callbacks: {
+                            label: (ctx) => ctx.raw !== null ? `Media: ${ctx.raw}/5` : 'Nessuna recensione',
+                            afterLabel: (ctx) => conteggi[ctx.dataIndex] > 0 ? `Recensioni: ${conteggi[ctx.dataIndex]}` : ''
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        min: 0,
+                        max: 5,
+                        ticks: { stepSize: 1, callback: v => `${v}` },
+                        grid: { color: 'rgba(0,0,0,0.05)' }
+                    },
+                    x: { grid: { display: false } }
+                }
+            }
+        });
+    }
+
     // RECENSIONI
-    function renderRecensioni(recensioni) {
+    function renderRecensioni( recensioni) {
+        const media = recensioni.length
+                ? (recensioni.reduce((s,r) => s+r.voto,0) / recensioni.length)
+                : null;
+
         if (!recensioni.length) return `
             <div class="empty-state">
                 <div class="empty-icon">💬</div>
                 <p>Nessuna recensione ancora.</p>
             </div>`;
-    
-        return recensioni.map((rec, idx) => {
-            const iniziale = (rec.consumer?.name || 'U').charAt(0).toUpperCase();
-            const nome = rec.consumer
-                ? `${rec.consumer.name||''} ${rec.consumer.surname||''}`.trim()
-                : 'Utente';
-    
-            const rispostaHtml = rec.risposta ? `
-                <div class="risposta-box">
-                    <div class="risposta-label">💬 Risposta del locale</div>
-                    <div class="risposta-testo">${rec.risposta}</div>
-                </div>` : `
-                <button class="btn-rispondi-trigger"
-                        onclick="toggleRispostaForm(${rec.id})">
-                    ✏️ Rispondi
-                </button>
-                <div class="risposta-form" id="formRisposta-${rec.id}">
-                    <textarea class="risposta-textarea" id="testoRisposta-${rec.id}"
-                        placeholder="Scrivi una risposta pubblica…"></textarea>
-                    <div class="risposta-actions">
-                        <button class="btn-annulla" onclick="toggleRispostaForm(${rec.id})">
-                            Annulla
-                        </button>
-                        <button class="btn-rispondi-send"
-                                id="btnInviaRisposta-${rec.id}"
-                                onclick="inviaRisposta(${rec.id})">
-                            Pubblica risposta
-                        </button>
-                    </div>
-                </div>`;
-    
-            return `
-            <div class="rec-card" style="animation-delay:${idx*0.06}s; animation: fadeSlideIn 0.35s ease both;">
-                <div class="rec-header-row">
-                    <div class="rec-user-info">
-                        <div class="rec-avatar">${iniziale}</div>
-                        <div>
-                            <div class="rec-user-name">${nome}</div>
-                            <div class="rec-data">${fmt(rec.created_at)}</div>
+        else return ` 
+            <!-- STATISTICHE -->
+            <div class="lc-card mt-2">
+                <p class="lc-card-title">📊 Statistiche</p>
+                
+                <div class="form-row ">
+                    ${luogoCorrente.colazione? `<div class="my-auto">` : ''}
+                        <div class="stat-box voto-big">
+                            <div class="stat-label">Voto medio</div>
+                            <div class="stat-num mt-1">${media ? media.toFixed(1) : '—'}</div>
+                            <div class="stelle-mini">${stelleMini(media ? Math.round(media) : 0)}</div>
+                        </div>
+                        <div class="stat-box mt-2">
+                            <div class="stat-label">N. recensioni</div>
+                            <div class="stat-num mt-1">${recensioni.length}</div>
+                        </div>
+                    ${luogoCorrente.colazione? `</div>` : ''}
+                    ${luogoCorrente.colazione ? `
+                    <div class="lc-card">
+                        <h2 class="lc-card-title">Fornitura per fascia oraria</h2>
+                        <canvas id="chartFornitura" height="120"></canvas>
+                    </div>` : ''}                    
+                </div>
+                
+            </div> ` + 
+            recensioni.map((rec, idx) => {
+                const iniziale = (rec.consumer?.name || 'U').charAt(0).toUpperCase();
+                const nome = rec.consumer
+                    ? `${rec.consumer.name||''} ${rec.consumer.surname||''}`.trim()
+                    : 'Utente';
+        
+                const rispostaHtml = rec.risposta ? `
+                    <div class="risposta-box">
+                        <div class="risposta-label">💬 Risposta del locale</div>
+                        <div class="risposta-testo">${rec.risposta}</div>
+                    </div>` : `
+
+                    <!-- RISPOSTA RECENSIONI -->
+                    <!-- <button class="btn-rispondi-trigger"
+                            onclick="toggleRispostaForm(${rec.id})">
+                        ✏️ Rispondi
+                    </button>
+
+                    <div class="risposta-form" id="formRisposta-${rec.id}">
+                        <textarea class="risposta-textarea" id="testoRisposta-${rec.id}"
+                            placeholder="Scrivi una risposta pubblica…"></textarea>
+                        <div class="risposta-actions">
+                            <button class="btn-annulla" onclick="toggleRispostaForm(${rec.id})">
+                                Annulla
+                            </button>
+                            <button class="btn-rispondi-send"
+                                    id="btnInviaRisposta-${rec.id}"
+                                    onclick="inviaRisposta(${rec.id})">
+                                Pubblica risposta
+                            </button>
+                        </div>
+                    </div> -->`;
+        
+                return `
+                <div class="rec-card" style="animation-delay:${idx*0.06}s; animation: fadeSlideIn 0.35s ease both;">
+                    <div class="rec-header-row">
+                        <div class="rec-user-info">
+                            <div class="rec-avatar avatar-size">${iniziale}</div>
+                            <div>
+                                <div class="rec-user-name">${nome}</div>
+                                <div class="rec-data">${fmt(rec.created_at)}</div>
+                            </div>
+                        </div>
+                        <div class="flex-column text-end">
+                            <div> ${stelleSVG(5, rec.voto)}</div>
+                            <div> ${rec.fascia_oraria ? `<strong>Fascia oraria:</strong> ${rec.fascia_oraria}` : ''}</div>
+                            <div> ${rec.fornitura ? `<strong>Livello fornitura:</strong> ${rec.fornitura} su 5` : ''}</div>
                         </div>
                     </div>
-                    <div class="stelle-row">${stelleSVG(5, rec.voto)}</div>
-                </div>
-                <p class="rec-testo">${rec.testo || ''}</p>
-                ${rispostaHtml}
-            </div>`;
-        }).join('');
+                    
+                    <p class="rec-testo">${rec.testo || ''}</p>
+                    ${rispostaHtml}
+                </div>`;
+            }).join('');
     }
     
-    function toggleRispostaForm(recId) {
+    /* function toggleRispostaForm(recId) {
         const form = document.getElementById(`formRisposta-${recId}`);
         if (form) form.classList.toggle('open');
-    }
+    } */
     
     async function inviaRisposta(recId) {
         const testo = document.getElementById(`testoRisposta-${recId}`).value.trim();
@@ -246,7 +359,7 @@
         try {
             const r = await fetch(`/api/recensioni/luogo/${idLuogo}`);
             const recs = r.ok ? await r.json() : [];
-            wrap.innerHTML = renderRecensioni(recs);
+            wrap.innerHTML = renderRecensioni(luogoCorrente, recs);
             // aggiorna sidebar stats
             const sidebar = document.getElementById('sidebarWrap');
             if (sidebar) sidebar.innerHTML = renderSidebar(luogoCorrente, recs);
@@ -259,7 +372,8 @@
     
         return `
         <div class="edit-form" id="editForm">
-    
+            
+            <p class="form-section-title">Dettagli locale</p>
             <div class="form-row">
                 <div class="form-group">
                     <label>Nome locale *</label>
@@ -287,7 +401,7 @@
                 </div>
             </div>
     
-            <p class="form-section-title">📞 Contatti</p>
+            <p class="form-section-title">Contatti</p>
             <div class="form-row">
                 
                 <div class="form-group">
@@ -300,7 +414,7 @@
                 </div>
             </div>
     
-            <p class="form-section-title">🕐 Orari</p>
+            <p class="form-section-title">Orari</p>
             <div class="form-row">
                 <div class="form-group">
                     <label>Apertura</label>
@@ -320,17 +434,17 @@
                 </div>
             </div>
     
-            <p class="form-section-title">🍸 Servizi</p>
+            <p class="form-section-title">Servizi</p>
             <div style="display:flex;flex-direction:column;gap:10px">
                 <div class="toggle-row">
-                    <span class="toggle-label">🌅 Aperitivo</span>
+                    <span class="toggle-label">Aperitivo</span>
                     <label class="toggle-switch">
                         <input type="checkbox" id="edit-aperitivo" ${luogo.aperitivo?'checked':''}>
                         <span class="toggle-slider"></span>
                     </label>
                 </div>
                 <div class="toggle-row">
-                    <span class="toggle-label">☕ Colazione</span>
+                    <span class="toggle-label">Colazione</span>
                     <label class="toggle-switch">
                         <input type="checkbox" id="edit-colazione" ${luogo.colazione?'checked':''}>
                         <span class="toggle-slider"></span>
@@ -470,6 +584,14 @@
             </div>`;
     
             initTabs();
+
+            if (luogoCorrente.colazione) {
+                const chiusuraColazione = (() => {
+                    const h = parseInt(luogoCorrente.chiusura.split(':')[0], 10);
+                    return h < 13 ? '13:00' : luogoCorrente.chiusura;
+                })();
+                renderChartFornitura(recensioni, luogoCorrente.apertura, chiusuraColazione);
+            }
     
         } catch(err) {
             document.getElementById('localeGrid').innerHTML = `
