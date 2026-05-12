@@ -354,8 +354,12 @@
                 menuAccedi.classList.add('d-none');
                 menuProfilo.classList.remove('d-none');
                 menuLogout.classList.remove('d-none');
+            } else {
+            // Non loggato: ripristina stato di default
+            menuAccedi.classList.remove('d-none');
+            menuProfilo.classList.add('d-none');
+            menuLogout.classList.add('d-none');
             }
-            // Se non loggato lascia "Accedi" visibile (default)
 
         } catch (err) {
             console.error('Errore controllo sessione:', err);

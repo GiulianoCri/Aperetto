@@ -63,15 +63,20 @@
                     document.getElementById('menuAccedi').classList.add('d-none');
                     document.getElementById('menuProfilo').classList.remove('d-none');
                     document.getElementById('menuLogout').classList.remove('d-none');
-                }
+                } else {
+                // Non loggato: ripristina stato di default
+                menuAccedi.classList.remove('d-none');
+                menuProfilo.classList.add('d-none');
+                menuLogout.classList.add('d-none');
+            }
             } catch {}
         }
 
         document.getElementById('menuLogout').addEventListener('click', async e => {
-            e.preventDefault();
-            await fetch('/api/logout', { method: 'POST' });
-            window.location.reload();
-        });
+        e.preventDefault();
+        await fetch('/api/logout', { method: 'POST' });
+        window.location.href = '/';
+    });
 
         /* ── UTILS ── */
         const formattaOrario = o => {

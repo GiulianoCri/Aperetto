@@ -1,5 +1,5 @@
 COSE FATTE:
-    miglioramenti pagina luoghi, inserimento grafico in profilo supplier e recensioni in consumer
+    aggiustata responsive luogo e sistemata sessione(controlla tu il bug)
 
 TODO:
     - sessioni supplier
@@ -8,4 +8,3 @@ TODO:
     - problemi fasce orarie
     - pin mappa             -> lat e lng non trovati in alcuni casi
     - profilo supplier      -> modifiche locale
-    - luogo                 -> aggiustare responsive 
