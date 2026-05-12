@@ -39,6 +39,51 @@ const supabaseApi= 'https://ocoztbtixgjdfadqoxtn.supabase.co';
 const supabaseApiKey= 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9jb3p0YnRpeGdqZGZhZHFveHRuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU3ODIwMzIsImV4cCI6MjA5MTM1ODAzMn0.K0tLeh1T-2zjCl3WSvtueTKRQWEadmR1gBXgguALov0';
 const supabase = createClient(supabaseApi, supabaseApiKey);
 
+
+
+//SESSIONI
+
+const session = require('express-session');
+
+app.use(session({
+    secret: 'una_stringa_segreta_molto_lunga',
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+        maxAge: 1000 * 60 * 60 * 24,
+        httpOnly: true,
+        sameSite: 'lax',
+        secure: false // metti true solo se usi HTTPS in produzione
+    }
+}));
+
+//AUTENTICAZIONE
+app.use(express.json()); //consente agli handler di leggere il body (renza questa riga la funzione req.body da errore)
+
+/*
+Use serve per creare un middleware, un ulteriore operazione che la richiesta subisce prima di raggiungere destinazione. 
+IMPORTANTE: use applica un middleware a tutte le richieste in entrata.
+IMPORTANTE: l'ordine in cui i middleware sono scritti nel mio file, sarebbe lo stesso con cui vengono applicati (app.use(espress.static(ROOT)) viene applicato prima di app.use(express.json()) )
+IMPORTANTE: è necessario che certi middleware vengano scritti prima di alcune handler (esempio app.use(express.json()) deve essere scritto prima di req.body negli handler)
+*/
+
+const bcrypt = require('bcrypt') //usiamo bcrypt per fare un hashing della password
+
+app.get('/api/me', (req, res) => {
+
+    //req.session.user ritorna la sessione per l'utente se è presente
+    if (req.session.user) {
+        
+        //se c'è una sessione attiva allora ritorno all'utente i suoi dati
+        res.json(req.session.user);
+    } else {
+        //se non c'è una sessione, mando il codice 401 (non autorizzato)
+        res.status(401).json({ error: "Non sei loggato" });
+    }
+});
+
+//FUNZIONI AUSILIARIE
+
 //Funzione per aggiungere l'url dell'immagine a un luogo
 const aggiungiUrl = (luogo) => {
     if (!luogo.immagine) return luogo; // se non c'è immagine, restituisce il luogo com'è
@@ -123,45 +168,6 @@ app.get("/api/luoghi/vicini", (req, res) => {
 });
 
 
-//SESSIONI
-
-const session = require('express-session');
-
-app.use(session({
-  secret: 'una_stringa_segreta_molto_lunga',
-  resave: false,
-  saveUninitialized: false,
-  cookie: {
-    maxAge: 1000 * 60 * 60 * 24,
-    httpOnly: true
-  }
-}));
-
-//AUTENTICAZIONE
-app.use(express.json()); //consente agli handler di leggere il body (renza questa riga la funzione req.body da errore)
-
-/*
-Use serve per creare un middleware, un ulteriore operazione che la richiesta subisce prima di raggiungere destinazione. 
-IMPORTANTE: use applica un middleware a tutte le richieste in entrata.
-IMPORTANTE: l'ordine in cui i middleware sono scritti nel mio file, sarebbe lo stesso con cui vengono applicati (app.use(espress.static(ROOT)) viene applicato prima di app.use(express.json()) )
-IMPORTANTE: è necessario che certi middleware vengano scritti prima di alcine handler (esempio app.use(express.json()) deve essere scritto prima di req.body negli handler)
-*/
-
-const bcrypt = require('bcrypt') //usiamo bcrypt per fare un hashing della password
-
-app.get('/api/me', (req, res) => {
-
-    //req.session.user ritorna la sessione per l'utente se è presente
-    if (req.session.user) {
-        
-        //se c'è una sessione attiva allora ritorno all'utente i suoi dati
-        res.json(req.session.user);
-    } else {
-        //se non c'è una sessione, mando il codice 401 (non autorizzato)
-        res.status(401).json({ error: "Non sei loggato" });
-    }
-});
-
 app.post("/api/login", async (req,res) =>{
     const {name, surname, email, password} = req.body; //anche qui passo i dati utente tramite il body
 
@@ -196,7 +202,7 @@ app.post("/api/login", async (req,res) =>{
         //faccio partire una sessione e anche qui salvo i dati utente di base
         req.session.user = { 
             email: user.email,
-            name: user.name,   
+            name: user.name,
             surname: user.surname
         };
 
@@ -254,8 +260,9 @@ app.post("/api/register", async (req, res) =>{
 
         //faccio partire una nuova sessione e riempio il campo "sess" con i dati utente di base
         req.session.user = { 
-            id: data[0].id,
-            email: data[0].email 
+            email: data[0].email,
+            name: data[0].name,
+            surname: data[0].surname
         };
 
        

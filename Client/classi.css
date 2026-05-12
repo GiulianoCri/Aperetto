@@ -1,5 +1,5 @@
 @charset "UTF-8";
-
+/* Colori Bootstrap */
 :root,
 [data-bs-theme=light] {
   --bs-blue: #0d6efd;
@@ -180,18 +180,19 @@
   --bs-form-invalid-border-color: #ea868f;
 }
 
+/* Reset e stili globali */
 *,
 *::before,
 *::after {
   box-sizing: border-box;
 }
-
+/* Abilita scroll fluido solo se l'utente non ha preferenze per ridurre il movimento */
 @media (prefers-reduced-motion: no-preference) {
   :root {
     scroll-behavior: smooth;
   }
 }
-
+/* Stili di base per il body, con variabili CSS per colori e font */
 body{
     margin: 0;
     font-family: var(--bs-body-font-family);
@@ -206,6 +207,8 @@ body{
 }
 
 /* CARD */
+
+/* Stili per le card dei risultati di ricerca */
 .risultato-card {
     background: #fff;
     border-radius: 18px;
@@ -219,14 +222,17 @@ body{
     border: 1.5px solid rgba(0,0,0,0.05);
     min-height: 300px;
 }
+
+/* Effetti di hover e active per le card */
 .risultato-card:hover {
     transform: translateY(-4px);
     box-shadow: 0 12px 28px rgba(0,0,0,0.14);
 }
-
 .risultato-card:active {
     transform: translateY(-1px);
 }
+
+/* Stili per l'immagine all'interno della card, con un wrapper per mantenere le proporzioni */
 .risultato-card .card-img-wrap {
     position: relative;
     width: 100%;
@@ -244,7 +250,66 @@ body{
     transition: transform 0.35s ease; 
 }
 
+/*Responsive card*/
+@media (max-width: 768px) {
+    .risultato-card .card-img-wrap {
+        height: 140px;
+    }
+    .risultato-card h2 {
+        font-size: 0.95rem;
+    }
+}
+
+/*Body della card*/
+.risultato-card .card-info {
+    flex: 1;
+    padding: 14px 16px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    background: #fff;
+}
+
+.risultato-card .card-info h2 {
+    font-size: 1rem;
+    font-weight: 700;
+    margin: 0;
+    color: #1a1a1a;
+    line-height: 1.3;
+}
+
+.risultato-card .card-info .card-desc {
+    font-size: 0.82rem;
+    color: #666;
+    line-height: 1.5;
+    margin: 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.risultato-card .card-info .card-address {
+    font-size: 0.78rem;
+    color: #999;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.risultato-card .card-info .card-address::before {
+    content: '📍';
+    font-size: 0.75rem;
+}
+
+
+
+
 /* ── PROFILO ── */
+
+/* Stili per la pagina del profilo utente, con una griglia per il layout e una sidebar sticky */
+
 .profilo-page {
     margin-top: 70px;
     padding: 30px 24px;
@@ -273,6 +338,7 @@ body{
     top: 88px;
 }
 
+/* Stili per l'avatar e le informazioni del profilo */
 .profilo-nome {
     font-size: 1.3rem;
     font-weight: 700;
@@ -305,7 +371,7 @@ body{
     font-size: 0.95rem;
     font-weight: 500;
 }
-
+/* Stili per il pulsante di logout */
 .btn-logout {
     margin-top: 6px;
     width: 100%;
@@ -334,6 +400,10 @@ body{
     font-weight: bold;
 }
 
+/*Recensioni*/
+
+
+/* Stili per le card delle recensioni all'interno del profilo, con effetti di hover e un layout pulito */
 .recensione-card {
     background: #fff;
     border-radius: 16px;
@@ -349,7 +419,7 @@ body{
     transform: translateY(-3px);
     box-shadow: 0 8px 22px rgba(0,0,0,0.13);
 }
-
+/* Stili per l'intestazione di ogni recensione, con informazioni sull'utente e la data */
 .rec-header {
     display: flex;
     justify-content: space-between;
@@ -379,7 +449,7 @@ body{
     padding: 3px 10px;
     border-radius: 20px;
 }
-
+/* Stili per lo stato vuoto quando non ci sono recensioni*/
 .empty-state {
     background: #fff;
     border-radius: 16px;
@@ -412,26 +482,8 @@ body{
     .profilo-page { padding: 20px 14px; }
     .rec-header   { flex-direction: column; align-items: flex-start; }
 }
-/*Responsive filtri*/
-/* Tablet / mobile: filtri si impilano su due righe se necessario */
-@media (max-width: 576px) {
-    .filtri-container {
-        top: 64px;
-        padding: 8px 12px;
-        gap: 8px;
-    }
 
-    .filtri-container .form-select {
-        flex: 1 1 calc(50% - 8px); /* due select affiancati */
-        min-width: 0;
-    }
-
-    #resetFiltri {
-        flex: 1 1 100%; /* reset occupa tutta la riga */
-    }
-}
-
-/* Aggiorna anche il margine del contenuto principale */
+/* Aggiorna anche il margine del contenuto principale del profilo*/
 .app-container {
     margin-top: 128px; /* 72px navbar + 56px filtri */
     height: calc(100vh - 128px);
@@ -441,16 +493,6 @@ body{
     .app-container {
         margin-top: 130px;
         height: calc(100vh - 130px);
-    }
-}
-
-/*Responsive card*/
-@media (max-width: 768px) {
-    .risultato-card .card-img-wrap {
-        height: 140px;
-    }
-    .risultato-card h2 {
-        font-size: 0.95rem;
     }
 }
 
@@ -862,7 +904,7 @@ body{
     padding: 6px 10px;
     box-shadow: 0 4px 10px rgba(0,0,0,0.15);
 }
-/* immagine */
+/* Immagine */
 
 .risultato-card:hover .card-img-wrap img {
     transform: scale(1.04);
@@ -876,49 +918,6 @@ body{
     height: 60px;
     background: linear-gradient(to top, rgba(0,0,0,0.18), transparent);
     pointer-events: none;
-}
-
-/*Body della car*/
-.risultato-card .card-info {
-    flex: 1;
-    padding: 14px 16px 16px;
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    background: #fff;
-}
-
-.risultato-card .card-info h2 {
-    font-size: 1rem;
-    font-weight: 700;
-    margin: 0;
-    color: #1a1a1a;
-    line-height: 1.3;
-}
-
-.risultato-card .card-info .card-desc {
-    font-size: 0.82rem;
-    color: #666;
-    line-height: 1.5;
-    margin: 0;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-}
-
-.risultato-card .card-info .card-address {
-    font-size: 0.78rem;
-    color: #999;
-    margin: 0;
-    display: flex;
-    align-items: center;
-    gap: 4px;
-}
-
-.risultato-card .card-info .card-address::before {
-    content: '📍';
-    font-size: 0.75rem;
 }
 
 /*Badge tipologia*/
@@ -1445,9 +1444,26 @@ body{
     transform: scale(0.97);
 }
 
-/* ══════════════════════════════════════════════════
-   PAGINA LUOGO — aggiungi in fondo a classi.css
-   ══════════════════════════════════════════════════ */
+/*Responsive filtri*/
+/* Tablet / mobile: filtri si impilano su due righe se necessario */
+@media (max-width: 576px) {
+    .filtri-container {
+        top: 64px;
+        padding: 8px 12px;
+        gap: 8px;
+    }
+
+    .filtri-container .form-select {
+        flex: 1 1 calc(50% - 8px); /* due select affiancati */
+        min-width: 0;
+    }
+
+    #resetFiltri {
+        flex: 1 1 100%; /* reset occupa tutta la riga */
+    }
+}
+
+/*Pagina Luogo*/
 
 /* ── banner ── */
 .luogo-banner {
@@ -2064,7 +2080,326 @@ body{
 @keyframes notificaIn  { from { opacity:0; transform:translateY(14px); } to { opacity:1; transform:translateY(0); } }
 @keyframes notificaOut { to   { opacity:0; transform:translateY(14px); } }
 
-/* ── RESPONSIVE ── */
+/* ═══════════════════════════════════════════
+   RESPONSIVE luogo
+   ═══════════════════════════════════════════ */
+
+/* ── TABLET (≤900px) ── */
+@media (max-width: 900px) {
+ 
+    /* Pagina luogo: colonne → stack verticale */
+    .profilo-grid {
+        grid-template-columns: 1fr;
+        gap: 14px;
+    }
+ 
+    /* La sidebar del profilo luogo smette di essere sticky */
+    .profilo-sidebar {
+        position: static !important;
+    }
+ 
+    /* Banner leggermente più basso */
+    .luogo-banner {
+        height: 320px;
+    }
+ 
+    /* Nome nel banner più piccolo */
+    .banner-nome {
+        font-size: 2.2rem;
+    }
+ 
+    /* Griglia info torna a 1 colonna */
+    .info-grid {
+        grid-template-columns: 1fr;
+    }
+ 
+    /* Form recensione: voto + fornitura in colonna */
+    .voto-fornitura-row {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+ 
+    /* Chart canvas più basso */
+    #chartFornitura {
+        max-height: 180px;
+    }
+}
+ 
+/* ── MOBILE (≤600px) ── */
+@media (max-width: 600px) {
+ 
+    /* Fix: profilo-page annidato in luogo-body non deve aggiungere margin-top né padding laterale */
+    .luogo-body .profilo-page {
+        margin-top: 0;
+        padding-top: 0;
+        padding-left: 0;
+        padding-right: 0;
+    }
+ 
+    /* Fix: profilo-grid e luogo-card non sforano a destra */
+    .luogo-body .profilo-grid {
+        width: 100%;
+        box-sizing: border-box;
+    }
+ 
+    .luogo-card {
+        width: 100%;
+        box-sizing: border-box;
+    }
+ 
+    /* Navbar: riduce padding e logo */
+    .navbar-custom {
+        height: 60px;
+        padding: 0 12px;
+        gap: 8px;
+    }
+ 
+    /* Banner compatto */
+    .luogo-banner {
+        margin-top: 60px;
+        height: 240px;
+    }
+ 
+    .banner-nome {
+        font-size: 1.6rem;
+        line-height: 1.15;
+    }
+ 
+    .banner-overlay {
+        padding: 18px 16px;
+    }
+ 
+    .banner-badge {
+        font-size: 0.65rem;
+        padding: 3px 10px;
+        margin-bottom: 6px;
+    }
+ 
+    /* Pulsante back più piccolo */
+    .btn-back-banner {
+        top: 10px;
+        left: 12px;
+        font-size: 0.78rem;
+        padding: 6px 12px;
+    }
+ 
+    /* Body pagina: meno padding laterale */
+    .luogo-body {
+        padding: 16px 12px 80px;
+        gap: 12px;
+    }
+ 
+    /* Card generica: padding ridotto */
+    .luogo-card {
+        border-radius: 16px;
+        padding: 18px 16px;
+    }
+ 
+    /* Titolo card più piccolo */
+    .luogo-card-title {
+        font-size: 1.05rem;
+        margin-bottom: 14px;
+    }
+ 
+    /* Media voto: numero più compatto */
+    .voto-numero {
+        font-size: 2.6rem;
+    }
+ 
+    /* Stelle interattive: un po' più piccole */
+    .stella-btn .stella-svg {
+        width: 28px;
+        height: 28px;
+    }
+ 
+    /* Fascia oraria: bottoni più stretti */
+    .fascia-btn {
+        font-size: 0.72rem;
+        padding: 6px 10px;
+    }
+ 
+    /* Sottosezione colazione */
+    .colazione-sub {
+        padding: 12px 12px;
+    }
+ 
+    /* Rec item */
+    .rec-item {
+        padding: 14px 14px;
+    }
+ 
+    /* Bottone invia recensione: full width su mobile */
+    .btn-invia-rec {
+        width: 100%;
+        text-align: center;
+        padding: 13px 20px;
+    }
+ 
+    /* Wrap bottone full-width */
+    .d-flex.justify-content-end {
+        justify-content: stretch !important;
+    }
+ 
+    /* Textarea leggermente più alta per il pollice */
+    .rec-textarea {
+        min-height: 110px;
+        font-size: 0.9rem;
+    }
+ 
+    /* Profilo sidebar: row invece di colonna */
+    .profilo-sidebar {
+        flex-direction: row;
+        flex-wrap: wrap;
+        align-items: flex-start;
+        gap: 12px;
+        padding: 16px;
+    }
+ 
+    .profilo-nome {
+        text-align: left;
+        font-size: 1.05rem;
+    }
+ 
+    /* Pill info */
+    .info-pill {
+        padding: 10px 12px;
+    }
+ 
+    .info-pill-value {
+        font-size: 0.88rem;
+    }
+ 
+    /* stat box: griglia 2 col */
+    .stats-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+ 
+    /* Chart canvas: altezza fissa ridotta */
+    #chartFornitura {
+        max-height: 150px;
+    }
+ 
+    /* badge aperto/chiuso */
+    .badge-aperto,
+    .badge-chiuso {
+        width: auto;
+        font-size: 0.68rem;
+    }
+ 
+    /* Lista risultati: 1 colonna piena */
+    .lista {
+        padding: 8px;
+        gap: 10px;
+    }
+ 
+    /* Filtri: due select affiancati + reset full width */
+    .filtri-container {
+        top: 60px;
+        padding: 8px 10px;
+        gap: 7px;
+    }
+ 
+    .filtri-container .form-select {
+        flex: 1 1 calc(50% - 4px);
+        min-width: 0;
+        font-size: 0.8rem;
+        height: 36px;
+    }
+ 
+    #resetFiltri {
+        flex: 1 1 100%;
+        height: 36px;
+        font-size: 0.8rem;
+    }
+ 
+    /* App container: si adatta all'altezza con navbar+filtri più corti */
+    .app-container {
+        margin-top: 108px;
+        height: calc(100vh - 108px);
+        padding: 10px;
+        gap: 10px;
+        flex-direction: column;
+    }
+ 
+    /* Su mobile la mappa si comprime e la lista è in cima */
+    #map {
+        flex: 0 0 45vh;
+        border-radius: 16px;
+        overflow: hidden;
+    }
+ 
+    .lista {
+        flex: 1;
+        height: auto;
+        max-height: 45vh;
+    }
+}
+ 
+/* ── SMALL (≤400px) ── */
+@media (max-width: 400px) {
+ 
+    .banner-nome {
+        font-size: 1.3rem;
+    }
+ 
+    .luogo-card {
+        padding: 14px 12px;
+    }
+ 
+    /* Fasce orarie: wrap stretto */
+    .fascia-grid {
+        gap: 5px;
+    }
+ 
+    .fascia-btn {
+        font-size: 0.68rem;
+        padding: 5px 8px;
+    }
+ 
+    /* Colazione sub: colonna singola */
+    .colazione-sub-row {
+        flex-direction: column;
+        gap: 14px;
+    }
+ 
+    /* Stat num più piccolo */
+    .stat-num {
+        font-size: 1.6rem;
+    }
+ 
+    .voto-numero {
+        font-size: 2.2rem;
+    }
+}
+ 
+/* ── LANDSCAPE MOBILE (altezza ≤500px) ── */
+@media (max-height: 500px) and (max-width: 900px) {
+ 
+    .luogo-banner {
+        height: 180px;
+    }
+ 
+    .banner-nome {
+        font-size: 1.4rem;
+    }
+ 
+    /* App container: layout orizzontale lista+mappa */
+    .app-container {
+        flex-direction: row;
+    }
+ 
+    #map {
+        flex: 1;
+        height: 100%;
+    }
+ 
+    .lista {
+        flex: 0 0 260px;
+        max-height: 100%;
+        height: 100%;
+    }
+}
+/* ── RESPONSIVENESS GENERALE ── */
 @media (max-width: 600px) {
     .luogo-banner  { height: 280px; }
     .banner-nome   { font-size: 2rem; }
