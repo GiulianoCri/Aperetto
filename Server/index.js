@@ -508,12 +508,12 @@ app.get('/client/reset-password.html', (req, res) => {
 // REGISTRAZIONE SUPPLIER
 app.post('/api/register-supplier', upload.single('immagineLocale'), async (req, res) => {
     const {
-        name, surname, email, ruolo,
+        name, surname, email, password, ruolo,
         nomeLocale, indirizzoLocale, telefonoFinale, orarioApertura, orarioChiusura, aperitivo, colazione, giornoChiusura,
         sitoWeb, instagram
     } = req.body;
 
-    if (!name || !surname || !email || !ruolo || !nomeLocale || !indirizzoLocale || !orarioApertura || !orarioChiusura) {
+    if (!name || !surname || !email || !password || !ruolo || !nomeLocale || !indirizzoLocale || !orarioApertura || !orarioChiusura) {
         return res.status(400).json({ error: "Tutti i campi obbligatori devono essere compilati" });
     }
 
@@ -528,14 +528,19 @@ app.post('/api/register-supplier', upload.single('immagineLocale'), async (req, 
             if (uploadError) throw uploadError;
         }
 
-        const { lat, lng } = await geocodifica(indirizzoLocale);
+        const saltRounds = 10;
+        const hashSupplier = await bcrypt.hash(password, saltRounds);
 
+        const { lat, lng } = await geocodifica(indirizzoLocale);
+        console.log("serve - password: " + password);
         const { error } = await supabase
             .from('location')
+            .select('id')
             .insert([{
                 email: email.toLowerCase().trim(),
                 nome: name,
                 cognome: surname,
+                password_hash: hashSupplier,
                 ruolo,
                 nome_locale: nomeLocale,
                 indirizzo: indirizzoLocale,
@@ -557,13 +562,57 @@ app.post('/api/register-supplier', upload.single('immagineLocale'), async (req, 
             throw error;
         }
 
-        res.status(201).json({ message: "Registrazione completata con successo!" });
+        res.status(201).json({ message: "Registrazione completata con successo!", id: data.id });
+        /* restituisco l'id del luogo appena creato per inserirlo nel redirect dopo la registrazione / login */
 
     } catch (err) {
         console.error("Errore registrazione supplier:", err.message, err.stack);
         res.status(500).json({ error: "Errore interno del server" });
     }
 });
+
+// LOGIN SUPPLIER
+app.post("/api/login-supplier", async (req,res) =>{
+    const {email, password} = req.body;
+
+    if (!email || !password) {
+        return res.status(400).json({ error: "Tutti i campi sono obbligatori" });
+    }
+
+    //effettuo una select sul database per cercare l'utente
+    const { data: user, error } = await supabase
+        .from('location')
+        .select('*')
+        .eq('email', email) //lo cerchiamo rispetto alla mail
+        .single();
+
+    if (!user || error) {
+        //401 -> utente non autorizzato
+        return res.status(401).json({ error: "Utente non trovato" });
+    }
+
+    //a stringhe uguali corrispondono hash uguali
+
+    console.log("PASSWORD RICEVUTA:", JSON.stringify(password));
+    console.log("HASH DAL DB:", user.password_hash);
+    const isPasswordCorrect = await bcrypt.compare(password, user.password_hash);
+    console.log("PASSWORD CORRETTA?", isPasswordCorrect);
+
+
+    if(isPasswordCorrect){
+        
+        //faccio partire una sessione e anche qui salvo i dati utente di base
+        req.session.user = { 
+            email: user.email,
+            localeId: user.id,
+        };
+
+        res.json({ message: "Login effettuato!", user: req.session.user, id: req.session.localeId});
+    } else {
+        res.status(401).json({ error: "Password errata" });
+    }
+
+})
 
 // AVVIO SERVER
 app.listen(PORT,HOST,()=>{

@@ -1,10 +1,9 @@
 COSE FATTE:
-    aggiustata responsive luogo e sistemata sessione(controlla tu il bug)
+    modifiche a login-supplier (registrazione + accesso)
 
 TODO:
     - sessioni supplier
-    - sessioni utente       -> sistemare bug
-    - login supplier        -> DA TERMINARE (fixare psw dim e login con db)
+    - login supplier        -> fixare reindirizzamento
     - problemi fasce orarie
     - pin mappa             -> lat e lng non trovati in alcuni casi
     - profilo supplier      -> modifiche locale
