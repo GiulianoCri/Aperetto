@@ -30,31 +30,60 @@
         </div>
     </div>
     <!-- FILTRI -->
-    <div class="filtri-container px-3 py-2 bg-light d-flex gap-3 align-items-center flex-wrap">
-        <!-- Tipo locale -->
-        <select id="filtroTipo" class="form-select w-auto">
-            <option value="">Tutti</option>
-            <option value="Colazione">Colazione</option>
-            <option value="Aperitivo">Aperitivo</option>
-        </select>
+    <div class="filtri-container">
 
-        <!-- Distanza -->
-        <select id="filtroDistanza" class="form-select w-auto">
+  <!-- Tipo locale -->
+  <div class="filtro-group">
+    <svg class="filtro-icon" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M3 5h14M6 10h8M9 15h2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+    </svg>
+    <div class="select-wrapper">
+      <select id="filtroTipo" class="filtro-select">
+        <option value="">Tutti i locali</option>
+        <option value="Colazione">Colazione</option>
+        <option value="Aperitivo">Aperitivo</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Distanza -->
+  <div class="filtro-group">
+        <svg class="filtro-icon" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M10 2C7.24 2 5 4.24 5 7c0 4 5 11 5 11s5-7 5-11c0-2.76-2.24-5-5-5zm0 6.5A1.5 1.5 0 1 1 10 5a1.5 1.5 0 0 1 0 3.5z" fill="currentColor"/>
+        </svg>
+        <div class="select-wrapper">
+        <select id="filtroDistanza" class="filtro-select">
             <option value="">Qualsiasi distanza</option>
             <option value="1">Entro 1 km</option>
             <option value="3">Entro 3 km</option>
             <option value="5">Entro 5 km</option>
             <option value="10">Entro 10 km</option>
         </select>
+        </div>
+    </div>
 
-        <!-- Reset -->
-        <button id="resetFiltri" class="btn btn-secondary">Reset</button>
+    <!-- Reset -->
+    <button id="resetFiltri">
+        <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" width="14" height="14">
+        <path d="M4 4l12 12M16 4L4 16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        Reset
+    </button>
 
     </div>
     <!-- Contenuto principale -->
     <div class="app-container">
         <div class="lista" id="risultati"></div>
         <div id="map"></div>
+    </div>
+    <!-- TOGGLE LISTA/MAPPA (solo mobile) -->
+    <div class="toggle-vista" id="toggleVista">
+        <button class="toggle-vista-btn active" id="btnLista" onclick="setVista('lista')">
+            ☰ Lista
+        </button>
+        <button class="toggle-vista-btn" id="btnMappa" onclick="setVista('mappa')">
+            🗺️ Mappa
+        </button>
     </div>
 
 <script>
@@ -389,6 +418,46 @@
         filtroDistanza.value = "";
         applicaFiltri();
     });
+
+    // Adatta il margin-top dell'app-container all'altezza reale di navbar + filtri
+    function adattaLayout() {
+        const navbar  = document.querySelector('.navbar-custom');
+        const filtri  = document.querySelector('.filtri-container');
+        const appCont = document.querySelector('.app-container');
+        if (!navbar || !filtri || !appCont) return;
+
+        const altezzaTotale = navbar.offsetHeight + filtri.offsetHeight;
+        appCont.style.marginTop = altezzaTotale + 'px';
+        appCont.style.height    = `calc(100vh - ${altezzaTotale}px)`;
+    }
+
+    // Esegui subito e ad ogni resize (o se i filtri cambiano altezza)
+    adattaLayout();
+    window.addEventListener('resize', adattaLayout);
+
+    // Osserva variazioni di altezza del filtri-container (es. wrap su mobile)
+    const resizeObs = new ResizeObserver(adattaLayout);
+    resizeObs.observe(document.querySelector('.filtri-container'));
+
+
+    // Funzione per toggle Lista/Mappa su mobile
+    function setVista(vista) {
+    const appContainer = document.querySelector('.app-container');
+    const btnLista = document.getElementById('btnLista');
+    const btnMappa = document.getElementById('btnMappa');
+
+    if (vista === 'mappa') {
+        appContainer.classList.add('vista-mappa');
+        btnMappa.classList.add('active');
+        btnLista.classList.remove('active');
+        // Invalida la mappa per ridisegnarla correttamente dopo che diventa visibile
+        setTimeout(() => map.invalidateSize(), 50);
+    } else {
+        appContainer.classList.remove('vista-mappa');
+        btnLista.classList.add('active');
+        btnMappa.classList.remove('active');
+    }
+}
 </script>
 </body>
 

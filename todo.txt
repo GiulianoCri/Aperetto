@@ -1,9 +1,9 @@
 COSE FATTE:
     modifiche a login-supplier (registrazione + accesso)
+    sistemato lato grafico index.htlm e fixati bug vari
 
 TODO:
     - sessioni supplier
     - login supplier        -> fixare reindirizzamento
     - problemi fasce orarie
-    - pin mappa             -> lat e lng non trovati in alcuni casi
     - profilo supplier      -> modifiche locale
