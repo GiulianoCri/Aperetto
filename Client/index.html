@@ -4,27 +4,34 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Aperetto: aperitivo o cornetto?</title>
+    <!-- Icona del sito -->
     <link rel="icon" type="image/x-icon" href="/Foto/APERETTO (1).png">
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"><!--CSS per la mappa-->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"><!--Iporto foglio di stile per la mappa-->
     <link rel="stylesheet" href="classi.css">
-    <!--Script per la mappa-->
+    <!--Importo script per la mappa-->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 </head>
 
-<body class="body-custom">
-    <div class="navbar-custom d-flex fixed-top align-items-center gap-3 px-3 bg-primary">
+<body>
+    <!-- NAVBAR -->
+    <div class="navbar-custom fixed-top">
         <img src="/Foto/APERETTO (1).png" alt="Logo Aperetto" class="logo">
         <input type="text" placeholder="Cerca un locale..." class="form-control rounded-5 flex-grow-1 search-input">
+        <!-- Bottone per la geolocalizzazione -->  
         <button id="vicinoBtn" class="btn border-0 bg-trasparent rounded-4">
             <img src="/Foto/location.png" class="logo zoom-hover border-0 bg-trasparent mt-4 mb-4 p-4">
         </button>
+        <!-- Menu a tendina per login/profilo/logout -->
+        <!--posizionato rispetto al flusso degli altri elementi-->
         <div class="position-relative">
             <button class="loginbtn rounded-circle border-0 p-0 me-2"></button>
+            <!--Menu a tendina-->
             <div class="dropdown rounded-4 flex-column d-flex">
                 <!-- Mostrato se NON loggato -->
                 <a href="login.html" class="text-dark m-auto" id="menuAccedi">Accedi</a>
                 <!-- Mostrati se loggato -->
                 <a href="profilo.html" class="text-dark m-auto d-none" id="menuProfilo">Profilo</a>
+                <!--utilizzo # perche è un link di logout e non deve reindirizzare -->
                 <a href="#" class="text-dark m-auto d-none" id="menuLogout">Logout</a>
             </div>
         </div>
@@ -32,50 +39,48 @@
     <!-- FILTRI -->
     <div class="filtri-container">
 
-  <!-- Tipo locale -->
-  <div class="filtro-group">
-    <svg class="filtro-icon" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M3 5h14M6 10h8M9 15h2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
-    </svg>
-    <div class="select-wrapper">
-      <select id="filtroTipo" class="filtro-select">
-        <option value="">Tutti i locali</option>
-        <option value="Colazione">Colazione</option>
-        <option value="Aperitivo">Aperitivo</option>
-      </select>
-    </div>
-  </div>
-
-  <!-- Distanza -->
-  <div class="filtro-group">
-        <svg class="filtro-icon" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M10 2C7.24 2 5 4.24 5 7c0 4 5 11 5 11s5-7 5-11c0-2.76-2.24-5-5-5zm0 6.5A1.5 1.5 0 1 1 10 5a1.5 1.5 0 0 1 0 3.5z" fill="currentColor"/>
-        </svg>
+    <!-- Tipo locale -->
+    <div class="filtro-group">
+        <!-- Creo l icona del filtro,viewbox mi specifica le dimensioni partendo da (0,0) a (20,20) fill è per lo sfondo nero -->
+        <img src="/Foto/filtro.svg" alt="filtro" width="15" height="15" class="filtro-icon">
         <div class="select-wrapper">
-        <select id="filtroDistanza" class="filtro-select">
-            <option value="">Qualsiasi distanza</option>
-            <option value="1">Entro 1 km</option>
-            <option value="3">Entro 3 km</option>
-            <option value="5">Entro 5 km</option>
-            <option value="10">Entro 10 km</option>
+        <select id="filtroTipo" class="filtro-select">
+            <option value="">Tutti i locali</option>
+            <option value="Colazione">Colazione</option>
+            <option value="Aperitivo">Aperitivo</option>
         </select>
         </div>
     </div>
 
-    <!-- Reset -->
-    <button id="resetFiltri">
-        <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" width="14" height="14">
-        <path d="M4 4l12 12M16 4L4 16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-        </svg>
-        Reset
-    </button>
+    <!-- Distanza -->
+    <div class="filtro-group">
+            <img src="/Foto/position.svg" alt="filtro" width="15" height="15" class="filtro-icon">
+            <div class="select-wrapper">
+            <select id="filtroDistanza" class="filtro-select">
+                <option value="">Qualsiasi distanza</option>
+                <option value="1">Entro 1 km</option>
+                <option value="3">Entro 3 km</option>
+                <option value="5">Entro 5 km</option>
+                <option value="10">Entro 10 km</option>
+            </select>
+    </div>
+    </div>
+
+        <!-- Reset -->
+        <button id="resetFiltri">
+            <img src="/Foto/reset.svg" alt="filtro" width="15" height="15" class="filtro-icon">
+            Reset
+        </button>
 
     </div>
+
     <!-- Contenuto principale -->
     <div class="app-container">
         <div class="lista" id="risultati"></div>
         <div id="map"></div>
     </div>
+
+
     <!-- TOGGLE LISTA/MAPPA (solo mobile) -->
     <div class="toggle-vista" id="toggleVista">
         <button class="toggle-vista-btn active" id="btnLista" onclick="setVista('lista')">
@@ -87,10 +92,16 @@
     </div>
 
 <script>
+
+
+
     //Script per gestire il menu a tendina
+
+
+    //salvo gli venti che mi interessano in variabili per comodità
     const btn = document.querySelector(".loginbtn");
     const menu = document.querySelector(".dropdown");
-
+    //Apro/chiudo menu al click sul bottone
     btn.addEventListener("click", () => {
         menu.classList.toggle("show");
     });
@@ -101,23 +112,14 @@
             menu.classList.remove("show");
         }
     });
-    //Funzione per ottenere l'icona corretta in base alla tipologia del locale
-    function getIconaPerTipologia(luogo) {
 
-        const aperitivo = luogo.aperitivo;
-        const colazione = luogo.colazione;
-
-        return L.icon({
-            iconUrl: '/Foto/position-marker.png', 
-            iconSize: [36, 36],
-            iconAnchor: [18, 36],
-            popupAnchor: [0, -36]
-        });
-    }
 
     //Script per caricare i luoghi dal server
+
+
     let tuttiILuoghi = [];
     let markers = {};
+    const input = document.querySelector("input");
     const caricaLuoghi = async () => {
     try {
         const response = await fetch('/api/location');
@@ -127,21 +129,28 @@
 
         const luoghi = await response.json();
 
-        console.log("Risposta API:", luoghi); // aggiungi questa riga
         tuttiILuoghi = luoghi; // SALVO I LUOGHI IN UNA VARIABILE GLOBALE PER FUTURI FILTRI
-        window.tuttiILuoghi = luoghi; // aggiungi questa riga per rendere tuttiILuoghi accessibile globalmente
-        tuttiILuoghi = luoghi;
-        console.log("Luoghi caricati:", tuttiILuoghi.length, tuttiILuoghi[0]);
+        window.tuttiILuoghi = luoghi; // rendo la variabile globale
         inserisciLuoghi(luoghi);
-        // pulisci marker vecchi dalla mappa
+
+        // pulisci marker vecchi dalla mappa in modo che non si sovrappongano a quelli nuovi
         Object.values(markers).forEach(m => map.removeLayer(m));
         markers = {};
 
         // aggiungi marker
         luoghi.forEach(luogo => {
             if (!luogo.lat || !luogo.lng) return;
-            const marker = L.marker([luogo.lat, luogo.lng], { icon: getIconaPerTipologia(luogo) }).addTo(map);
-
+            //L è la libreria Leaflet, marker è il marcatore da posizionare sulla mappa, lat e lng sono le coordinate del luogo, icon è l'icona personalizzata,iconanchor è il punto dell'icona che corrisponde alla posizione, popupanchor è dove appare il popup rispetto all'icona
+            const marker = L.marker([luogo.lat, luogo.lng], { 
+            icon: 
+                L.icon({
+                iconUrl: '/Foto/position-marker.png', 
+                iconSize: [36, 36],
+                iconAnchor: [18, 36],
+                popupAnchor: [0, -36]
+                }) 
+            }).addTo(map);
+            // tooltip è un piccolo box che appare al passaggio del mouse
             marker.bindTooltip(`
                 <b>${luogo.nome_locale}</b><br>
                 ${luogo.indirizzo}
@@ -149,46 +158,50 @@
                 direction: "top",
                 offset: [0, -10]
             });
-
-            marker.bindPopup(`
-                <b>${luogo.nome_locale}</b><br>${luogo.indirizzo}
-            `);
-
+            // al click sul marker, reindirizza alla pagina del luogo, il from=index serve per sapere da dove viene l'utente e poter mostrare un bottone "torna alla lista" nella pagina del luogo e indirizzare correttamente al click
             marker.on("click", () => {
                 window.location.href = `/luogo.html?id=${luogo.id}&from=index`;
             });
-
+            // salvo marker in un oggetto per poterlo rimuovere facilmente in futuro
             markers[luogo.id] = marker;
     });
-    } catch (error) {
-        console.error('Errore nel caricamento dei luoghi:', error);
-    }
-};
-    
-    const input = document.querySelector("input");
+        } catch (error) {
+            console.error('Errore nel caricamento dei luoghi:', error);
+        }
+    };
 
+
+    //Script per la ricerca
+
+
+    // Prendo l'input di ricerca e aggiungo un event listener per ogni volta che l'utente digita qualcosa
     input.addEventListener("input", () => {
-    const testo = input.value.toLowerCase().trim();
+        applicaFiltri();
+    });
 
-    const filtrati = tuttiILuoghi.filter(l =>
-        l.nome_locale.toLowerCase().includes(testo)
-    );
 
-    aggiornaVista(filtrati);
-});
 
-    //Per mappa
-    let map = L.map('map').setView([41.8932482, 12.4829853], 13); //Roma come centro iniziale
+    //Script per la mappa
 
+
+
+    //imposto la vista iniziale della mappa centrata su Roma, con zoom 13
+    let map = L.map('map').setView([41.8932482, 12.4829853], 13);
+    // aggiungo il layer delle mappe di OpenStreetMap, con l'attribuzione per rispettare la licenza
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; OpenStreetMap contributors'
     }).addTo(map);
+    // carico i luoghi e aggiungo i marker sulla mappa
     caricaLuoghi();
 
 
     //Funzioni ausiliarie
+
+
+    // Aggiorna la lista dei luoghi e i marker sulla mappa in base a un array di luoghi filtrati
     function aggiornaVista(luoghi) {
 
+        // aggiorna la lista dei risultati
         inserisciLuoghi(luoghi);
 
         // pulizia marker
@@ -197,12 +210,22 @@
 
         luoghi.forEach(luogo => {
 
-            // controllo sicurezza (IMPORTANTISSIMO)
             if (!luogo.lat || !luogo.lng) return;
 
-            const marker = L.marker([luogo.lat, luogo.lng], { icon: getIconaPerTipologia(luogo) }).addTo(map);
+            const marker = L.marker([luogo.lat, luogo.lng], { 
+            icon:
+                L.icon({
+                iconUrl: '/Foto/position-marker.png', 
+                iconSize: [36, 36],
+                iconAnchor: [18, 36],
+                popupAnchor: [0, -36]
+                })
+            }).addTo(map);
 
-            marker.bindTooltip(luogo.nome_locale);
+            marker.bindTooltip(`<b>${luogo.nome_locale}</b><br>${luogo.indirizzo}`, {
+                direction: "top",
+                offset: [0, -10]
+            });
 
             marker.on("click", () => {
                 window.location.href = `/luogo.html?id=${luogo.id}&from=index`;
@@ -212,6 +235,8 @@
         });
     }
 
+
+    // ritorna un booleano se il luogo è aperto in base all'orario di apertura e chiusura
     function isAperto(apertura, chiusura) {
         if (!apertura || !chiusura) return null;
         const ora = new Date();
@@ -224,31 +249,32 @@
         return now >= open && now < close;
     }
     
+
+    // Funzione per inserire i luoghi nella lista dei risultati, con badge di aperto/chiuso e tipo locale, e onclick per reindirizzare alla pagina del luogo
+
+
     const inserisciLuoghi = (luoghi) => {
+        // prendo il container dei risultati e lo svuoto prima di inserire i nuovi risultati filtrati
         const container = document.getElementById('risultati');
+        // aggiungo una classe per lo spazio tra i risultati
         container.classList.add("spazio");
         container.innerHTML = '';
 
         luoghi.forEach(luogo => {
-            console.log(luogo.nome_locale, "| aperitivo:", luogo.aperitivo, "| colazione:", luogo.colazione);
-        });
-
-        luoghi.forEach(luogo => {
+            // creo un div per ogni luogo, con classe risultato-card per lo stile
             const div = document.createElement('div');
             div.className = "risultato-card";
-
+            // calcolo se il luogo è aperto o chiuso in base all'orario di apertura e chiusura, se non ho orari restituisco null, se è aperto restituisco un badge verde, se è chiuso un badge rosso, se non ho orari non mostro nessun badge
             const aperto = isAperto(luogo.apertura, luogo.chiusura);
-            const badgeAperto = aperto === null
-                ? ''
-                : aperto
+            const badgeAperto = aperto === null ? '': aperto
                     ? `<span class="badge-aperto text-center">Aperto</span>`
                     : `<span class="badge-chiuso text-center">Chiuso</span>`;
-
+            // creo badge per il tipo di locale, se è aperitivo o colazione, se non ho info mostro "Locale"
             const badges = [];
             if (luogo.aperitivo) badges.push(`<span class="card-badge">Aperitivo</span>`);
             if (luogo.colazione) badges.push(`<span class="card-badge">Colazione</span>`);
             const badgesHtml = badges.length ? badges.join('') : `<span class="card-badge">Locale</span>`;
-
+            // inserisco nell'html del div il nome del locale, l'indirizzo, i badge di aperto/chiuso e tipo locale, e l'immagine se presente, con un onclick che reindirizza alla pagina del luogo
             div.innerHTML = `
                 <div class="card-img-wrap">
                     <img src="${luogo.immagine}" alt="${luogo.nome_locale}">
@@ -262,20 +288,36 @@
                     <p class="card-address">${luogo.indirizzo}</p>
                 </div>
             `;
-
+            // al click sul div, reindirizza alla pagina del luogo, il from=index serve per sapere da dove viene l'utente e poter mostrare un bottone "torna alla lista" nella pagina del luogo e indirizzare correttamente al click
             div.addEventListener('click', () => {
                 window.location.href = `/luogo.html?id=${luogo.id}&from=index`;
             });
+            // aggiungo il div al container dei risultati
             container.appendChild(div);
         });
     };
+
+
+
+    // Script per applicare i filtri di ricerca
+
+
     async function applicaFiltri() {
+        // faccio una copia dell'array originale dei luoghi, in modo da poterlo filtrare senza perdere i dati originali e poter resettare facilmente i filtri mostrando tutti i luoghi
         let filtrati = [...tuttiILuoghi];
 
+        const testo = input.value.toLowerCase().trim(); 
         const tipo = filtroTipo.value;
         const distanzaMax = parseFloat(filtroDistanza.value);
 
-        // filtro tipo
+        // filtro testo: controllo se il nome del locale include il testo di ricerca, uso toLowerCase per rendere la ricerca case-insensitive e trim per evitare problemi con spazi extra
+        if (testo) {
+            filtrati = filtrati.filter(l =>
+                l.nome_locale.toLowerCase().includes(testo)
+            );
+        }
+
+        // filtro tipo: se è selezionato un tipo, filtro i luoghi in base alla proprietà corrispondente (aperitivo o colazione), altrimenti mostro tutti i luoghi indipendentemente dal tipo
         if (tipo) {
             filtrati = filtrati.filter(l => {
                 if (tipo === 'Aperitivo') return l.aperitivo === true;
@@ -284,66 +326,88 @@
             });
         }
 
-        // filtro distanza (serve posizione utente)
+        // filtro distanza: se è selezionata una distanza massima, ottengo la posizione dell'utente e filtro i luoghi calcolando la distanza in km tra l'utente e il luogo con la formula di Haversine, mostro solo i luoghi che sono entro la distanza massima selezionata, se non riesco a ottenere la posizione (es. permesso negato) mostro un alert e non applico il filtro per distanza
         if (distanzaMax) {
             try {
                 const user = await getPosizioneUtente();
-
                 filtrati = filtrati.filter(l => {
                     const dist = distanzaKm(user.lat, user.lng, l.lat, l.lng);
                     return dist <= distanzaMax;
                 });
-
             } catch {
                 alert("Attiva la geolocalizzazione per filtrare per distanza");
             }
         }
-
+        // aggiorno la vista con i luoghi filtrati, sia la lista che i marker sulla mappa
         aggiornaVista(filtrati);
     }
 
 
     //Script per ottenere la posizione dell'utente
-    function getPosizioneUtente() {
-    return new Promise((resolve, reject) => {
-        const id = navigator.geolocation.watchPosition(
-            pos => {
-                navigator.geolocation.clearWatch(id);
-                resolve({ lat: pos.coords.latitude, lng: pos.coords.longitude });
-            },
-            err => {
-                navigator.geolocation.clearWatch(id);
-                reject(err);
-            }
-        );
-    });
-    }
-    //Calcola distanza in km tra due coordinate(Formula Haversine)
-    function distanzaKm(lat1, lon1, lat2, lon2) {
-        const R = 6371;
 
+
+    function getPosizioneUtente() {
+    // restituisce una Promise che si risolve con un oggetto { lat, lng } o si rifiuta con un errore
+    //uso una promise perché la geolocalizzazione è asincrona e può richiedere tempo o fallire se l'utente non concede il permesso
+        return new Promise((resolve, reject) => {
+            // controllo se il browser supporta la geolocalizzazione
+            const id = navigator.geolocation.watchPosition(
+                pos => {
+                    // se ottengo la posizione, pulisco il watch per evitare chiamate multiple e risolvo la promise con le coordinate
+                    navigator.geolocation.clearWatch(id);//monitoraggio continuo della posizione, lo pulisco appena ottengo la posizione per evitare chiamate multiple
+                    resolve({ lat: pos.coords.latitude, lng: pos.coords.longitude });
+                },
+                err => {
+                    // se c'è un errore (es. permesso negato, timeout, ecc.), pulisco il watch e rifiuto la promise con l'errore
+                    navigator.geolocation.clearWatch(id);
+                    reject(err);
+                }
+            );
+        });
+        }
+
+
+
+    
+    
+    //Calcola distanza in km tra due coordinate(Formula Haversine)
+    
+    
+    function distanzaKm(lat1, lon1, lat2, lon2) {
+        const R = 6371;// raggio della Terra in km
+        // converto le differenze di latitudine e longitudine in radianti
         const dLat = (lat2 - lat1) * Math.PI / 180;
         const dLon = (lon2 - lon1) * Math.PI / 180;
-
+        // applico la formula di Haversine
         const a =
             Math.sin(dLat/2) * Math.sin(dLat/2) +
             Math.cos(lat1*Math.PI/180) *
             Math.cos(lat2*Math.PI/180) *
             Math.sin(dLon/2) * Math.sin(dLon/2);
-
+        // calcolo l'angolo centrale tra i due punti
         const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-
+        // moltiplico l'angolo centrale per il raggio della Terra per ottenere la distanza in km
         return R * c;
     }
+
+
+
+
     // Ordina i luoghi in base alla distanza dall'utente e li mostra
+    
+    
     async function mostraVicinoAMe() {
+        // se non ho ancora i luoghi, li carico prima di tutto
         const user = await getPosizioneUtente();
 
         const ordinati = tuttiILuoghi.map(l => {
             return {
+                //copio tutte le proprietà del luogo, in modo da non perdere dati importanti come nome, indirizzo, ecc.
                 ...l,
+                // aggiungo una proprietà "distanza" calcolata con la funzione distanzaKm, che prende le coordinate dell'utente e del luogo
                 distanza: distanzaKm(user.lat, user.lng, l.lat, l.lng)
             };
+            // ordino i luoghi in base alla distanza, dal più vicino al più lontano
         }).sort((a, b) => a.distanza - b.distanza);
 
         inserisciLuoghi(ordinati);
@@ -358,26 +422,34 @@
         iconSize: [40, 40],           // dimensione in pixel
         iconAnchor: [20, 40],         // punto dell'icona che corrisponde alla posizione
         popupAnchor: [0, -40]         // dove appare il popup rispetto all'icona
-});
+    });
         // marker utente
         L.marker([user.lat, user.lng], { icon: iconaUtente })
             .addTo(map)
             .bindPopup("Sei qui")
             .openPopup();
     }
+    // Aggiungo event listener al bottone "Vicino a me" per mostrare i luoghi ordinati per distanza
     document.getElementById("vicinoBtn").addEventListener("click", () => {
         mostraVicinoAMe();
     });
 
+
+
+    
     //script per il profilo
+    
+    
     // Controlla se l'utente è loggato e aggiorna il menu
     async function aggiornaMenu() {
         try {
+            // Chiedo al server se l'utente è loggato
             const res = await fetch('/api/me');
+            
             const menuAccedi  = document.getElementById('menuAccedi');
             const menuProfilo = document.getElementById('menuProfilo');
             const menuLogout  = document.getElementById('menuLogout');
-
+            // Se è loggato, mostro il suo nome nel menu e carico le sue recensioni
             if (res.ok) {
                 // Utente loggato
                 menuAccedi.classList.add('d-none');
@@ -395,69 +467,100 @@
         }
     }
 
+
     // Logout
+
+
     document.getElementById('menuLogout').addEventListener('click', async (e) => {
         e.preventDefault();
         await fetch('/api/logout', { method: 'POST' });
+        // Ricarica la pagina per aggiornare il menu e lo stato dell'utente
         window.location.reload();
     });
 
+
+    // Eseguito subito per aggiornare il menu in base allo stato di login
     aggiornaMenu();
 
+
+
     //script per i filtri
+
+
     const filtroTipo = document.getElementById("filtroTipo");
     const filtroDistanza = document.getElementById("filtroDistanza");
     const resetBtn = document.getElementById("resetFiltri");
-
+    // aggiungo event listener a entrambi i filtri per applicare i filtri al cambiamento di uno qualsiasi dei due
     [filtroTipo, filtroDistanza].forEach(f =>
         f.addEventListener("change", applicaFiltri)
     );
-
+    // al click sul reset, svuoto i filtri e mostro tutti i luoghi
     resetBtn.addEventListener("click", () => {
         filtroTipo.value = "";
         filtroDistanza.value = "";
         applicaFiltri();
     });
 
+
+
     // Adatta il margin-top dell'app-container all'altezza reale di navbar + filtri
+    
+    
     function adattaLayout() {
         const navbar  = document.querySelector('.navbar-custom');
         const filtri  = document.querySelector('.filtri-container');
         const appCont = document.querySelector('.app-container');
         if (!navbar || !filtri || !appCont) return;
-
+        // calcolo altezza totale e la applico come margin-top all'app-container, in modo che sia sempre sotto navbar e filtri, anche se cambiano altezza (es. wrap su mobile)
         const altezzaTotale = navbar.offsetHeight + filtri.offsetHeight;
         appCont.style.marginTop = altezzaTotale + 'px';
         appCont.style.height    = `calc(100vh - ${altezzaTotale}px)`;
     }
 
-    // Esegui subito e ad ogni resize (o se i filtri cambiano altezza)
+    
+    
+    // Eseguito subito e ad ogni resize (o se i filtri cambiano altezza)
+    
+    
     adattaLayout();
     window.addEventListener('resize', adattaLayout);
 
+    
+    
     // Osserva variazioni di altezza del filtri-container (es. wrap su mobile)
+    
+    
     const resizeObs = new ResizeObserver(adattaLayout);
     resizeObs.observe(document.querySelector('.filtri-container'));
 
 
+    
+    
     // Funzione per toggle Lista/Mappa su mobile
+    
+    
     function setVista(vista) {
-    const appContainer = document.querySelector('.app-container');
-    const btnLista = document.getElementById('btnLista');
-    const btnMappa = document.getElementById('btnMappa');
+        //definisco variabili per il container principale e i bottoni
+        const appContainer = document.querySelector('.app-container');
+        const btnLista = document.getElementById('btnLista');
+        const btnMappa = document.getElementById('btnMappa');
 
-    if (vista === 'mappa') {
-        appContainer.classList.add('vista-mappa');
-        btnMappa.classList.add('active');
-        btnLista.classList.remove('active');
-        // Invalida la mappa per ridisegnarla correttamente dopo che diventa visibile
-        setTimeout(() => map.invalidateSize(), 50);
-    } else {
-        appContainer.classList.remove('vista-mappa');
-        btnLista.classList.add('active');
-        btnMappa.classList.remove('active');
+        if (vista === 'mappa') {
+            // aggiungo classe che mostra la mappa e nasconde la lista
+            appContainer.classList.add('vista-mappa');
+            // aggiorno stili dei bottoni
+            btnMappa.classList.add('active');
+            btnLista.classList.remove('active');
+            // Invalida la mappa per ridisegnarla correttamente dopo che diventa visibile
+            setTimeout(() => map.invalidateSize(), 50);
+        } else {
+            // rimuovo classe che mostra la mappa e nasconde la lista
+            appContainer.classList.remove('vista-mappa');
+            // aggiorno stili dei bottoni
+            btnLista.classList.add('active');
+            btnMappa.classList.remove('active');
+        }
     }
-}
 </script>
 </body>
 

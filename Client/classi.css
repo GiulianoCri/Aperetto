@@ -179,7 +179,6 @@
   --bs-form-invalid-color: #ea868f;
   --bs-form-invalid-border-color: #ea868f;
 }
-
 /* Reset e stili globali */
 *,
 *::before,
@@ -206,69 +205,190 @@ body{
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0); 
 }
 
-/* ---- LOGIN SUPPLIER ---- */
-/* Wrapper per posizionare il chevron */
-.select-wrapper {
-  position: relative;
-  display: block;
+
+
+
+
+
+
+
+
+/*Classi per index.html*/
+
+
+
+
+
+
+
+
+/* Stili per la navbar, con un design moderno e pulito, e un logo ben visibile */
+.navbar-custom{
+    height: 72px;
+    display: flex;
+    align-items: center;
+    background-color: var(--bs-body-bg);
+    box-shadow: 0 2px 16px rgba(0,0,0,0.06);
+    gap: 12px;
+    padding: 0 20px;
+    border-bottom: 2px solid rgba(0, 0, 0, 0.12);
 }
 
-/* Nasconde la freccia nativa del browser */
-.form-select-custom {
+/* Stili per il logo all'interno della navbar*/
+.logo {
+    height: 100px;
+    width: auto;
+    margin-bottom: 0.5rem;
+    object-fit: contain;
+    cursor: pointer;
+}
+
+/* Stili per bottone della geolocalizzazione */
+.zoom-hover {
+    transition: transform 0.2s ease;
+}
+.zoom-hover:hover {
+    transform: scale(1.2);
+}
+
+/* Stili per il pulsante di login/profilo/logout*/
+.loginbtn {
+    height: 50px;
+    width: 50px;
+    background-image: url('/Foto/profilo_img.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    cursor: pointer;
+}
+
+/* Stili per il menu a tendina del profilo*/
+.dropdown {
+    position: absolute;
+    top: 120%;
+    right: 0;
+    background-color: RGBA(var(--bs-white-rgb), var(--bs-bg-opacity, 1));
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    min-width: 150px;
+
+    /* Animazione */
+    opacity: 0;
+    transform: translateY(-10px);
+    pointer-events: none;
+
+    transition: all 0.3s ease;
+}
+
+/* Quando è attivo */
+.dropdown.show {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+}
+
+/* Link */
+.dropdown a {
+    padding: 10px;
+    text-decoration: none;
+    color: black;
+}
+
+
+/* ── FILTRI ── */
+.filtri-container {
+  position: fixed;
+  top: 72px;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+  background: rgba(255, 193, 7, 0.45);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  padding: 10px 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+/* Gruppo icona + select */
+.filtro-group {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  background: rgba(255, 255, 255, 0.55);
+  border: 1px solid rgba(0, 0, 0, 0.10);
+  border-radius: 50px;
+  padding: 0 14px 0 12px;
+  height: 38px;
+  transition: background 0.2s, border-color 0.2s, box-shadow 0.2s;
+}
+.filtro-group:focus-within {
+  background: rgba(255, 255, 255, 0.90);
+  border-color: rgba(0, 0, 0, 0.22);
+  box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.06);
+}
+
+/* Icona */
+.filtro-icon {
+  width: 15px;
+  height: 15px;
+  margin-left: 5px;
+  margin-right: 3px;
+  color: #555;
+  flex-shrink: 0;
+  pointer-events: none;
+}
+
+/* Select senza stili nativi */
+.filtro-select {
   appearance: none;
   -webkit-appearance: none;
-  -moz-appearance: none;
-
-  display: block;
-  width: 100%;
-  padding: 0.75rem 3rem 0.75rem 1rem; /* spazio a destra per il chevron */
-  cursor: pointer;
-
-  font-size: var(--text-base, 1rem);
+  border: none;
+  background: transparent;
   font-family: inherit;
-  color: var(--color-text, #28251d);
-  line-height: 1.5;
-
-  background-color: var(--color-surface, #f9f8f5);
-  border: 1px solid oklch(from var(--color-text, #28251d) l c h / 0.15);
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #1a1a1a;
+  cursor: pointer;
   outline: none;
-
-  transition: border-color 180ms ease, box-shadow 180ms ease;
+  padding: 0;
+  min-width: 130px;
+}
+.filtro-select option {
+  background: #fff;
+  color: #1a1a1a;
 }
 
-/* Stato focus accessibile */
-.form-select-custom:focus-visible {
-  border-color: var(--color-primary, #01696f);
-  box-shadow: 0 0 0 3px oklch(from var(--color-primary, #01696f) l c h / 0.18);
+/* Bottone Reset */
+#resetFiltri {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 38px;
+  padding: 0 16px;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  border-radius: 50px;
+  background: rgba(0, 0, 0, 0.06);
+  color: #1a1a1a;
+  font-family: inherit;
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.15s;
 }
-
-/* Stato hover */
-.form-select-custom:hover {
-  border-color: oklch(from var(--color-text, #28251d) l c h / 0.3);
+#resetFiltri:hover {
+  background: rgba(0, 0, 0, 0.14);
+  transform: scale(1.03);
 }
+#resetFiltri:active { transform: scale(0.97); }
 
-/* Opzione placeholder (vuota) */
-.form-select-custom option[value=""] {
-  color: var(--color-text-muted, #7a7974);
-}
-
-/* Chevron SVG sovrapposto */
-.select-chevron {
-  position: absolute;
-  right: 0.875rem;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 1.125rem;
-  height: 1.125rem;
-  color: var(--color-text-muted, #7a7974);
-  pointer-events: none; /* non intercetta i click */
-  transition: transform 180ms ease, color 180ms ease;
-}
-
-/* Ruota il chevron quando il select è aperto (focus) */
-.form-select-custom:focus ~ .select-chevron {
-  transform: translateY(-50%) rotate(180deg);
-  color: var(--color-primary, #01696f);
+/* Contenitore per i risultati, con un layout a griglia fluida e spaziatura uniforme */
+.spazio{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 }
 
 /* CARD */
@@ -365,6 +485,264 @@ body{
 .risultato-card .card-info .card-address::before {
     content: '📍';
     font-size: 0.75rem;
+}
+
+/* ── TOGGLE VISTA MOBILE ── */
+.toggle-vista {
+    display: none;
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1100;
+    background: #1a1a1a;
+    border-radius: 50px;
+    padding: 5px;
+    gap: 4px;
+    box-shadow: 0 6px 24px rgba(0,0,0,0.22);
+}
+
+.toggle-vista-btn {
+    padding: 10px 24px;
+    border: none;
+    border-radius: 50px;
+    font-family: inherit;
+    font-size: 0.88rem;
+    font-weight: 700;
+    cursor: pointer;
+    background: transparent;
+    color: rgba(255,255,255,0.55);
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    transition: background 0.2s, color 0.2s;
+}
+
+.toggle-vista-btn.active {
+    background: #FFC107;
+    color: #1a1a1a;
+}
+
+@media (max-width: 600px) {
+    .toggle-vista {
+        display: flex;
+    }
+
+    /* Di default su mobile: lista visibile, mappa nascosta */
+    #map {
+        display: none;
+        flex: 1;
+        height: 100%;
+        border-radius: 16px;
+        overflow: hidden;
+    }
+
+    .lista {
+        flex: 1;
+        height: auto;
+        max-height: none;
+        display: flex;
+    }
+
+    /* Classe per mostrare la mappa e nascondere la lista */
+    .app-container.vista-mappa #map {
+        display: block;
+    }
+
+    .app-container.vista-mappa .lista {
+        display: none;
+    }
+}
+
+/* ── RESPONSIVE FILTRI ── */
+@media (max-width: 576px) {
+  .filtri-container {
+    top: 64px;
+    padding: 8px 12px;
+    gap: 8px;
+  }
+  .filtro-group {
+    flex: 1 1 calc(50% - 8px);
+  }
+  .filtro-select {
+    min-width: 0;
+    width: 100%;
+    font-size: 0.8rem;
+  }
+  #resetFiltri {
+    flex: 1 1 100%;
+    justify-content: center;
+  }
+}
+    
+/* Stili responsive per la navbar e i suoi elementi, con adattamenti per schermi più piccoli */
+@media (max-width: 576px) {
+    .navbar-custom {
+        height: 64px;
+        gap: 8px;
+        padding: 0 10px;
+    }
+
+    .logo {
+        height: 80px;
+    }
+
+    #vicinoBtn {
+    background: rgba(255,255,255,0.6);
+    border-radius: 12px !important;
+    padding: 6px 10px !important;
+    transition: background 0.2s, transform 0.15s;
+    border: 1.5px solid rgba(0,0,0,0.08) !important;
+    }
+
+    #vicinoBtn:hover {
+    background: rgba(255,255,255,0.9);
+    transform: scale(1.05);
+    }
+    #vicinoBtn img.logo {
+        height: 36px;
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+
+    .loginbtn {
+    height: 44px;
+    width: 44px;
+    background-image: url('/Foto/profilo_img.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    cursor: pointer;
+    border: 2.5px solid rgba(0,0,0,0.15) !important;
+    border-radius: 50% !important;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .loginbtn:hover {
+        border-color: rgba(0,0,0,0.4) !important;
+        box-shadow: 0 0 0 3px rgba(0,0,0,0.08);
+    }
+}
+/* Stili per l'input di ricerca*/
+@media (max-width: 600px) {
+  .search-input {
+    height: 42px;
+    border-radius: 50px !important;
+    border: 1.5px solid rgba(0,0,0,0.15);
+    padding: 0 18px;
+    font-size: 0.92rem;
+    background: rgba(255,255,255,0.85);
+    backdrop-filter: blur(4px);
+    transition: box-shadow 0.2s, border-color 0.2s;
+  }
+  .search-input:focus {
+      box-shadow: 0 0 0 3px rgba(0,0,0,0.10);
+      border-color: rgba(0,0,0,0.3);
+      outline: none;
+      background: #fff;
+  }
+}
+@media (max-height: 500px) and (max-width: 900px) {
+ 
+    .luogo-banner {
+        height: 180px;
+    }
+ 
+    .banner-nome {
+        font-size: 1.4rem;
+    }
+ 
+    /* App container: layout orizzontale lista+mappa */
+    .app-container {
+        flex-direction: row;
+    }
+ 
+    #map {
+        flex: 1;
+        height: 100%;
+    }
+ 
+    .lista {
+        flex: 0 0 260px;
+        max-height: 100%;
+        height: 100%;
+    }
+}
+
+
+
+
+
+
+/* Classi per login-supplier.html */
+
+
+
+
+
+
+
+/* Permette di ancorare gli elementi al blocco */
+.select-wrapper {
+  position: relative;
+  display: block;
+}
+
+/* Nasconde la freccia nativa del browser */
+.form-select-custom {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+
+  display: block;
+  width: 100%;
+  padding: 0.75rem 3rem 0.75rem 1rem; /* spazio a destra per il chevron */
+  cursor: pointer;
+
+  font-size: var(--text-base, 1rem);
+  font-family: inherit;
+  color: var(--color-text, #28251d);
+  line-height: 1.5;
+
+  background-color: var(--color-surface, #f9f8f5);
+  border: 1px solid oklch(from var(--color-text, #28251d) l c h / 0.15);
+  outline: none;
+
+  transition: border-color 180ms ease, box-shadow 180ms ease;
+}
+
+/* Stato focus accessibile */
+.form-select-custom:focus-visible {
+  border-color: var(--color-primary, #01696f);
+  box-shadow: 0 0 0 3px oklch(from var(--color-primary, #01696f) l c h / 0.18);
+}
+
+/* Stato hover */
+.form-select-custom:hover {
+  border-color: oklch(from var(--color-text, #28251d) l c h / 0.3);
+}
+
+/* Opzione placeholder (vuota) */
+.form-select-custom option[value=""] {
+  color: var(--color-text-muted, #7a7974);
+}
+
+/* Chevron SVG sovrapposto */
+.select-chevron {
+  position: absolute;
+  right: 0.875rem;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 1.125rem;
+  height: 1.125rem;
+  color: var(--color-text-muted, #7a7974);
+  pointer-events: none; /* non intercetta i click */
+  transition: transform 180ms ease, color 180ms ease;
+}
+
+/* Ruota il chevron quando il select è aperto (focus) */
+.form-select-custom:focus ~ .select-chevron {
+  transform: translateY(-50%) rotate(180deg);
+  color: var(--color-primary, #01696f);
 }
 
 
@@ -1313,85 +1691,7 @@ body{
 .btn-avanti:active {
   transform: translateY(0);
 }
-.navbar-custom{
-    height: 72px;
-    display: flex;
-    align-items: center;
-    background-color: var(--bs-body-bg);
-    box-shadow: 0 2px 16px rgba(0,0,0,0.06);
-    gap: 12px;
-    padding: 0 20px;
-    border-bottom: 2px solid rgba(0, 0, 0, 0.12);
-}
-.logo {
-    height: 100px;
-    width: auto;
-    margin-bottom: 0.5rem;
-    object-fit: contain;
-    cursor: pointer;
-}
-.zoom-hover {
-    transition: transform 0.2s ease;
-}
-.zoom-hover:hover {
-    transform: scale(1.2);
-}
-.loginbtn {
-    height: 50px;
-    width: 50px;
-    background-image: url('/Foto/profilo_img.png');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    cursor: pointer;
-}
 
-@media (max-width: 576px) {
-    .navbar-custom {
-        height: 64px;
-        gap: 8px;
-        padding: 0 10px;
-    }
-
-    .logo {
-        height: 80px;
-    }
-
-    #vicinoBtn {
-    background: rgba(255,255,255,0.6);
-    border-radius: 12px !important;
-    padding: 6px 10px !important;
-    transition: background 0.2s, transform 0.15s;
-    border: 1.5px solid rgba(0,0,0,0.08) !important;
-    }
-
-    #vicinoBtn:hover {
-    background: rgba(255,255,255,0.9);
-    transform: scale(1.05);
-    }
-    #vicinoBtn img.logo {
-        height: 36px;
-        padding: 0 !important;
-        margin: 0 !important;
-    }
-
-    .loginbtn {
-    height: 44px;
-    width: 44px;
-    background-image: url('/Foto/profilo_img.png');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    cursor: pointer;
-    border: 2.5px solid rgba(0,0,0,0.15) !important;
-    border-radius: 50% !important;
-    transition: border-color 0.2s, box-shadow 0.2s;
-    }
-    .loginbtn:hover {
-        border-color: rgba(0,0,0,0.4) !important;
-        box-shadow: 0 0 0 3px rgba(0,0,0,0.08);
-    }
-}
 
 @media (max-width: 768px) {
     /* Riduce il gap tra le due colonne quando si impilano */
@@ -1450,114 +1750,6 @@ body{
   display: none; 
 }
 
-/* ── FILTRI ── */
-.filtri-container {
-  position: fixed;
-  top: 72px;
-  left: 0;
-  width: 100%;
-  z-index: 1000;
-  background: rgba(255, 193, 7, 0.45);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
-  padding: 10px 20px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  flex-wrap: wrap;
-}
-
-/* Gruppo icona + select */
-.filtro-group {
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  background: rgba(255, 255, 255, 0.55);
-  border: 1px solid rgba(0, 0, 0, 0.10);
-  border-radius: 50px;
-  padding: 0 14px 0 12px;
-  height: 38px;
-  transition: background 0.2s, border-color 0.2s, box-shadow 0.2s;
-}
-.filtro-group:focus-within {
-  background: rgba(255, 255, 255, 0.90);
-  border-color: rgba(0, 0, 0, 0.22);
-  box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.06);
-}
-
-/* Icona */
-.filtro-icon {
-  width: 15px;
-  height: 15px;
-  color: #555;
-  flex-shrink: 0;
-  pointer-events: none;
-}
-
-/* Select senza stili nativi */
-.filtro-select {
-  appearance: none;
-  -webkit-appearance: none;
-  border: none;
-  background: transparent;
-  font-family: inherit;
-  font-size: 0.875rem;
-  font-weight: 600;
-  color: #1a1a1a;
-  cursor: pointer;
-  outline: none;
-  padding: 0;
-  min-width: 130px;
-}
-.filtro-select option {
-  background: #fff;
-  color: #1a1a1a;
-}
-
-/* Bottone Reset */
-#resetFiltri {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  height: 38px;
-  padding: 0 16px;
-  border: 1px solid rgba(0, 0, 0, 0.15);
-  border-radius: 50px;
-  background: rgba(0, 0, 0, 0.06);
-  color: #1a1a1a;
-  font-family: inherit;
-  font-size: 0.82rem;
-  font-weight: 700;
-  cursor: pointer;
-  transition: background 0.2s, transform 0.15s;
-}
-#resetFiltri:hover {
-  background: rgba(0, 0, 0, 0.14);
-  transform: scale(1.03);
-}
-#resetFiltri:active { transform: scale(0.97); }
-
-/* ── RESPONSIVE FILTRI ── */
-@media (max-width: 576px) {
-  .filtri-container {
-    top: 64px;
-    padding: 8px 12px;
-    gap: 8px;
-  }
-  .filtro-group {
-    flex: 1 1 calc(50% - 8px);
-  }
-  .filtro-select {
-    min-width: 0;
-    width: 100%;
-    font-size: 0.8rem;
-  }
-  #resetFiltri {
-    flex: 1 1 100%;
-    justify-content: center;
-  }
-}
 /*Pagina Luogo*/
 
 /* ── banner ── */
@@ -2225,7 +2417,7 @@ body{
         max-height: 180px;
     }
 }
- 
+/*per luogo-card, info-pill e altri elementi con padding fisso, considerare di ridurre il padding su tablet se necessario per evitare spazi eccessivi*/
 /* ── MOBILE (≤600px) ── */
 @media (max-width: 600px) {
  
@@ -2457,101 +2649,7 @@ body{
         font-size: 2.2rem;
     }
 }
- 
-/* ── LANDSCAPE MOBILE (altezza ≤500px) ── */
-@media (max-height: 500px) and (max-width: 900px) {
- 
-    .luogo-banner {
-        height: 180px;
-    }
- 
-    .banner-nome {
-        font-size: 1.4rem;
-    }
- 
-    /* App container: layout orizzontale lista+mappa */
-    .app-container {
-        flex-direction: row;
-    }
- 
-    #map {
-        flex: 1;
-        height: 100%;
-    }
- 
-    .lista {
-        flex: 0 0 260px;
-        max-height: 100%;
-        height: 100%;
-    }
-}
 
-/* ── TOGGLE VISTA MOBILE ── */
-.toggle-vista {
-    display: none;
-    position: fixed;
-    bottom: 24px;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 1100;
-    background: #1a1a1a;
-    border-radius: 50px;
-    padding: 5px;
-    gap: 4px;
-    box-shadow: 0 6px 24px rgba(0,0,0,0.22);
-}
-
-.toggle-vista-btn {
-    padding: 10px 24px;
-    border: none;
-    border-radius: 50px;
-    font-family: inherit;
-    font-size: 0.88rem;
-    font-weight: 700;
-    cursor: pointer;
-    background: transparent;
-    color: rgba(255,255,255,0.55);
-    display: flex;
-    align-items: center;
-    gap: 7px;
-    transition: background 0.2s, color 0.2s;
-}
-
-.toggle-vista-btn.active {
-    background: #FFC107;
-    color: #1a1a1a;
-}
-
-@media (max-width: 600px) {
-    .toggle-vista {
-        display: flex;
-    }
-
-    /* Di default su mobile: lista visibile, mappa nascosta */
-    #map {
-        display: none;
-        flex: 1;
-        height: 100%;
-        border-radius: 16px;
-        overflow: hidden;
-    }
-
-    .lista {
-        flex: 1;
-        height: auto;
-        max-height: none;
-        display: flex;
-    }
-
-    /* Classe per mostrare la mappa e nascondere la lista */
-    .app-container.vista-mappa #map {
-        display: block;
-    }
-
-    .app-container.vista-mappa .lista {
-        display: none;
-    }
-}
 /* ── RESPONSIVENESS GENERALE ── */
 @media (max-width: 600px) {
     .luogo-banner  { height: 280px; }
@@ -2566,22 +2664,6 @@ body{
 #map {
     flex: 1;
     height: 100%;
-}
-.search-input {
-    height: 42px;
-    border-radius: 50px !important;
-    border: 1.5px solid rgba(0,0,0,0.15);
-    padding: 0 18px;
-    font-size: 0.92rem;
-    background: rgba(255,255,255,0.85);
-    backdrop-filter: blur(4px);
-    transition: box-shadow 0.2s, border-color 0.2s;
-}
-.search-input:focus {
-    box-shadow: 0 0 0 3px rgba(0,0,0,0.10);
-    border-color: rgba(0,0,0,0.3);
-    outline: none;
-    background: #fff;
 }
 
 
@@ -2627,36 +2709,6 @@ body{
     transform: translateY(-50%); 
     cursor: pointer;
 }
-
-.dropdown {
-    position: absolute;
-    top: 120%;
-    right: 0;
-    background-color: RGBA(var(--bs-white-rgb), var(--bs-bg-opacity, 1));
-    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-    min-width: 150px;
-
-    /* Animazione */
-    opacity: 0;
-    transform: translateY(-10px);
-    pointer-events: none;
-
-    transition: all 0.3s ease;
-}
-
-/* Quando è attivo */
-.dropdown.show {
-    opacity: 1;
-    transform: translateY(0);
-    pointer-events: auto;
-}
-
-/* Link */
-.dropdown a {
-    padding: 10px;
-    text-decoration: none;
-    color: black;
-}
 .risultati {
     width: 80%;                /* un po’ di margine ai lati */
     max-width: 1000px;         /* larghezza massima */
@@ -2671,11 +2723,7 @@ body{
     gap: 20px;                 /* spazio tra i luoghi */
 }
 
-.spazio{
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
+
 .btn-back {
     background: none; border: none; cursor: pointer;
     font-size: 1rem; padding: 0.5rem 0; margin-bottom: 1.5rem;
