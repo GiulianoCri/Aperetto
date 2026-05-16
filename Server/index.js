@@ -219,8 +219,6 @@ app.post("/api/login", async (req,res) =>{
 app.post("/api/register", async (req, res) =>{
     const {name, surname, email, password} = req.body;  //richiediamo il body dalla richiesta (il body contiene i dati utente)
 
-    //console.log("ricevuti: " + username +", "+ email +", " + password)
-
     if (!email || !password) {
         return res.status(400).json({ error: "Tutti i campi sono obbligatori" });
     }
@@ -533,9 +531,8 @@ app.post('/api/register-supplier', upload.single('immagineLocale'), async (req, 
 
         const { lat, lng } = await geocodifica(indirizzoLocale);
         console.log("serve - password: " + password);
-        const { error } = await supabase
+        const { data, error } = await supabase
             .from('location')
-            .select('id')
             .insert([{
                 email: email.toLowerCase().trim(),
                 nome: name,
@@ -554,11 +551,13 @@ app.post('/api/register-supplier', upload.single('immagineLocale'), async (req, 
                 instagram: instagram || null,
                 lat,
                 lng,
-                immagine: nomeFile  // ← salviamo il path nel DB
-            }]);
+                immagine: nomeFile
+            }])
+            .select('id');
+            
 
         if (error) {
-            if (error.code === '23505') return res.status(400).json({ error: "Questa email è già registrata" });
+            if (error.code === '23505') return res.status(400).json({ error: "Questo locale è già registrato" });
             throw error;
         }
 
