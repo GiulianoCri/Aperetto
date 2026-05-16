@@ -468,7 +468,16 @@
                 });
 
                 const data = await response.json();
-                if (response.ok) { goTo(4); } else { alert(data.error); }
+                if (response.ok) { 
+                    goTo(4); 
+
+                    const localeId = data.id;
+                    setTimeout(() => {
+                        window.location.href = `/profilo-supplier.html?id=${localeId}&from=register`;
+                    }, 3000);
+                } else { 
+                    alert(data.error); 
+                }
             } catch (err) {
                 console.error("Errore di rete:", err);
                 alert("Errore di connessione al server");
@@ -477,6 +486,7 @@
 
         // LOGIN FORM
         const loginLink = document.getElementById('loginLink');
+        const loginForm = document.getElementById('formLogin');
         loginLink.addEventListener('click', (e) => {
             e.preventDefault();
             loginLink.classList.add('d-none');
@@ -486,7 +496,6 @@
             if (!step3.classList.contains('d-none')) step3.classList.add('d-none');
             if (!step4.classList.contains('d-none')) step4.classList.add('d-none');
 
-            const loginForm = document.getElementById('formLogin');
             loginForm.classList.remove('d-none');
         });
 
@@ -514,7 +523,7 @@
             e.preventDefault();
 
             const email = document.getElementById('emailLogin').value.toLowerCase().trim();
-            const password = document.getElementById('pswField').value;
+            const password = pswField.value;
 
             try {
                 const response = await fetch('/api/login-supplier', {
@@ -524,10 +533,12 @@
                 });
 
                 const data = await response.json();
+                console.log("RISPOSTA LOGIN COMPLETA:", JSON.stringify(data));
 
                 if (response.ok) {
-                    console.log(`/profilo-supplier.html?id=${data.user.localeId}&from=index`);
-                    window.location.href = `/profilo-supplier.html?id=${data.user.localeId}&from=index`;
+                    setTimeout(() => {
+                        window.location.href = `/profilo-supplier.html?id=${data.user.localeId}&from=register`;
+                    }, 3000);
                 } else {
                     alert(data.error);
                 }

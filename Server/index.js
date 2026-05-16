@@ -561,7 +561,7 @@ app.post('/api/register-supplier', upload.single('immagineLocale'), async (req, 
             throw error;
         }
 
-        res.status(201).json({ message: "Registrazione completata con successo!", id: data.id });
+        res.status(201).json({ message: "Registrazione completata con successo!", id: data[0].id });
         /* restituisco l'id del luogo appena creato per inserirlo nel redirect dopo la registrazione / login */
 
     } catch (err) {
@@ -591,7 +591,6 @@ app.post("/api/login-supplier", async (req,res) =>{
     }
 
     //a stringhe uguali corrispondono hash uguali
-
     console.log("PASSWORD RICEVUTA:", JSON.stringify(password));
     console.log("HASH DAL DB:", user.password_hash);
     const isPasswordCorrect = await bcrypt.compare(password, user.password_hash);
@@ -606,7 +605,7 @@ app.post("/api/login-supplier", async (req,res) =>{
             localeId: user.id,
         };
 
-        res.json({ message: "Login effettuato!", user: req.session.user, id: req.session.localeId});
+        res.json({ message: "Login effettuato!", user: req.session.user, id: user.localeId});
     } else {
         res.status(401).json({ error: "Password errata" });
     }

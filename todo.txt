@@ -1,9 +1,8 @@
 COSE FATTE:
-    modifiche a login-supplier (registrazione + accesso)
-    sistemato lato grafico index.htlm e fixati bug vari
+    reindirizzamento login-supplier
 
 TODO:
     - sessioni supplier
-    - login supplier        -> fixare reindirizzamento
     - problemi fasce orarie
     - profilo supplier      -> modifiche locale
+    - psw dimenticata       -> bottoni per visualizzare psw da fixare
