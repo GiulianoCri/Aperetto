@@ -181,11 +181,21 @@
                                 </div>
 
                                 <div class="col-12 btn-group mx-1"> 
-                                    <label for="telefono" class="info-pill-label login-color me-2 my-auto">Che servizio offre il tuo locale?</label>
-                                    <input type="checkbox" id="aperitivo">
-                                    <label for="aperitivo" class="info-pill-label login-color my-auto">Aperitivo</label>
-                                    <input type="checkbox" id="colazione">
-                                    <label for="colazione" class="info-pill-label login-color my-auto">Colazione</label>
+                                    <label for="" class="info-pill-label login-color me-2 my-auto">Che servizio offre il tuo locale?</label>
+                                    <div class="toggle-row">
+                                        <span class="toggle-label">Aperitivo</span>
+                                        <label class="toggle-switch">
+                                            <input type="checkbox" id="edit-aperitivo">
+                                            <span class="toggle-slider"></span>
+                                        </label>
+                                    </div>
+                                    <div class="toggle-row mt-2">
+                                        <span class="toggle-label">Colazione</span>
+                                        <label class="toggle-switch">
+                                            <input type="checkbox" id="edit-colazione">
+                                            <span class="toggle-slider"></span>
+                                        </label>
+                                    </div>
                                 </div>
                             </div>
                             
@@ -243,12 +253,13 @@
                                     <h3 class="text-success d-inline">registrazione</h3>
                                     <h3 class="text-black d-inline"> è avvenuta con successo!</h3>
                                 </div>
+                                <h5 class="text-black d-inline"> Verrai reindirizzato nel giro di qualche secondo! </h5>
                             </div>
                         </div>
                     </div>
 
                     <!-- LOGIN -->
-                      <div class="p-5 pb-2 rounded-4 border-0 mx-auto mt-5 w-100 d-none" id="formLogin">
+                    <div class="p-5 pb-2 rounded-4 border-0 mx-auto mt-5 w-100 d-none" id="formLogin">
                         
                         <!-- FORM DI ACCESSO -->
                         <form class="luogo-card">
@@ -274,11 +285,12 @@
                                 <a href="#" id="forgotPsw" class="link-dark mt-1 mx-2"> Password dimenticata? </a> <br>
                             </div>
                             <!-- bottoni -->
-                            <button type="submit" class="btn btn-success mt-auto rounded-3 w-100 mb-2"> Accedi </button>
+                            <button type="submit" class="btn btn-success mt-auto rounded-3 w-100 mb-2" id="accediLogin"> Accedi </button>
                         </form>
+                    </div>  
 
-                        <!-- Password dimenticata -->
-                        <div id="pswDimenticata" class="text-center d-none m-auto mb-4">
+                    <!-- Password dimenticata -->
+                        <div id="pswDimenticata" class="text-center d-none m-auto mb-4 w-75">
                             <h1 class="text-black d-inline">Hai dimenticato la password?</h3>
                             <div class id="recuperoForm">
                                 <p class="text-end"> Nessun problema, basta inserire di seguito il tuo indirizzo e-mail e ti invieremo un link per reimpostarla </p>
@@ -296,8 +308,6 @@
                                 </button>
                             </div>
                         </div>
-
-                    </div>  
 
                 </div>
 
@@ -470,7 +480,7 @@
                 const data = await response.json();
                 if (response.ok) { 
                     goTo(4); 
-
+                    
                     const localeId = data.id;
                     setTimeout(() => {
                         window.location.href = `/profilo-supplier.html?id=${localeId}&from=register`;
@@ -536,9 +546,14 @@
                 console.log("RISPOSTA LOGIN COMPLETA:", JSON.stringify(data));
 
                 if (response.ok) {
+
+                    const accediLogin = document.getElementById("accediLogin");
+                    accediLogin.disabled = true;
+                    accediLogin.classList.add("btn-disabled");
+
                     setTimeout(() => {
                         window.location.href = `/profilo-supplier.html?id=${data.user.localeId}&from=register`;
-                    }, 3000);
+                    }, 1000);
                 } else {
                     alert(data.error);
                 }
@@ -560,11 +575,11 @@
         // PASSWORD DIMENTICATA
         const recuperaPsw = document.getElementById('recuperaPsw');
         recuperaPsw.addEventListener('click', async () => {
-            const emailRec = document.getElementById('emailRec').value.trim();
+        const emailRec = document.getElementById('emailRec').value.trim();
 
             try {
                 // chiamata del server con mail inserita per il recupero
-                const response = await fetch('/api/recover-password', {
+                const response = await fetch('/api/recover-password-supplier', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ email: emailRec })

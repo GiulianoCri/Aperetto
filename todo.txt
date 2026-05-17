@@ -1,8 +1,8 @@
 COSE FATTE:
-    reindirizzamento login-supplier
+    miglioramenti generali login-supplier e altro
 
 TODO:
     - sessioni supplier
     - problemi fasce orarie
-    - profilo supplier      -> modifiche locale
-    - psw dimenticata       -> bottoni per visualizzare psw da fixare
+    - profilo supplier          -> modifiche locale
+    - pse dimenticata supplier  -> errore account non trovato
