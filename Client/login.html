@@ -165,7 +165,12 @@
     </div>
 
     <script>
-    // serve a far comparire / scomparire il form per la registrazione
+
+        // fa comparire / scomparire il form per la registrazione in base alle necessità dell'utente:
+        // se l'utente deve registrarsi basta premere sul pulsante "Registrati" (btnRegistrazione) e comparirà il 
+        // form per la registrazione, facendo scomparire il form per il login
+
+        // è sempre disponibile il pulsante per accesso / registrazione dedicata agli admin dei locali
         const formLogin = document.getElementById('formLogin');
         const formRegistrazione = document.getElementById('formRegistrazione');
 
@@ -191,11 +196,15 @@
             formLogin.classList.add('d-none');
             pswDimenticata.classList.remove('d-none');
         });
+        
 
-    </script>
+        // la sequenza di script permette di mostrare / nascondere la password nel form di accesso e/o registrazione
+        // cambiando il type dell'input:
+        // quando viene premuto il pulsante per MOSTRARE la password, il type viene cambiato da password a text
+        // quando viene premuto il pulsante per NASCONDERE la password viene fatto esattamente il viceversa
 
-    <script>
-        // mostra / nascondi password
+        // questo script è usato per TUTTE la pagine all'interno delle quali è presente il campo password
+
         // PAGINA DI ACCESSO
         const showPswBtn = document.getElementById('showPswBtn');
         const hidePswBtn = document.getElementById('hidePswBtn');
@@ -252,9 +261,9 @@
             showConf.classList.remove('d-none');
             showConf.classList.add('d-block');
         });
-    </script>
+        
 
-    <script>
+        // RECUPERO PASSWORD
         const recuperaPsw = document.getElementById('recuperaPsw');
 
         recuperaPsw.addEventListener('click', async () => {
@@ -292,7 +301,9 @@
         
         // REGISTRAZIONE NEL DB
         document.getElementById('formRegistrazione').addEventListener('submit', async (e) => {
-            e.preventDefault();  //serve ad evitare che il browser faccia il refresh della pagina dopo aver inviato un form (comportamento di default)
+            e.preventDefault();  
+            // serve ad evitare che il browser faccia il refresh della pagina dopo aver inviato un form 
+            // (comportamento di default)
 
             //prendiamo i dati utente dal form
             //const username = document.getElementById('username').value;
@@ -332,7 +343,8 @@
 
                 /*
                 Convenzionalmente le chiamate di login e registrazione sono di tipo post.
-                IMPORTANTE: non posso passare i dati utente (soprattutto la password) nella URL, ma devo usare il body. Non devo criptare password perche ci pensa già HTTPS.
+                IMPORTANTE: non posso passare i dati utente (soprattutto la password) nella URL, ma devo usare il body.
+                Non devo criptare password perche ci pensa già HTTPS.
                 */
 
                 const data = await response.json();
@@ -349,10 +361,8 @@
                 alert("Errore di connessione al server")
             }
         });
-    </script>
-
-    <!-- LOGIN  -->
-    <script>
+        
+        // LOGIN
         document.getElementById('formLogin').addEventListener('submit', async (e) => {
             e.preventDefault(); 
 

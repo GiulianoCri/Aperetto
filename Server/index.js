@@ -615,15 +615,19 @@ app.post("/api/login-supplier", async (req,res) =>{
 // RECUPERO PASSWORD SUPPLIER
 app.post('/api/recover-password-supplier', async (req, res) => {
     try {
-        const { email } = req.body;
+        const email = req.body.email?.trim().toLowerCase();
 
         if (!email) return res.status(400).json({ error: "Email obbligatoria" });
         // Controllo associazion email - account
         const { data: user, error } = await supabase
-            .from('supplier')
+            .from('location')
             .select('*')
             .eq('email', email)
             .single();
+
+            console.log("EMAIL RICEVUTA:", JSON.stringify(email)); // controlla spazi/caratteri nascosti
+            console.log("USER TROVATO:", JSON.stringify(user));
+            console.log("ERRORE QUERY:", JSON.stringify(error));
 
         if (!user || error) {
             return res.status(404).json({ error: "Nessun account associato a questa email" });
@@ -703,10 +707,10 @@ app.post('/api/reset-password-supplier', async (req, res) => {
     console.log("NUOVA PASSWORD:", JSON.stringify(newPassword)); // controlla se ha spazi
     console.log("HASH GENERATO:", hash);
     const { data: updateData, error: updateError } = await supabase
-    .from('supplier')
+    .from('location')
     .update({ password_hash: hash })
     .eq('email', reset.email)
-    .select(); // <-- aggiunge questo
+    .select();
 
     console.log("UPDATE DATA:", JSON.stringify(updateData)); // quante righe ha aggiornato?
     console.log("UPDATE ERROR:", updateError);

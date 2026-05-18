@@ -1,8 +1,7 @@
 COSE FATTE:
-    miglioramenti generali login-supplier e altro
+    risolti problemi al recupero psw e inizio revisione codice
 
 TODO:
     - sessioni supplier
     - problemi fasce orarie
     - profilo supplier          -> modifiche locale
-    - pse dimenticata supplier  -> errore account non trovato
