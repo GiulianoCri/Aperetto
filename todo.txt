@@ -2,6 +2,7 @@ COSE FATTE:
     Pagine definitive e complete di commento:
     -index.html
     -profilo.html
+    -index.js
 
 TODO:
     - problemi fasce orarie
