@@ -275,7 +275,7 @@ app.post("/api/register", async (req, res) =>{
     }
 
 })
-// Logout
+// Logout Client
 app.post('/api/logout', (req, res) => {
     req.session.destroy();
     res.json({ message: 'Logout effettuato' });

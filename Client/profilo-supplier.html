@@ -16,7 +16,7 @@
 <div class="navbar-custom d-flex fixed-top align-items-center gap-3 px-3">
     <img src="/Foto/APERETTO (1).png" alt="Logo Aperetto" class="logo">
     <div class="col"></div>
-    <a href="login-supplier.html" class="nav-login-link logout" id="loginLink">Logout</a>
+    <a href="#" class="nav-login-link logout" id="loginLink">Logout</a>
 </div>
 
 <!-- NOTIFICA -->
@@ -608,6 +608,12 @@
     }
     
     init();
+
+    document.getElementById('loginLink').addEventListener('click', async (e) => {
+    e.preventDefault();
+    await fetch('/api/logout', { method: 'POST' });
+    window.location.href = '/';
+});
 </script>
 
 </body>

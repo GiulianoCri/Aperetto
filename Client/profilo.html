@@ -13,8 +13,8 @@
         <img src="/Foto/APERETTO (1).png" alt="Logo Aperetto" class="logo" onclick="window.location.href='index.html'">
         <img src="/Foto/profilo_text.png" alt="Profilo" class="mt-3 mb-1 profilo-txt">
     </div>
-
-    <button class="btn-back-banner" onclick="window.location.href='/'">← Torna alla lista</button>
+    <!--Bottone per tornare indietro-->
+    <button class="btn-back-banner-profilo" onclick="window.location.href='/'">← Torna alla lista</button>
 
     <!-- PAGINA -->
     <div class="profilo-page">
@@ -22,9 +22,9 @@
  
             <!-- ── SINISTRA: dati utente ── -->
             <aside class="profilo-sidebar">
- 
+                <!--Scritta caricamento presente soltanto durante il caricamento dei dati-->
                 <div id="profilo-nome" class="profilo-nome">Caricamento...</div>
- 
+                <!--Informazioni utente-->
                 <div class="profilo-info">
                     <div class="info-row">
                         <label>Nome</label>
@@ -39,7 +39,7 @@
                         <span id="info-email">–</span>
                     </div>
                 </div>
- 
+                <!-- Bottone per il logout -->
                 <button class="btn-logout" id="logoutBtn">Esci dall'account</button>
             </aside>
  
@@ -62,25 +62,29 @@
         // Carica dati utente dalla sessione
         async function caricaProfilo() {
             try {
+                // Verifica se l'utente è autenticato
                 const res = await fetch('/api/me');
+                // Se non è autenticato, reindirizza alla pagina di login
                 if (!res.ok) {
                     window.location.href = '/login.html';
                     return;
                 }
+
+                // Se è autenticato, mostra i suoi dati
                 const user = await res.json();
-                
+                // Mostra iniziale del nome come avatar e nome completo
                 const iniziale = (user?.name || 'U').charAt(0).toUpperCase();
                 const nome = user
                     ? `${user.name || ''} ${user.surname || ''}`.trim()
                     : 'Utente';
-                
+                // Popola la sezione del profilo con i dati dell'utente
                 document.getElementById('profilo-nome').innerHTML = `
                     <div class="rec-avatar avatar-profilo">${iniziale}</div> `
                 
                 document.getElementById('info-nome').textContent    = user.name    || '–';
                 document.getElementById('info-cognome').textContent = user.surname || '–';
                 document.getElementById('info-email').textContent   = user.email   || '–';
- 
+                // Dopo aver caricato i dati del profilo, carica le recensioni dell'utente
                 caricaRecensioni();
 
             } catch (err) {
@@ -90,13 +94,13 @@
  
         // Carica recensioni dell'utente
         async function caricaRecensioni() {
+            // Seleziona il container dove verranno mostrate le recensioni
             const container = document.getElementById('recensioni-container');
             try {
+                // Effettua una richiesta per ottenere le recensioni scritte dall'utente
                 const res = await fetch('/api/recensioni/mie');
                 const recensioni = await res.json();
-                console.log("RECENSIONI:", JSON.stringify(recensioni));
-                console.log("STATUS:", res.status);
- 
+                // Se non ci sono recensioni, mostra uno stato vuoto con un messaggio informativo 
                 if (!recensioni || recensioni.length === 0) {
                     container.innerHTML = `
                         <div class="empty-state">
@@ -105,9 +109,13 @@
                         </div>`;
                     return;
                 }
- 
-                container.innerHTML = recensioni.map(r => 
-                    console.log("RECENSIONE:", JSON.stringify(r)) ||
+                // Se ci sono recensioni, costruisce dinamicamente il contenuto HTML per ciascuna recensione e lo inserisce nel container tramite il join per concatenare le stringhe generate da map in un unico blocco HTML da inserire nella pagina
+                /*  -recensioni è un array di oggetti recensione
+                    -.map() scorr e ogni elemento uno alla volta
+                    -r è la singola recensione corrente ad ogni iterazione quello che scrivi dopo 
+                    -=> è ciò che viene restituito per quell'elemento*/
+                container.innerHTML = recensioni.map(r =>
+                // Crea una card per ogni recensione, con un link alla pagina del luogo recensito, mostrando il nome del locale, la data della recensione, la valutazione a stelle, eventuali dettagli aggiuntivi e il testo della recensione. Se il locale ha caratteristiche particolari (aperitivo o colazione), mostra dei tag distintivi.
                     ` <div class="recensione-card mb-2" onclick="window.location.href='/luogo.html?id=${r.luogo_id}&from=index'">
                         <div class="rec-header">
                             <span class="rec-locale">${r.location?.nome_locale || 'Locale'}</span>
@@ -125,6 +133,7 @@
  
             } catch (err) {
                 console.error('Errore caricaRecensioni:', err);
+                // In caso di errore, mostra uno stato vuoto con un messaggio informativo
                 container.innerHTML = `
                     <div class="empty-state">
                         <div class="empty-icon">⭐</div>
@@ -133,16 +142,20 @@
             }
         }
  
-        // Helpers
+        // Funzione per generare la valutazione a stelle in base al voto numerico, restituendo un blocco HTML con 5 stelle, di cui alcune piene e altre vuote a seconda del voto
         function stelle(voto) {
+            //arrotonda il voto al numero intero piu vicino e se voto è NaN o non definito restituisce 0
             const n = Math.round(voto) || 0;
+            
+            // Crea un array di 5 elementi e per ciascuno genera un'immagine di stella piena o vuota a seconda se l'indice è inferiore al numero di stelle piene da mostrare, poi unisce tutto in un'unica stringa HTML da restituire
+            //_ è il valore corrente dell'elemento (non usato, quindi indicato con _), i è l'indice dell'elemento nell'array (da 0 a 4)
             return Array.from({ length: 5 }, (_, i) =>
-                `<svg class="stella ${i < n ? '' : 'vuota'}" viewBox="0 0 20 20">
-                    <path d="M10 1l2.4 7.3H20l-6.2 4.5 2.4 7.3L10 15.6l-6.2 4.5 2.4-7.3L0 8.3h7.6z"/>
-                </svg>`
+                `<img src="/Foto/${i < n ? 'stella_piena' : 'stella_vuota'}.svg" 
+                    width="18" height="18" alt="stella">`
             ).join('');
         }
- 
+        
+        // Funzione per formattare la data in formato leggibile, restituendo una stringa con giorno, mese e anno in italiano
         function formatData(iso) {
             if (!iso) return '';
             return new Date(iso).toLocaleDateString('it-IT', {

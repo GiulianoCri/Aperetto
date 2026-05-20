@@ -748,7 +748,13 @@ body{
 
 
 
-/* ── PROFILO ── */
+
+/* Classi per profilo.html */
+
+
+
+
+
 
 /* Stili per la pagina del profilo utente, con una griglia per il layout e una sidebar sticky */
 
@@ -758,7 +764,7 @@ body{
     min-height: calc(100vh - 70px);
 }
 
-/* Stili per il pulsante di ritorno alla lista, con un design moderno e un effetto di hover */
+/* Stili per il pulsante di ritorno alla lista, con un effetto di hover */
 .btn-back-banner-profilo {
     position: static;
     display: inline-flex;
@@ -778,6 +784,7 @@ body{
 }
 .btn-back-banner-profilo:hover { background: rgba(255,255,255,0.32); }
 
+/* Stili per il layout del profilo, con una griglia a due colonne e una sidebar che rimane visibile durante lo scroll */
 .profilo-grid {
     display: grid;
     grid-template-columns: 300px 1fr;
@@ -801,6 +808,7 @@ body{
 }
 
 /* Stili per l'avatar e le informazioni del profilo */
+
 .profilo-nome {
     font-size: 1.3rem;
     font-weight: 700;
@@ -814,6 +822,7 @@ body{
     gap: 10px;
 }
 
+/* Stili per le righe di informazioni all'interno della sidebar del profilo */
 .info-row {
     display: flex;
     flex-direction: column;
@@ -833,6 +842,7 @@ body{
     font-size: 0.95rem;
     font-weight: 500;
 }
+
 /* Stili per il pulsante di logout */
 .btn-logout {
     margin-top: 6px;
@@ -849,6 +859,7 @@ body{
 }
 .btn-logout:hover { opacity: 0.8; }
 
+/* Stili per il contenuto principale del profilo, con una disposizione verticale e spaziatura uniforme */
 .profilo-content {
     display: flex;
     flex-direction: column;
@@ -887,19 +898,23 @@ body{
     flex-wrap: wrap;
     gap: 10px;
 }
+
+/* Stili per il nome dell'utente e la data all'interno dell'intestazione della recensione */
 .rec-locale { font-weight: 700; font-size: 1rem; }
 .rec-data   { font-size: 0.78rem; color: #aaa; }
 
+/* Stili per la valutazione a stelle all'interno dell'intestazione della recensione */
 .stelle { display: flex; gap: 3px; }
 .stella       { width: 16px; height: 16px; fill: #FFC107; }
 .stella.vuota { fill: #e0e0e0; }
 
+/* Stili per il testo della recensione, con una dimensione leggermente più piccola e un colore più tenue */
 .rec-testo {
     font-size: 0.92rem;
     color: #444;
     line-height: 1.55;
 }
-
+/* Stili per i tag di raccomandazione all'interno della recensione, con un design distintivo e colori accattivanti */
 .rec-tag {
     display: inline-block;
     background: #FFF3CD;
@@ -959,6 +974,12 @@ body{
         height: calc(100vh - 130px);
     }
 }
+
+
+
+
+
+
 
 /* ── PAGINA PROFILO LOCALE ── */
 
