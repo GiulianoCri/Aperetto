@@ -621,7 +621,7 @@ app.post("/api/login-supplier", async (req,res) =>{
             localeId: user.id,
         };
 
-        res.json({ message: "Login effettuato!", user: req.session.user, id: user.localeId});
+        res.json({ message: "Login effettuato!", user: req.session.user, id: user.id});
     } else {
         res.status(401).json({ error: "Password errata" });
     }
@@ -631,7 +631,8 @@ app.post("/api/login-supplier", async (req,res) =>{
 // RECUPERO PASSWORD SUPPLIER
 app.post('/api/recover-password-supplier', async (req, res) => {
     try {
-        //estraggo l'email dal body della richiesta, la normalizzo (rimuovendo spazi e convertendo in minuscolo) per evitare problemi di formattazione o differenze di maiuscole/minuscole che potrebbero impedire di trovare l'account associato all'email. Se l'email è mancante, restituisco un errore 400.
+        // estraggo l'email dal body della richiesta, la normalizzo (rimuovendo spazi e convertendo in minuscolo) per evitare problemi di formattazione 
+        // o differenze di maiuscole/minuscole che potrebbero impedire di trovare l'account associato all'email. Se l'email è mancante, restituisco un errore 400.
         const email = req.body.email?.trim().toLowerCase();
 
         if (!email) return res.status(400).json({ error: "Email obbligatoria" });
@@ -685,7 +686,102 @@ app.post('/api/recover-password-supplier', async (req, res) => {
     }
 });
 
-//rotta per reimpostare la password del supplier, simile a quella del client ma aggiorna la tabella location invece di consumer
+
+//  MODIFICA INFORMAZIONI LOCALE - PROFILO SUPPLIER
+//  nella pagina del profilo, viene data la possibilità di cambiare tutte le informazioni del locale
+app.put('/api/location/:id', async (req, res) => {
+ 
+    // 1. Controllo sessione: deve essere loggato come supplier
+    if (!req.session.user || !req.session.user.localeId) {
+        return res.status(401).json({ error: 'Non autorizzato' });
+    }
+ 
+    const id = req.params.id;
+ 
+    // 2. Il supplier può aggiornare solo il proprio locale
+    if (req.session.user.localeId !== id) {
+        return res.status(403).json({ error: 'Non puoi modificare questo locale' });
+    }
+ 
+    // 3. Whitelist dei campi aggiornabili
+    //    (nessun campo sensibile come email, password_hash, ruolo, lat, lng)
+    const CAMPI_CONSENTITI = [
+        'nome_locale',
+        'tipologia',
+        'descrizione',
+        'indirizzo',
+        'telefono',
+        'sito_web',
+        'instagram',
+        'apertura',
+        'chiusura',
+        'giorno_chiusura',
+        'immagine',
+        'aperitivo',
+        'colazione',
+    ];
+ 
+    // 4. Costruisco l'oggetto con solo i campi consentiti presenti nel body
+    const aggiornamenti = {};
+    for (const campo of CAMPI_CONSENTITI) {
+        if (req.body[campo] !== undefined) {
+            aggiornamenti[campo] = req.body[campo];
+        }
+    }
+ 
+    // 5. Validazione base
+    //    controllo che nel body siano presenti almeno 'nome_locale', 'indirizzo', 'apertura' e 'chisura' e che almeno uno tra 'aperitivo' e 'colazione' sia spuntato
+        if (!aggiornamenti.nome_locale || !aggiornamenti.indirizzo || !aggiornamenti.apertura || !aggiornamenti.chiusura 
+            || (!aggiornamenti.aperitivo && !aggiornamenti.colazione)) {
+        return res.status(400).json({ error: 'Inserire i campi obbligatori' });
+    }
+ 
+    // 6. Se l'indirizzo è cambiato, ricalcolo le coordinate geografiche
+    //    così la mappa rimane aggiornata senza intervento manuale
+    try {
+        const { data: localeAttuale, error: fetchError } = await supabase
+            .from('location')
+            .select('indirizzo')
+            .eq('id', id)
+            .single();
+ 
+        if (fetchError) throw fetchError;
+ 
+        if (
+            localeAttuale &&
+            aggiornamenti.indirizzo &&
+            aggiornamenti.indirizzo !== localeAttuale.indirizzo
+        ) {
+            const { lat, lng } = await geocodifica(aggiornamenti.indirizzo);
+            aggiornamenti.lat = lat;
+            aggiornamenti.lng = lng;
+        }
+    } catch (err) {
+        // se la geocodifica fallisce non blocco il salvataggio, loggo solo
+        console.warn('Geocodifica fallita durante aggiornamento:', err.message);
+    }
+ 
+    // 7. Eseguo l'UPDATE su Supabase
+    try {
+        const { data, error } = await supabase
+            .from('location')
+            .update(aggiornamenti)
+            .eq('id', id)
+            .select()
+            .single();
+ 
+        if (error) throw error;
+ 
+        res.json({ message: 'Locale aggiornato con successo', locale: aggiungiUrl(data) });
+ 
+    } catch (err) {
+        console.error('Errore aggiornamento locale:', err.message);
+        res.status(500).json({ error: err.message || 'Errore interno del server' });
+    }
+});
+
+//  RESET PASSWORD SUPPLIER
+//  rotta per reimpostare la password del supplier, simile a quella del client ma aggiorna la tabella location invece di consumer
 app.post('/api/reset-password-supplier', async (req, res) => {
     const { token, newPassword } = req.body;
 

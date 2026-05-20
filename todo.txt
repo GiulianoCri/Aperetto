@@ -1,9 +1,8 @@
 COSE FATTE:
-    Pagine definitive e complete di commento:
-    -index.html
-    -profilo.html
-    -index.js
+    implementata la possibilità di modificare info locale + revisione pagine
+    - login.html
+    - profilo-supplier.html
 
 TODO:
     - problemi fasce orarie
-    - profilo supplier          -> modifiche locale
+    - profilo-supplier / modifica info  -> aggiornaPreviewCover non viene utilizzata

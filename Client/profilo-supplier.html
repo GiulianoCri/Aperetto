@@ -83,7 +83,8 @@
     const fmt = iso => new Date(iso).toLocaleDateString('it-IT', { day:'2-digit', month:'short', year:'numeric' });
     const fmtOrario = o => { if(!o) return 'N/A'; const [h,m]=o.split(':'); return `${h}:${m}`; };
     
-    // AUTENTICAZIONE
+    //  AUTENTICAZIONE
+    //  va a verificare che l'utente è loggato, solo l'admin del locale può accedere a questa pagina
     async function checkLogin() {
         try {
             const r = await fetch('/api/me');
@@ -93,12 +94,18 @@
         } catch {}
     }
         
-
+    //  SIDEBAR
+    //  sulla sidebar possiamo trovare un'anteprima della foto di sfondo del locale, oltre alle info principali
+    //  abbiamo anche un link per vedere la pagina pubblica del proprio locale
     function renderSidebar(luogo, recensioni) {
+        
+        // calcola la media delle recensioni:
+        // somma tramite la funzione 'reduce' il voto di ogni recensione, dividendo poi per il numero di recensioni totali
         const media = recensioni.length
             ? (recensioni.reduce((s,r) => s+r.voto,0) / recensioni.length)
             : null;
-    
+        
+        // crea la sidebar con foto, nome del locale, tipologia di servizio offerto e le informazioni
         return `
         <!-- IDENTITÀ -->
         <div class="lc-card" id="cardIdentita">
@@ -137,31 +144,40 @@
         </div> `;
     }
     
-    // CREA FASCE ORARIE
+    //  CREA FASCE ORARIE
+    //  la funzione va a generare delle fasce orarie di 1h/fascia utili poi alle recensioni (riservate ai soli locali che forniscono 
+    //  il servizio di colazione) e al render del grafico relativo alla fornitura
+    let fasceOrarie = null;
     function generaFasceOrarie(apertura, chiusura) {
         if (!apertura || !chiusura) return [];
 
+        // identifica l'orario di apertura e chiusura del locale e lo divido in due parti (ora - h e minuti - m)
         const fasce = [];
         let [hA, mA] = apertura.split(':').map(Number);
         let [hC, mC] = chiusura.split(':').map(Number);
 
-        // Gestisce orari a cavallo della mezzanotte (es. 18:00 → 02:00)
+        // gestisce orari a cavallo della mezzanotte: se l'orario di chiusura è successivo alla mezzanotte va ad aggiungere 24 in modo da
+        // rendere il calcolo lineare
         if (hC < hA || (hC === hA && mC <= mA)) hC += 24;
 
+        // converto l'orario in minuti
         let current = hA * 60 + mA;
         const end = hC * 60 + mC;
 
+        // finchè c'è spazio, avanza di 60 minuti per fascia riportando l'orario nel formato 24 ore (00:00 - 23:59)
         while (current + 60 <= end) {
             const hStart = Math.floor(current / 60) % 24;
             const hEnd   = Math.floor((current + 60) / 60) % 24;
+            // 'padStart() gestisce la formattazione dell'orario aggiungendo uno zero all'inizio
             fasce.push(`${String(hStart).padStart(2,'0')}:00 – ${String(hEnd).padStart(2,'0')}:00`);
             current += 60;
         }
 
-        return fasce;
+        fasceOrarie = fasce;
     }
 
-    // CARICA TUTTO
+    //  CARICA TUTTO
+    //  serve alla creazione del grafico vero e proprio per le forniture
     let chartFornituraInstance = null;
     function renderChartFornitura(recensioni, apertura, chiusuraColazione) {
         // controllo esistenza del canvas
@@ -176,22 +192,25 @@
             chartFornituraInstance = null;
         }
 
-        const fasce = generaFasceOrarie(apertura, chiusuraColazione);
+        generaFasceOrarie(apertura, chiusuraColazione);
 
-        // raggruppa per fascia oraria e calcola la media fornitura
+        // raggruppa le recensioni per fascia oraria e va a calcolare la media di fornitura (valori da 1 a 5)
         const gruppi = {};
         recensioni.forEach(r => {
+            // (vengono saltate le recensioni senza fascia oraria o fornitura)
             if (!r.fascia_oraria || r.fornitura == null) return;
+            // costruisce un oggetto 'gruppi' dove ogni chiave è una fascia oraria
             if (!gruppi[r.fascia_oraria]) gruppi[r.fascia_oraria] = { somma: 0, count: 0 };
             gruppi[r.fascia_oraria].somma += r.fornitura;
             gruppi[r.fascia_oraria].count += 1;
         });
 
-        // Ordina le fasce cronologicamente
-        const labels = fasce;
+        // ordina le fasce cronologicamente
+        const labels = fasceOrarie;
         const valori = labels.map(f => gruppi[f] ? (gruppi[f].somma / gruppi[f].count).toFixed(1) : null);
         const conteggi = labels.map(f => gruppi[f]?.count ?? 0);
 
+        // creazione del canvas che verrà inserito poi in ogni pagina del locale
         chartFornituraInstance = new Chart(canvas, {
             type: 'bar',
             data: {
@@ -212,6 +231,8 @@
                     legend: { display: false }, // nasconde legenda
                     tooltip: {
                         callbacks: {
+                            // quando viene passato il mouse sopra / viene cliccata la colonnina relativa al grado di fornitura viene 
+                            // mostrato un riquadro con ORARIO, la MEDIA e il N. DI RECENSIONI
                             label: (ctx) => ctx.raw !== null ? `Media: ${ctx.raw}/5` : 'Nessuna recensione',
                             afterLabel: (ctx) => conteggi[ctx.dataIndex] > 0 ? `Recensioni: ${conteggi[ctx.dataIndex]}` : ''
                         }
@@ -230,7 +251,9 @@
         });
     }
 
-    // RECENSIONI
+    //  RECENSIONI
+    //  nella tab delle recensioni troviamo le statistiche (voto medio, numero di recensioni e grafico fornitura) in alto
+    //  in basso troviamo l'elenco delle recensioni
     function renderRecensioni( recensioni) {
         const media = recensioni.length
                 ? (recensioni.reduce((s,r) => s+r.voto,0) / recensioni.length)
@@ -267,38 +290,14 @@
                 
             </div> ` + 
             recensioni.map((rec, idx) => {
+                // viene individuata l'iniziale dell'user che ha scritto la recensione e viene usata come avatar (come nella pagina del profilo)
                 const iniziale = (rec.consumer?.name || 'U').charAt(0).toUpperCase();
                 const nome = rec.consumer
                     ? `${rec.consumer.name||''} ${rec.consumer.surname||''}`.trim()
                     : 'Utente';
-        
-                const rispostaHtml = rec.risposta ? `
-                    <div class="risposta-box">
-                        <div class="risposta-label">💬 Risposta del locale</div>
-                        <div class="risposta-testo">${rec.risposta}</div>
-                    </div>` : `
 
-                    <!-- RISPOSTA RECENSIONI -->
-                    <!-- <button class="btn-rispondi-trigger"
-                            onclick="toggleRispostaForm(${rec.id})">
-                        ✏️ Rispondi
-                    </button>
-
-                    <div class="risposta-form" id="formRisposta-${rec.id}">
-                        <textarea class="risposta-textarea" id="testoRisposta-${rec.id}"
-                            placeholder="Scrivi una risposta pubblica…"></textarea>
-                        <div class="risposta-actions">
-                            <button class="btn-annulla" onclick="toggleRispostaForm(${rec.id})">
-                                Annulla
-                            </button>
-                            <button class="btn-rispondi-send"
-                                    id="btnInviaRisposta-${rec.id}"
-                                    onclick="inviaRisposta(${rec.id})">
-                                Pubblica risposta
-                            </button>
-                        </div>
-                    </div> -->`;
-        
+                // per ogni recensione viene mostrato il nome dell'user, il testo della recensione, il voto dato (sotto forma di stelline)
+                // e, SOLO nel caso in cui siano state inserite, fascia oraria e fornitura del locale sulla sinistra
                 return `
                 <div class="rec-card" style="animation-delay:${idx*0.06}s; animation: fadeSlideIn 0.35s ease both;">
                     <div class="rec-header-row">
@@ -317,59 +316,16 @@
                     </div>
                     
                     <p class="rec-testo">${rec.testo || ''}</p>
-                    ${rispostaHtml}
                 </div>`;
             }).join('');
     }
-    
-    /* function toggleRispostaForm(recId) {
-        const form = document.getElementById(`formRisposta-${recId}`);
-        if (form) form.classList.toggle('open');
-    } */
-    
-    async function inviaRisposta(recId) {
-        const testo = document.getElementById(`testoRisposta-${recId}`).value.trim();
-        if (!testo) { mostraNotifica('Scrivi una risposta prima di pubblicare', 'error'); return; }
-    
-        const btn = document.getElementById(`btnInviaRisposta-${recId}`);
-        btn.disabled = true;
-        btn.textContent = 'Invio…';
-    
-        try {
-            const r = await fetch(`/api/recensioni/${recId}/risposta`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ risposta: testo })
-            });
-            const data = await r.json();
-            if (!r.ok) throw new Error(data.error || 'Errore');
-    
-            mostraNotifica('Risposta pubblicata! 🎉');
-            await ricaricaRecensioni();
-        } catch(err) {
-            mostraNotifica(err.message, 'error');
-            btn.disabled = false;
-            btn.textContent = 'Pubblica risposta';
-        }
-    }
-    
-    async function ricaricaRecensioni() {
-        const wrap = document.getElementById('recListWrap');
-        if (!wrap) return;
-        try {
-            const r = await fetch(`/api/recensioni/luogo/${idLuogo}`);
-            const recs = r.ok ? await r.json() : [];
-            wrap.innerHTML = renderRecensioni(luogoCorrente, recs);
-            // aggiorna sidebar stats
-            const sidebar = document.getElementById('sidebarWrap');
-            if (sidebar) sidebar.innerHTML = renderSidebar(luogoCorrente, recs);
-        } catch {}
-    }
-    
-    // MODIFICA INFO
+        
+    //  MODIFICA INFO
+    //  affianco alla tab delle recensioni troviamo la tab per la modifica delle informazioni
     function renderFormModifica(luogo) {
         const giorni = ['Lunedì','Martedì','Mercoledì','Giovedì','Venerdì','Sabato','Domenica','Nessuno'];
-    
+        
+        // possono essere modificati tutti i dati del locale inseriti
         return `
         <div class="edit-form" id="editForm">
             
@@ -458,33 +414,42 @@
         </div>`;
     }
     
+    //  aggiorna l'immagine del locale e mostra un'anteprima
+    //  ATTUALMENTE NON UTILIZZATA
     function aggiornaPreviewCover(url) {
         const img = document.getElementById('coverPreview');
         if (img && url) img.src = url;
     }
     
+
+    //  serve a salvare le modifiche nel tab 'MODIFICA INFO'
     async function salvaModifiche() {
         const btnSalva = document.getElementById('btnSalva');
+        // il pulsante per salvare le modifiche viene disattivato e il testo viene cambiato
         btnSalva.disabled = true;
         btnSalva.textContent = 'Salvataggio…';
-    
+        
+        // il contenuto dei campi del form viene salvato in 'payload'
         const payload = {
-            nome_locale:     document.getElementById('edit-nome')?.value.trim(),
-            tipologia:       document.getElementById('edit-tipologia')?.value,
-            descrizione:     document.getElementById('edit-descrizione')?.value.trim(),
-            indirizzo:       document.getElementById('edit-indirizzo')?.value.trim(),
-            telefono:        document.getElementById('edit-telefono')?.value.trim(),
-            sito_web:        document.getElementById('edit-sito')?.value.trim(),
-            instagram:       document.getElementById('edit-instagram')?.value.trim(),
-            apertura:        document.getElementById('edit-apertura')?.value,
-            chiusura:        document.getElementById('edit-chiusura')?.value,
+            nome_locale: document.getElementById('edit-nome')?.value.trim(),
+            tipologia: document.getElementById('edit-tipologia')?.value,
+            descrizione: document.getElementById('edit-descrizione')?.value.trim(),
+            indirizzo: document.getElementById('edit-indirizzo')?.value.trim(),
+            telefono: document.getElementById('edit-telefono')?.value.trim(),
+            sito_web: document.getElementById('edit-sito')?.value.trim(),
+            instagram: document.getElementById('edit-instagram')?.value.trim(),
+            apertura: document.getElementById('edit-apertura')?.value,
+            chiusura: document.getElementById('edit-chiusura')?.value,
             giorno_chiusura: document.getElementById('edit-giorno-chiusura')?.value,
-            immagine:        document.getElementById('edit-immagine')?.value.trim(),
-            aperitivo:       document.getElementById('edit-aperitivo')?.checked || false,
-            colazione:       document.getElementById('edit-colazione')?.checked || false,
+            immagine: document.getElementById('edit-immagine')?.value.trim(),
+            aperitivo: document.getElementById('edit-aperitivo')?.checked || false,
+            colazione: document.getElementById('edit-colazione')?.checked || false,
         };
     
-        if (!payload.nome_locale || !payload.indirizzo) {
+        // devono essere presenti tutte le informazioni essenziali del locale
+        if (!payload.nome_locale || !payload.indirizzo || !payload.apertura || !payload.chiusura 
+            || (!payload.aperitivo && !payload.colazione)) {
+            // se non presenti, viene inviata una notifica all'utente e viene inizializzato il bottono di salvataggio
             mostraNotifica('Nome e indirizzo sono obbligatori', 'error');
             btnSalva.disabled = false;
             btnSalva.textContent = '💾 Salva modifiche';
@@ -501,12 +466,23 @@
             if (!r.ok) throw new Error(data.error || 'Errore durante il salvataggio');
     
             mostraNotifica('Modifiche salvate! ✅');
-            luogoCorrente = { ...luogoCorrente, ...payload };
+            luogoCorrente = { ...luogoCorrente, ...data.locale };
     
-            // aggiorna sidebar
             const recs = await (await fetch(`/api/recensioni/luogo/${idLuogo}`)).json();
+            // aggiorna sidebar con le nuove informazioni modificate / inserite
             document.getElementById('sidebarWrap').innerHTML = renderSidebar(luogoCorrente, recs);
-    
+            // aggiorna tab recensioni (utile nel caso in cui vengono modificati gli orari del locale)
+            document.getElementById('recListWrap').innerHTML = renderRecensioni(recs);
+
+            // viene controllato se in luogo corrente è checkato "colazione", se true viene renderizzato il grafico
+            if (luogoCorrente.colazione) {
+                const chiusuraColazione = (() => {
+                    const h = parseInt(luogoCorrente.chiusura.split(':')[0], 10);
+                    return h < 13 ? '13:00' : luogoCorrente.chiusura;
+                })();
+                renderChartFornitura(recs, luogoCorrente.apertura, chiusuraColazione);
+            }
+
         } catch(err) {
             mostraNotifica(err.message, 'error');
         } finally {
@@ -527,6 +503,7 @@
         });
     }
     
+    //  INIZIALIZZA LA PAGINA DEL LOCALE
     async function init() {
         await checkLogin();
     
@@ -541,8 +518,8 @@
             luogoCorrente = await resLuogo.json();
             const recensioni = resRec.ok ? await resRec.json() : [];
     
-            document.title = `Gestione – ${luogoCorrente.nome_locale} – Aperetto`;
-    
+            document.title = `Gestione – ${luogoCorrente.nome_locale}`;
+            
             document.getElementById('localeGrid').innerHTML = `
             <!-- SIDEBAR -->
             <div class="locale-sidebar">
@@ -552,7 +529,7 @@
             </div>
     
             <!-- CONTENT -->
-            <div>
+            <div class="mb-5">
                 <div class="lc-card">
                     <!-- TABS -->
                     <div class="tab-nav">
@@ -585,6 +562,7 @@
     
             initTabs();
 
+            // viene controllato se in luogo corrente è checkato "colazione", se true viene renderizzato il grafico
             if (luogoCorrente.colazione) {
                 const chiusuraColazione = (() => {
                     const h = parseInt(luogoCorrente.chiusura.split(':')[0], 10);
@@ -594,6 +572,7 @@
             }
     
         } catch(err) {
+            // nel caso in cui non viene trovato il locale, viene mostrata la pagina di locale errore 
             document.getElementById('localeGrid').innerHTML = `
                 <div class="lc-card" style="grid-column:1/-1;text-align:center;padding:60px 20px">
                     <p style="font-size:3rem;margin-bottom:12px">😕</p>
