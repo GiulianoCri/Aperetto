@@ -1,7 +1,8 @@
 COSE FATTE:
-    risolti problemi al recupero psw e inizio revisione codice
+    Pagine definitive e complete di commento:
+    -index.html
+    -profilo.html
 
 TODO:
-    - sessioni supplier
     - problemi fasce orarie
     - profilo supplier          -> modifiche locale
