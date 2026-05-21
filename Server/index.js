@@ -7,57 +7,22 @@ const express=require('express');
 const path = require("path");
 //multer è un middleware che semplifica la gestione degli upload di file (usato per l'upload dell'immagine del locale da parte del supplier)
 const multer = require('multer');
+//richiediamo la sessione
+const session = require('express-session');
 //upload è la configurazione di multer, in questo caso stiamo dicendo a multer di salvare i file caricati in memoria (non su disco), così possiamo poi passarli direttamente a supabase storage senza doverli salvare temporaneamente su disco
 const upload = multer({ storage: multer.memoryStorage() });
 //creazione dell'app express
 const app=express();
 
-//Impostiamo la porta
+// Impostiamo la porta
 const PORT=3000;
 const HOST='0.0.0.0';
 
-//Impostiamo le rotte
-//ROOT è la cartella principale da cui serviremo i file statici (html, css, js lato client)
+// Impostiamo le rotte
+// ROOT è la cartella principale da cui serviremo i file statici (html, css, js lato client)
 const ROOT = path.join(__dirname,'..','client');
-//con questa riga diciamo a express di servire i file statici dalla cartella ROOT, quindi quando il client richiede un file (esempio index.html o uno script js) express lo cercherà in quella cartella
-app.use(express.static(ROOT)); 
-//con questa riga diciamo a express di interpretare il body delle richieste in formato json, così possiamo accedere ai dati inviati dal client tramite req.body negli handler
-app.use(express.json());
-
-//importo le pagine
-//pagina home
-//con questa rotta, quando il client fa una richiesta GET alla radice del sito (esempio http://localhost:3000/) allora express risponde inviando il file index.html che si trova nella cartella ROOT
-app.get('/',(req,res)=>{
-    res.sendFile(path.join(ROOT,'index.html'));
-});
-
-//pagina login
-app.get('/login',(req,res)=>{
-    res.sendFile(path.join(ROOT,'login.html'));
-});
-
-//pagina location
-app.get('/luogo',(req,res)=>{
-    res.sendFile(path.join(ROOT,'luogo.html'));
-});
-
-
-
-//Connesione a supabase
-
-//createClient è la funzione che ci permette di creare un'istanza del client di supabase, a cui poi possiamo fare le query al database e le operazioni di storage. La funzione prende come parametri l'url del nostro progetto supabase e la chiave anonima (public) 
-const { createClient } = require('@supabase/supabase-js');
-const supabaseApi= 'https://ocoztbtixgjdfadqoxtn.supabase.co';
-const supabaseApiKey= 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9jb3p0YnRpeGdqZGZhZHFveHRuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU3ODIwMzIsImV4cCI6MjA5MTM1ODAzMn0.K0tLeh1T-2zjCl3WSvtueTKRQWEadmR1gBXgguALov0';
-const supabase = createClient(supabaseApi, supabaseApiKey);
-
-
-
-//SESSIONI
-//richiediamo la sessione
-const session = require('express-session');
-
-//configuriamo express-session come middleware, in questo modo ogni richiesta che arriva al server passerà prima da questa configurazione di sessione. La sessione ci permette di mantenere lo stato dell'utente tra le varie richieste, ad esempio per sapere se è loggato o no, e per salvare i suoi dati di base (esempio email, nome) senza doverli inviare dal client ad ogni richiesta. La configurazione che abbiamo messo prevede un segreto (usato per firmare la sessione), e alcune opzioni per i cookie (durata, sicurezza, ecc). Importante: in produzione è consigliabile usare un store di sessioni più robusto (esempio Redis) invece della memoria del server, che è volatile e non scalabile.
+// SESSIONI
+// configuriamo express-session come middleware, in questo modo ogni richiesta che arriva al server passerà prima da questa configurazione di sessione. La sessione ci permette di mantenere lo stato dell'utente tra le varie richieste, ad esempio per sapere se è loggato o no, e per salvare i suoi dati di base (esempio email, nome) senza doverli inviare dal client ad ogni richiesta. La configurazione che abbiamo messo prevede un segreto (usato per firmare la sessione), e alcune opzioni per i cookie (durata, sicurezza, ecc). Importante: in produzione è consigliabile usare un store di sessioni più robusto (esempio Redis) invece della memoria del server, che è volatile e non scalabile.
 app.use(session({
     //secret è una stringa segreta usata per firmare la sessione, è importante che sia lunga e complessa per evitare attacchi di forza bruta.
     secret: 'una_stringa_segreta_molto_lunga',
@@ -73,6 +38,34 @@ app.use(session({
         secure: false 
     }
 }));
+// con questa riga diciamo a express di servire i file statici dalla cartella ROOT, quindi quando il client richiede un file (esempio index.html o uno script js) express lo cercherà in quella cartella
+app.use(express.static(ROOT)); 
+// con questa riga diciamo a express di interpretare il body delle richieste in formato json, così possiamo accedere ai dati inviati dal client tramite req.body negli handler
+app.use(express.json());
+
+// importo le pagine
+// pagina home
+// con questa rotta, quando il client fa una richiesta GET alla radice del sito (esempio http://localhost:3000/) allora express risponde inviando il file index.html che si trova nella cartella ROOT
+app.get('/',(req,res)=>{
+    res.sendFile(path.join(ROOT,'index.html'));
+});
+
+// pagina login
+app.get('/login',(req,res)=>{
+    res.sendFile(path.join(ROOT,'login.html'));
+});
+
+// pagina location
+app.get('/luogo',(req,res)=>{
+    res.sendFile(path.join(ROOT,'luogo.html'));
+});
+
+// CONNESSIONE A SUPABASE
+// createClient è la funzione che ci permette di creare un'istanza del client di supabase, a cui poi possiamo fare le query al database e le operazioni di storage. La funzione prende come parametri l'url del nostro progetto supabase e la chiave anonima (public) 
+const { createClient } = require('@supabase/supabase-js');
+const supabaseApi= 'https://ocoztbtixgjdfadqoxtn.supabase.co';
+const supabaseApiKey= 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9jb3p0YnRpeGdqZGZhZHFveHRuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU3ODIwMzIsImV4cCI6MjA5MTM1ODAzMn0.K0tLeh1T-2zjCl3WSvtueTKRQWEadmR1gBXgguALov0';
+const supabase = createClient(supabaseApi, supabaseApiKey);
 
 //AUTENTICAZIONE
 app.use(express.json()); //consente agli handler di leggere il body (renza questa riga la funzione req.body da errore)

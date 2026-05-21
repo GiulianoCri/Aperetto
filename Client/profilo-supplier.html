@@ -26,6 +26,8 @@
 <div class="locale-page">
     <div class="locale-grid" id="localeGrid">
         <!-- Skeleton loading -->
+        <!-- va a creare la suddivisione in blocchi della pagina html aspettando che la funzione init() vada a sovrascrivere 
+             questi blocchi con i dati del locale presi dal server -->
         <div class="locale-sidebar">
             <div class="lc-card" style="height:340px">
                 <div class="skeleton" style="height:160px;border-radius:16px;margin-bottom:14px"></div>
@@ -46,14 +48,19 @@
 </div>
 
 <script>
-    const params   = new URLSearchParams(window.location.search);
-    const idLuogo  = params.get('id');
+    // CARICA TUTTO
+    const params = new URLSearchParams(window.location.search);
+    const idLuogo = params.get('id');
     const from = params.get('from');
     if (!idLuogo) window.location.href = '/';
     
+    // definisce le variabili locali per l'utente loggato e per il locale corrente
     let utenteLoggato = null;
     let luogoCorrente = null;
     
+    // permette di mostrare notifiche temporanee (circa 3 secondi) in basso a destra
+    // serve per mostrare messaggi di errore o di successo all'utente: viene utilizzata, per esempio, per notificare la corretta
+    // pubblicazione di una recensione, oppure per segnalare un errore in caso di problemi (la troviamo anche nelle altre pagine)
     function mostraNotifica(msg, tipo = 'ok') {
         const wrap = document.getElementById('notificaWrap');
         const t = document.createElement('div');
@@ -63,28 +70,30 @@
         setTimeout(() => t.remove(), 3100);
     }
     
+    // genera una riga di stelle SVG con un numero variabile
+    //  -> totale è il numero totale di stelle da dover inserire nella riga
+    //  -> piene è il numero di stelle che, tra quelle totali, devono essere piene
     function stelleSVG(totale, piene) {
         return Array.from({ length: totale }, (_, i) => `
-            <svg class="stella-r" viewBox="0 0 24 24">
-                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77
-                        l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"
-                    fill="${i < piene ? '#FFC107' : '#e0e0e0'}"/>
-            </svg>`).join('');
+            <img class="stella-r" viewBox="0 0 24 24" src="/Foto/${i < piene ? 'stella_piena' : 'stella_vuota'}.svg">`).join('');
+            // viene verificato il numero di stelle piene tramite un ciclo, se la variabile 'i' è minore di 'piene', allora la stella
+            // con quell'indice viene sostituita con 'stella_piena'
     }
+
+    // genera una riga fissa di 5 stelle all'interno della quale sono piene il numero che viene
+    // passato come argomento della funzione
     function stelleMini(piene) {
         return Array.from({ length: 5 }, (_, i) => `
-            <svg class="stella-mini" viewBox="0 0 24 24">
-                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77
-                        l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"
-                    fill="${i < piene ? '#FFC107' : '#e0e0e0'}"/>
-            </svg>`).join('');
+            <img class="stella-mini" viewBox="0 0 24 24" src="/Foto/${i < piene ? 'stella_piena' : 'stella_vuota'}.svg">`).join('');
     }
-    
+
+    // Funzione per formattare la data in formato leggibile, restituendo una stringa con giorno, mese e anno in italiano
     const fmt = iso => new Date(iso).toLocaleDateString('it-IT', { day:'2-digit', month:'short', year:'numeric' });
     const fmtOrario = o => { if(!o) return 'N/A'; const [h,m]=o.split(':'); return `${h}:${m}`; };
     
-    //  AUTENTICAZIONE
-    //  va a verificare che l'utente è loggato, solo l'admin del locale può accedere a questa pagina
+    // AUTENTICAZIONE
+    // va a verificare che l'utente è loggato, solo l'admin del locale può accedere a questa pagina
+    // nel caso in cui l'admin non è loggato, è impossibile accedere a tale pagina
     async function checkLogin() {
         try {
             const r = await fetch('/api/me');
@@ -94,9 +103,9 @@
         } catch {}
     }
         
-    //  SIDEBAR
-    //  sulla sidebar possiamo trovare un'anteprima della foto di sfondo del locale, oltre alle info principali
-    //  abbiamo anche un link per vedere la pagina pubblica del proprio locale
+    // SIDEBAR
+    // sulla sidebar possiamo trovare un'anteprima della foto di sfondo del locale, oltre alle info principali
+    // abbiamo anche un link per vedere la pagina pubblica del proprio locale
     function renderSidebar(luogo, recensioni) {
         
         // calcola la media delle recensioni:
@@ -106,6 +115,7 @@
             : null;
         
         // crea la sidebar con foto, nome del locale, tipologia di servizio offerto e le informazioni
+        // partendo dalle informazioni ricavate dal server, le inserisce all'interno della pagina 
         return `
         <!-- IDENTITÀ -->
         <div class="lc-card" id="cardIdentita">
@@ -144,9 +154,9 @@
         </div> `;
     }
     
-    //  CREA FASCE ORARIE
-    //  la funzione va a generare delle fasce orarie di 1h/fascia utili poi alle recensioni (riservate ai soli locali che forniscono 
-    //  il servizio di colazione) e al render del grafico relativo alla fornitura
+    // CREA FASCE ORARIE
+    // la funzione va a generare delle fasce orarie di 1h/fascia utili poi alle recensioni (riservate ai soli locali che forniscono 
+    // il servizio di colazione) e al render del grafico relativo alla fornitura
     let fasceOrarie = null;
     function generaFasceOrarie(apertura, chiusura) {
         if (!apertura || !chiusura) return [];
@@ -156,8 +166,8 @@
         let [hA, mA] = apertura.split(':').map(Number);
         let [hC, mC] = chiusura.split(':').map(Number);
 
-        // gestisce orari a cavallo della mezzanotte: se l'orario di chiusura è successivo alla mezzanotte va ad aggiungere 24 in modo da
-        // rendere il calcolo lineare
+        // gestisce orari a cavallo della mezzanotte: se l'orario di chiusura è successivo alla mezzanotte va ad aggiungere 24 
+        // in modo da rendere il calcolo lineare
         if (hC < hA || (hC === hA && mC <= mA)) hC += 24;
 
         // converto l'orario in minuti
@@ -176,8 +186,10 @@
         fasceOrarie = fasce;
     }
 
-    //  CARICA TUTTO
-    //  serve alla creazione del grafico vero e proprio per le forniture
+    // CARICA TUTTO
+    // serve alla creazione del grafico vero e proprio per le forniture
+
+    // inizializza una variabile globale, serivirà successivamente per aggiungere il canvas alla pagina
     let chartFornituraInstance = null;
     function renderChartFornitura(recensioni, apertura, chiusuraColazione) {
         // controllo esistenza del canvas
@@ -187,6 +199,7 @@
         console.log('apertura:', apertura, '| chiusura:', chiusuraColazione);
         console.log('fasce generate:', generaFasceOrarie(apertura, chiusuraColazione));
 
+        // se il canvas esiste, viene "distrutto" e viene posto a "null"
         if (chartFornituraInstance) {
             chartFornituraInstance.destroy();
             chartFornituraInstance = null;
@@ -197,8 +210,10 @@
         // raggruppa le recensioni per fascia oraria e va a calcolare la media di fornitura (valori da 1 a 5)
         const gruppi = {};
         recensioni.forEach(r => {
-            // (vengono saltate le recensioni senza fascia oraria o fornitura)
+            // vengono saltate le recensioni senza fascia oraria o fornitura
+            //  -> affinchè la recensione sia valida devono essere presenti sia la fascia_oraria che la fornitura
             if (!r.fascia_oraria || r.fornitura == null) return;
+
             // costruisce un oggetto 'gruppi' dove ogni chiave è una fascia oraria
             if (!gruppi[r.fascia_oraria]) gruppi[r.fascia_oraria] = { somma: 0, count: 0 };
             gruppi[r.fascia_oraria].somma += r.fornitura;
@@ -231,8 +246,8 @@
                     legend: { display: false }, // nasconde legenda
                     tooltip: {
                         callbacks: {
-                            // quando viene passato il mouse sopra / viene cliccata la colonnina relativa al grado di fornitura viene 
-                            // mostrato un riquadro con ORARIO, la MEDIA e il N. DI RECENSIONI
+                            // quando viene passato il mouse sopra / viene cliccata la colonnina relativa al grado di fornitura 
+                            // viene mostrato un riquadro con ORARIO, la MEDIA e il N. DI RECENSIONI
                             label: (ctx) => ctx.raw !== null ? `Media: ${ctx.raw}/5` : 'Nessuna recensione',
                             afterLabel: (ctx) => conteggi[ctx.dataIndex] > 0 ? `Recensioni: ${conteggi[ctx.dataIndex]}` : ''
                         }
@@ -251,19 +266,24 @@
         });
     }
 
-    //  RECENSIONI
-    //  nella tab delle recensioni troviamo le statistiche (voto medio, numero di recensioni e grafico fornitura) in alto
-    //  in basso troviamo l'elenco delle recensioni
+    // RECENSIONI
+    // nella tab delle recensioni troviamo le statistiche (voto medio, numero di recensioni e grafico fornitura) in alto
+    // in basso troviamo l'elenco delle recensioni
     function renderRecensioni( recensioni) {
         const media = recensioni.length
                 ? (recensioni.reduce((s,r) => s+r.voto,0) / recensioni.length)
                 : null;
 
+        // se non sono presenti recensioni per il locale, viene mostrata la schermata di default
         if (!recensioni.length) return `
             <div class="empty-state">
                 <div class="empty-icon">💬</div>
-                <p>Nessuna recensione ancora.</p>
+                <p>Ancora nessuna recensione.</p>
             </div>`;
+        
+        // se sono presenti delle recensioni (almeno 1), viene mostrata la schermata con le statistiche del locale (numero di
+        // recensioni, valutazione media, grafico del livello di fornitura - solo se il locale offre il servizio di colazione)
+        // e l'elenco di tutte le recensioni  
         else return ` 
             <!-- STATISTICHE -->
             <div class="lc-card mt-2">
@@ -290,14 +310,15 @@
                 
             </div> ` + 
             recensioni.map((rec, idx) => {
-                // viene individuata l'iniziale dell'user che ha scritto la recensione e viene usata come avatar (come nella pagina del profilo)
+                // viene individuata l'iniziale dell'user che ha scritto la recensione e viene usata come avatar (come nella 
+                // pagina del profilo)
                 const iniziale = (rec.consumer?.name || 'U').charAt(0).toUpperCase();
                 const nome = rec.consumer
                     ? `${rec.consumer.name||''} ${rec.consumer.surname||''}`.trim()
                     : 'Utente';
 
-                // per ogni recensione viene mostrato il nome dell'user, il testo della recensione, il voto dato (sotto forma di stelline)
-                // e, SOLO nel caso in cui siano state inserite, fascia oraria e fornitura del locale sulla sinistra
+                // per ogni recensione viene mostrato il nome dell'user, il testo della recensione, il voto dato (sotto forma 
+                // di stelline) e, SOLO nel caso in cui siano state inserite, fascia oraria e fornitura del locale sulla sinistra
                 return `
                 <div class="rec-card" style="animation-delay:${idx*0.06}s; animation: fadeSlideIn 0.35s ease both;">
                     <div class="rec-header-row">
@@ -320,8 +341,8 @@
             }).join('');
     }
         
-    //  MODIFICA INFO
-    //  affianco alla tab delle recensioni troviamo la tab per la modifica delle informazioni
+    // MODIFICA INFO
+    // affianco alla tab delle recensioni troviamo la tab per la modifica delle informazioni
     function renderFormModifica(luogo) {
         const giorni = ['Lunedì','Martedì','Mercoledì','Giovedì','Venerdì','Sabato','Domenica','Nessuno'];
         
@@ -414,15 +435,14 @@
         </div>`;
     }
     
-    //  aggiorna l'immagine del locale e mostra un'anteprima
-    //  ATTUALMENTE NON UTILIZZATA
+    // aggiorna l'immagine del locale e mostra un'anteprima
+    // ATTUALMENTE NON UTILIZZATA
     function aggiornaPreviewCover(url) {
         const img = document.getElementById('coverPreview');
         if (img && url) img.src = url;
     }
     
-
-    //  serve a salvare le modifiche nel tab 'MODIFICA INFO'
+    // serve a salvare le modifiche nel tab 'MODIFICA INFO'
     async function salvaModifiche() {
         const btnSalva = document.getElementById('btnSalva');
         // il pulsante per salvare le modifiche viene disattivato e il testo viene cambiato
@@ -449,7 +469,7 @@
         // devono essere presenti tutte le informazioni essenziali del locale
         if (!payload.nome_locale || !payload.indirizzo || !payload.apertura || !payload.chiusura 
             || (!payload.aperitivo && !payload.colazione)) {
-            // se non presenti, viene inviata una notifica all'utente e viene inizializzato il bottono di salvataggio
+            // se non presenti, viene inviata una notifica all'utente e viene inizializzato il bottone di salvataggio
             mostraNotifica('Nome e indirizzo sono obbligatori', 'error');
             btnSalva.disabled = false;
             btnSalva.textContent = '💾 Salva modifiche';
@@ -503,19 +523,23 @@
         });
     }
     
-    //  INIZIALIZZA LA PAGINA DEL LOCALE
+    // INIZIALIZZA LA PAGINA DEL LOCALE
     async function init() {
         await checkLogin();
     
         try {
             const [resLuogo, resRec] = await Promise.all([
+                // fa una richiesta sia per 'location' (dalla quale prende le informazioni del locale) sia per
+                // 'recensioni' (dalla quale prende tutte le informazioni da inserire nelle recensioni)
                 fetch(`/api/location/${idLuogo}`),
                 fetch(`/api/recensioni/luogo/${idLuogo}`)
             ]);
-    
+        
             if (!resLuogo.ok) throw new Error('Locale non trovato');
-    
+            
+            // luogoCorrente viene inizializzato con la risposta del server 
             luogoCorrente = await resLuogo.json();
+            // la risposta del server alla richiesta per 'recensioni' viene salvata in un array
             const recensioni = resRec.ok ? await resRec.json() : [];
     
             document.title = `Gestione – ${luogoCorrente.nome_locale}`;
@@ -564,9 +588,14 @@
 
             // viene controllato se in luogo corrente è checkato "colazione", se true viene renderizzato il grafico
             if (luogoCorrente.colazione) {
+                // viene settato l'orario limite per le colazioni (massimo alle 13:00)
                 const chiusuraColazione = (() => {
                     const h = parseInt(luogoCorrente.chiusura.split(':')[0], 10);
                     return h < 13 ? '13:00' : luogoCorrente.chiusura;
+                    // viene individuato l'orario di chiusura del luogo (viene splittato l'orario di chiusura in corrispondenza
+                    // dei due punti e viene preso l'elemento 0) e viene confrontato con '13'
+                    //  -> se minore, allora viene preso come limite massimo l'orario di chisuura del locale
+                    //  -> se maggiore, viene preso come limite massimo le 13:00
                 })();
                 renderChartFornitura(recensioni, luogoCorrente.apertura, chiusuraColazione);
             }
@@ -588,11 +617,13 @@
     
     init();
 
+    // LOGOUT
+    // quando viene premuto il bottone di logout, viene disconnesso l'user dal sito e viene reindirizzato ad index
     document.getElementById('loginLink').addEventListener('click', async (e) => {
-    e.preventDefault();
-    await fetch('/api/logout', { method: 'POST' });
-    window.location.href = '/';
-});
+        e.preventDefault();
+        await fetch('/api/logout', { method: 'POST' });
+        window.location.href = '/';
+    });
 </script>
 
 </body>

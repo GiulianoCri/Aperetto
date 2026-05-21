@@ -1,11 +1,10 @@
 COSE FATTE:
-    bug recensioni + revisione codice 
+    bug recensioni, sistemazione stelle + revisione codice 
     - luogo.html
 
 TODO:
     - problemi fasce orarie
     - profilo-supplier / modifica info  -> aggiornaPreviewCover non viene utilizzata
-    - bug sul livello fornitura(se metto zero non compare)
     - profilo supplier va sistemata responsiveness(inserendo recensioni diventa troppo largo)
     - unificare stile
     - commentare
