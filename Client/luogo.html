@@ -43,7 +43,10 @@
     <div class="notifica-wrap" id="notificaWrap"></div>
 
     <script>
-        /* ── NAVBAR DROPDOWN ── */
+        // NAVBAR DROPDOWN MENU
+        // menù "a tendina" per accesso / logout / profilo user: cambia in base allo stato di login dell'user
+        //  -> se utente non loggato, viene mostrato SOLO il pulsante "Accedi"
+        //  -> se utente loggato, vengono mostrati i pulsanti "Profilo" e "Logout"
         const btn  = document.querySelector('.loginbtn');
         const menu = document.querySelector('.dropdown');
         btn.addEventListener('click', () => menu.classList.toggle('show'));
@@ -54,17 +57,17 @@
 
         // SESSIONE
         let utenteLoggato = null;
-
         async function checkLogin() {
             try {
                 const r = await fetch('/api/me');
                 if (r.ok) {
                     utenteLoggato = await r.json();
+                    // LOGGATO: mostra i pulsante per accedere al profilo utente e per il logout
                     document.getElementById('menuAccedi').classList.add('d-none');
                     document.getElementById('menuProfilo').classList.remove('d-none');
                     document.getElementById('menuLogout').classList.remove('d-none');
                 } else {
-                // Non loggato: ripristina stato di default
+                // NON LOGGATO: ripristina lo stato di default del menù, mostrando solo il pulsante "Accedi"
                 menuAccedi.classList.remove('d-none');
                 menuProfilo.classList.add('d-none');
                 menuLogout.classList.add('d-none');
@@ -72,19 +75,22 @@
             } catch {}
         }
 
+        // LOGOUT
+        // se dal menù a tendina viene premuto logout, l'utente viene disconnesso e reindirizzato alla homepage del sito
         document.getElementById('menuLogout').addEventListener('click', async e => {
         e.preventDefault();
         await fetch('/api/logout', { method: 'POST' });
         window.location.href = '/';
     });
 
-        /* ── UTILS ── */
+        // UTILS
         const formattaOrario = o => {
             if (!o) return 'N/A';
             const [h, m] = o.split(':');
             return `${h}:${m}`;
         };
 
+        // converte una data in formato ISO in una stringa formattata in italiano (es. 21 mag 2026)
         const formattaData = iso => new Date(iso).toLocaleDateString('it-IT', {
             day: '2-digit', month: 'short', year: 'numeric'
         });
@@ -98,6 +104,9 @@
                 </svg>`).join('');
         }
 
+        // permette di mostrare notifiche temporanee (circa 3 secondi) in basso a destra
+        // serve per mostrare messaggi di errore o di successo all'utente: viene utilizzata, per esempio, per notificare la corretta
+        // pubblicazione di una recensione, oppure per segnalare un errore in caso di problemi (la troviamo anche nelle altre pagine)
         function mostranotifica(msg, tipo = 'ok') {
             const wrap = document.getElementById('notificaWrap');
             const t = document.createElement('div');
@@ -130,6 +139,10 @@
         }
 
         // RECENSIONI 
+        // viene inviata una richiesta al server per 'recuperare' tutte le recensioni di un determinato locale partendo dal suo ID
+        //  -> se la richiesta viene eseguita con successo, viene restituito un array di recensioni
+        //  -> se la richiesta fallisce per un qualsiasi motivo, viene restituito un array vuoto e non viene modifcato lo stato di dafault della pagina
+        //      (viene mostrato "Ancora nessuna recensione. Sii il primo!")
         async function caricaRecensioni(idLuogo) {
             try {
                 const r = await fetch(`/api/recensioni/luogo/${idLuogo}`);
@@ -145,7 +158,7 @@
                 wrap.innerHTML = `
                     <div class="rec-empty">
                         <span>💬</span>
-                        Nessuna recensione ancora. Sii il primo!
+                        Ancora nessuna recensione. Sii il primo!
                     </div>`;
                 return;
             }
@@ -202,6 +215,19 @@
             btnInvia.disabled = true;
             btnInvia.textContent = 'Invio...';
 
+            const fornitura = parseInt(document.getElementById('fornituraSlider')?.value ?? 0);
+            const fascia_oraria = document.querySelector('.fascia-btn.selected')?.getAttribute('data-fascia') || null;
+
+            // VALIDAZIONE CAMPI
+            // se è presente il livello di fornitura, allora DEVE essere presente anche la fascia oraria e viceversa
+            if ((fornitura && !fascia_oraria) || (!fornitura && fascia_oraria)) {
+                // nel caso in cui uno dei due non dovesse esser selezionato, viene bloccato l'invio della recensione e viene mostrato un alert
+                mostranotifica('Devi selezionare sia il livello di fornitura che la fascia oraria!' , 'error');
+                btnInvia.disabled = false;
+                btnInvia.textContent = 'Pubblica';
+                return;
+            }
+
             try {
                 const r = await fetch('/api/recensioni', {
                     method: 'POST',
@@ -218,13 +244,15 @@
                 if (!r.ok) throw new Error(data.error || 'Errore');
 
                 // RESET SLIDER E FASCIA ORARIA
+                // una volta inviata la recensione, viene msotrata una notifica di successo ed è possibile visualizzare la propria recensione 
+                // nell'elenco sotto il form; successivamente, vengono resettati TUTTI i campi del form, preparandolo per una nuova eventuale recensione
                 mostranotifica('Recensione pubblicata! 🎉');
                 document.getElementById('recTesto').value = '';
                 const slider = document.getElementById('fornituraSlider');
                 if(slider) {
-                    slider.value = 0;
+                    slider.value = 1;
                     slider.style.background = 'linear-gradient(to right, #FFC107 0%, #e9ecef 0%)';
-                    document.getElementById('fornituraValore').textContent = '0';
+                    document.getElementById('fornituraValore').textContent = '1';
                 }
                 document.querySelectorAll('.fascia-btn').forEach(b => b.classList.remove('selected'));
 
@@ -239,6 +267,7 @@
             } catch (err) {
                 mostranotifica(err.message, 'error');
             } finally {
+                // una volta completata con successo la richiesta di invio della notifica, viene riabilitato il pulsante di invio
                 btnInvia.disabled = false;
                 btnInvia.textContent = 'Pubblica';
             }
@@ -384,7 +413,9 @@
                     ? fasce.map(f => `<button type="button" class="fascia-btn" data-fascia="${f}">${f}</button>`).join('')
                     : `<span style="font-size:0.82rem;color:#bbb;">Orari non disponibili</span>`;
 
-                /* SEZIONE FORM O PROMPT LOGIN */
+                // SEZIONE FORM RECENSIONE (mostrato solo se utente loggato)
+                // se un utente non è loggato, viene mostrato un messaggio che invita ad accedere per lasciare una recensione
+                // le recensioni sono sempre visibili, anche agli utenti non loggati / registrati
                 const formSection = utenteLoggato ? `
                     <div class="voto-fornitura-row">
                         <div>
@@ -416,10 +447,10 @@
                                 <p class="rec-form-label">Quanto era fornito?</p>
                                 <div class="fornitura-header">
                                     <span style="font-size:0.78rem;font-weight:700;color:#888;">Livello fornitura</span>
-                                    <span class="fornitura-valore" id="fornituraValore">0</span>
+                                    <span class="fornitura-valore" id="fornituraValore">1</span>
                                 </div>
                                 <input type="range" class="fornitura-slider" id="fornituraSlider"
-                                    min="0" max="5" step="1" value="0">
+                                    min="1" max="5" step="1" value="1">
                                 <div class="fornitura-labels">
                                     <span>Scarso</span>
                                     <span>Ottimo</span>
@@ -440,7 +471,8 @@
                         <span><a href="/login.html">Accedi</a> per lasciare una recensione</span>
                     </div>`;
 
-                /* BODY */
+                // SOCIAL
+                // nella sidebar del locale vengono mostrati link cliccabili per il sito web del locale e per il suo profilo Instagram (se presenti)
                 const socials = [];
                 if (luogo.sito_web) socials.push(`    
                     <span class="info-pill-value">
@@ -460,7 +492,8 @@
                                 </a>` : 'N/A'}
                     </span>`);
 
-                const socialLocation = socials.length ? socials.join('') : `<span class="info-pill-value">N/A</span>`;
+                // nel caso in cui l'admin del locale non dovesse aver inserito nessun contatto social, viene mostrato "N/A"
+                const socialLocation = socials.length ? socials.join('') : `<span class="info-pill-value">Nessun contatto presente!</span>`;
 
                 document.getElementById('luogo-body').innerHTML = `
                 <div class="profilo-page">    
@@ -550,16 +583,23 @@
                         });
                     });
 
-                    document.getElementById('btnInviaRec')
-                        .addEventListener('click', () => inviaRecensione(id));
+                    document.getElementById('btnInviaRec').addEventListener('click', () => inviaRecensione(id));
 
+                    // SLIDER FORNITURA
+                    // inizializza lo slider per il livello di fornitura (form recensione)
                     const slider = document.getElementById('fornituraSlider');
                     if (slider) {
                         const valLabel = document.getElementById('fornituraValore');
                         slider.addEventListener('input', () => {
+                            // viene "recuperato" l'elemento slider e il suo valore, mostrato accanto a "livello fornitura"
                             const v = slider.value;
                             valLabel.textContent = v;
-                            const pct = (v / 5) * 100;
+
+                            // ad ogni movimento del cursore, viene aggiornata la barra riempendo di giallo la parte corrispondente
+                            // e modificando il valore numerico: ogni step rappresenta un incremento del 25%
+                            // il "trucco" sta nel calcolare la percentuale di riempimento in base al valore attuale: usiamo 'v-1' in modo da
+                            // considerare 0% quando il valore è 1 -> (1-1)/4*100 = 0%
+                            const pct = ((v-1) / 4) * 100;
                             slider.style.background =
                                 `linear-gradient(to right, #FFC107 ${pct}%, #e9ecef ${pct}%)`;
                         });

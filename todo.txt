@@ -1,13 +1,11 @@
 COSE FATTE:
-    implementata la possibilità di modificare info locale + revisione pagine
-    - login.html
-    - profilo-supplier.html
+    bug recensioni + revisione codice 
+    - luogo.html
 
 TODO:
     - problemi fasce orarie
     - profilo-supplier / modifica info  -> aggiornaPreviewCover non viene utilizzata
     - bug sul livello fornitura(se metto zero non compare)
-    - bug su fascia oraria,mi ha fatto inserire il livello fornitura anche nìsenza orario
     - profilo supplier va sistemata responsiveness(inserendo recensioni diventa troppo largo)
     - unificare stile
     - commentare
