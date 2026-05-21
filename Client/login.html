@@ -59,7 +59,7 @@
                             <a id="btnRegistrazione" class="btn btn-danger m-auto w-100"> Registrati </a> <br>
 
                             <div class="text-start mt-3">
-                                <a href="login-supplier.html" class="d-inline-flex align-items-center gap-2 text-dark" target="_blank">    
+                                <a href="login-supplier.html" class="d-inline-flex align-items-center gap-2 text-dark">    
                                     <span class="d-inline-flex justify-content-center align-items-center">
                                         <img src="/Foto/supplier.svg" class="supplier d-block" alt="Icona ristoranti">
                                         <span class="mx-1 text-bg-info">Per i locali</span>
@@ -139,7 +139,7 @@
                                 </div>
 
                                 <div class="text-start mt-4 mb-2">
-                                <a href="login-supplier.html" class="d-inline-flex align-items-center gap-2 text-dark" target="_blank">    
+                                <a href="login-supplier.html" class="d-inline-flex align-items-center gap-2 text-dark">    
                                     <span class="d-inline-flex justify-content-center align-items-center">
                                         <img src="/Foto/supplier.svg" class="supplier d-block" alt="Icona ristoranti">
                                         <span class="mx-1 text-bg-info">Per i locali</span>
@@ -277,8 +277,6 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ email: emailRec })
                 });
-                
-                console.log("richiesta recupero password per: " + emailRec);
                 const data = await response.json();
 
                 if (response.ok) {
@@ -320,7 +318,7 @@
             // controllo lunghezza della password (almeno 8 char)
             // IMPORTANTE: questo controllo deve essere fatto anche lato server.
             if(password.length < 8){
-                alert("La passwrod deve essere lunga almeno 8 caratteri")
+                alert("La password deve essere lunga almeno 8 caratteri")
                 return 
             }
 
@@ -330,8 +328,6 @@
                 confirmPassword.value = "";
                 return
             }
-            
-            console.log("Dati inviati:", { name, surname, email, password });
 
             try {
                 const response = await fetch('/api/register', {
@@ -361,7 +357,6 @@
 
             const email = document.getElementById('emailLogin').value.toLowerCase().trim();
             const password = pswField.value;
-            console.log("sto per fare una richiesta per: " + email +", " + password)
 
             try {
                 
