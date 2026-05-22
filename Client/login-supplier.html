@@ -102,8 +102,7 @@
                                         </button>
                                     </div>
                                 </div>
-
-                                <h5 class="text-danger d-none" id="textConf">Password non corrispondenti</h5>
+                                <div id="errorMsg" class="text-danger d-none"></div>
 
                                 <div class="col-12">
                                     <label for="ruolo" class="info-pill-label login-color mt-4 mx-2">Ruolo*</label>
@@ -395,16 +394,19 @@
 
         
         // Step 1 -> 2: la validazione dei campi required avviene automaticamente
+        const errorMsg = document.getElementById('errorMsg');
         document.getElementById('formStep1').addEventListener('submit', e => {
             e.preventDefault();
 
             if((psw.value).length < 8){
-                alert("La passwrod deve essere lunga almeno 8 caratteri")
+                errorMsg.textContent = "La password deve avere almeno 8 caratteri";
+                errorMsg.classList.remove('d-none');
                 return 
             }
 
             if(psw.value !== confPsw.value){
-                alert("Le password inserite sono diverse")
+                errorMsg.textContent = "Le password non coincidono";
+                errorMsg.classList.remove('d-none');
                 confPsw.value = "";
                 return
             }

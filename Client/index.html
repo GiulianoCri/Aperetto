@@ -45,9 +45,9 @@
         <img src="/Foto/filtro.svg" alt="filtro" width="15" height="15" class="filtro-icon">
         <div class="select-wrapper">
         <select id="filtroTipo" class="filtro-select">
-            <option value="">Tutti i locali</option>
-            <option value="Colazione">Colazione</option>
-            <option value="Aperitivo">Aperitivo</option>
+            <option class="text-center" value="">Tutti i locali</option>
+            <option class="text-center" value="Colazione">Colazione</option>
+            <option class="text-center" value="Aperitivo">Aperitivo</option>
         </select>
         </div>
     </div>
@@ -57,11 +57,11 @@
             <img src="/Foto/position.svg" alt="filtro" width="15" height="15" class="filtro-icon">
             <div class="select-wrapper">
             <select id="filtroDistanza" class="filtro-select">
-                <option value="">Qualsiasi distanza</option>
-                <option value="1">Entro 1 km</option>
-                <option value="3">Entro 3 km</option>
-                <option value="5">Entro 5 km</option>
-                <option value="10">Entro 10 km</option>
+                <option class="text-center" value="">Qualsiasi distanza</option>
+                <option class="text-center" value="1">Entro 1 km</option>
+                <option class="text-center" value="3">Entro 3 km</option>
+                <option class="text-center" value="5">Entro 5 km</option>
+                <option class="text-center" value="10">Entro 10 km</option>
             </select>
     </div>
     </div>
@@ -92,13 +92,8 @@
     </div>
 
 <script>
-
-
-
-    //Script per gestire il menu a tendina
-
-
-    //salvo gli venti che mi interessano in variabili per comodità
+    // MENU A TENDINA
+    // salvo gli venti che mi interessano in variabili per comodità
     const btn = document.querySelector(".loginbtn");
     const menu = document.querySelector(".dropdown");
     //Apro/chiudo menu al click sul bottone
@@ -106,7 +101,7 @@
         menu.classList.toggle("show");
     });
 
-    /* Chiude il menu se clicchi fuori */
+    // chiude il menù se clicchi fuori
     document.addEventListener("click", (e) => {
         if (!btn.contains(e.target) && !menu.contains(e.target)) {
             menu.classList.remove("show");
@@ -114,9 +109,7 @@
     });
 
 
-    //Script per caricare i luoghi dal server
-
-
+    // Script per caricare i luoghi dal server
     let tuttiILuoghi = [];
     let markers = {};
     const input = document.querySelector("input");
@@ -140,7 +133,9 @@
         // aggiungi marker
         luoghi.forEach(luogo => {
             if (!luogo.lat || !luogo.lng) return;
-            //L è la libreria Leaflet, marker è il marcatore da posizionare sulla mappa, lat e lng sono le coordinate del luogo, icon è l'icona personalizzata,iconanchor è il punto dell'icona che corrisponde alla posizione, popupanchor è dove appare il popup rispetto all'icona
+            // L è la libreria Leaflet, marker è il marcatore da posizionare sulla mappa, lat e lng sono le coordinate del luogo, icon 
+            // è l'icona personalizzata,iconanchor è il punto dell'icona che corrisponde alla posizione, popupanchor è dove appare il 
+            // popup rispetto all'icona
             const marker = L.marker([luogo.lat, luogo.lng], { 
             icon: 
                 L.icon({
@@ -158,7 +153,8 @@
                 direction: "top",
                 offset: [0, -10]
             });
-            // al click sul marker, reindirizza alla pagina del luogo, il from=index serve per sapere da dove viene l'utente e poter mostrare un bottone "torna alla lista" nella pagina del luogo e indirizzare correttamente al click
+            // al click sul marker, reindirizza alla pagina del luogo, il from=index serve per sapere da dove viene l'utente e poter 
+            // mostrare un bottone "torna alla lista" nella pagina del luogo e indirizzare correttamente al click
             marker.on("click", () => {
                 window.location.href = `/luogo.html?id=${luogo.id}&from=index`;
             });
@@ -171,20 +167,13 @@
     };
 
 
-    //Script per la ricerca
-
-
+    // SCRIPT PER LA RICERCA
     // Prendo l'input di ricerca e aggiungo un event listener per ogni volta che l'utente digita qualcosa
     input.addEventListener("input", () => {
         applicaFiltri();
     });
 
-
-
-    //Script per la mappa
-
-
-
+    // SCRIPT PER LA MAPPA
     //imposto la vista iniziale della mappa centrata su Roma, con zoom 13
     let map = L.map('map').setView([41.8932482, 12.4829853], 13);
     // aggiungo il layer delle mappe di OpenStreetMap, con l'attribuzione per rispettare la licenza
@@ -195,9 +184,7 @@
     caricaLuoghi();
 
 
-    //Funzioni ausiliarie
-
-
+    // FUNZIONI AUSILIARIE
     // Aggiorna la lista dei luoghi e i marker sulla mappa in base a un array di luoghi filtrati
     function aggiornaVista(luoghi) {
 
@@ -235,7 +222,7 @@
         });
     }
 
-
+    // TAG APERTO / CHIUSO
     // ritorna un booleano se il luogo è aperto in base all'orario di apertura e chiusura
     function isAperto(apertura, chiusura) {
         if (!apertura || !chiusura) return null;
@@ -250,9 +237,8 @@
     }
     
 
-    // Funzione per inserire i luoghi nella lista dei risultati, con badge di aperto/chiuso e tipo locale, e onclick per reindirizzare alla pagina del luogo
-
-
+    // Funzione per inserire i luoghi nella lista dei risultati, con badge di aperto/chiuso e tipo locale, e onclick per 
+    // reindirizzare alla pagina del luogo
     const inserisciLuoghi = (luoghi) => {
         // prendo il container dei risultati e lo svuoto prima di inserire i nuovi risultati filtrati
         const container = document.getElementById('risultati');
@@ -264,7 +250,8 @@
             // creo un div per ogni luogo, con classe risultato-card per lo stile
             const div = document.createElement('div');
             div.className = "risultato-card";
-            // calcolo se il luogo è aperto o chiuso in base all'orario di apertura e chiusura, se non ho orari restituisco null, se è aperto restituisco un badge verde, se è chiuso un badge rosso, se non ho orari non mostro nessun badge
+            // calcolo se il luogo è aperto o chiuso in base all'orario di apertura e chiusura, se non ho orari restituisco null, se è 
+            // aperto restituisco un badge verde, se è chiuso un badge rosso, se non ho orari non mostro nessun badge
             const aperto = isAperto(luogo.apertura, luogo.chiusura);
             const badgeAperto = aperto === null ? '': aperto
                     ? `<span class="badge-aperto text-center">Aperto</span>`
@@ -274,7 +261,8 @@
             if (luogo.aperitivo) badges.push(`<span class="card-badge">Aperitivo</span>`);
             if (luogo.colazione) badges.push(`<span class="card-badge">Colazione</span>`);
             const badgesHtml = badges.length ? badges.join('') : `<span class="card-badge">Locale</span>`;
-            // inserisco nell'html del div il nome del locale, l'indirizzo, i badge di aperto/chiuso e tipo locale, e l'immagine se presente, con un onclick che reindirizza alla pagina del luogo
+            // inserisco nell'html del div il nome del locale, l'indirizzo, i badge di aperto/chiuso e tipo locale, e l'immagine se presente, 
+            // con un onclick che reindirizza alla pagina del luogo
             div.innerHTML = `
                 <div class="card-img-wrap">
                     <img src="${luogo.immagine}" alt="${luogo.nome_locale}">
@@ -288,7 +276,8 @@
                     <p class="card-address">${luogo.indirizzo}</p>
                 </div>
             `;
-            // al click sul div, reindirizza alla pagina del luogo, il from=index serve per sapere da dove viene l'utente e poter mostrare un bottone "torna alla lista" nella pagina del luogo e indirizzare correttamente al click
+            // al click sul div, reindirizza alla pagina del luogo, il from=index serve per sapere da dove viene l'utente e poter mostrare un bottone
+            // "torna alla lista" nella pagina del luogo e indirizzare correttamente al click
             div.addEventListener('click', () => {
                 window.location.href = `/luogo.html?id=${luogo.id}&from=index`;
             });

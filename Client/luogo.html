@@ -58,6 +58,9 @@
         });
 
         // SESSIONE
+        // viene controllato se l'utente ha effettuato il login e risulta attualmente loggato al sito: nel caso in cui questo controllo
+        // dovesse avere esito negativo, allora viene mostrato il solo pulsante di accesso nel menù a tendina e l'invito ad accedere per
+        // scrivere una recensione
         let utenteLoggato = null;
         async function checkLogin() {
             try {
@@ -69,11 +72,11 @@
                     document.getElementById('menuProfilo').classList.remove('d-none');
                     document.getElementById('menuLogout').classList.remove('d-none');
                 } else {
-                // NON LOGGATO: ripristina lo stato di default del menù, mostrando solo il pulsante "Accedi"
-                menuAccedi.classList.remove('d-none');
-                menuProfilo.classList.add('d-none');
-                menuLogout.classList.add('d-none');
-            }
+                    // NON LOGGATO: ripristina lo stato di default del menù, mostrando solo il pulsante "Accedi"
+                    menuAccedi.classList.remove('d-none');
+                    menuProfilo.classList.add('d-none');
+                    menuLogout.classList.add('d-none');
+                }
             } catch {}
         }
 
@@ -97,13 +100,13 @@
             day: '2-digit', month: 'short', year: 'numeric'
         });
 
+        // Funzione per generare la valutazione a stelle in base al voto numerico, restituendo un blocco HTML con 5 stelle, di cui 
+        // alcune piene e altre vuote a seconda del voto
         function stelleSVG(totale, piene) {
-            return Array.from({ length: totale }, (_, i) => `
-                <svg class="stella-svg" viewBox="0 0 24 24">
-                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77
-                             l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"
-                          fill="${i < piene ? '#FFC107' : '#e0e0e0'}"/>
-                </svg>`).join('');
+            // in base al numero preso in input 'piene', viene confrontato l'indice della stella corrente con il valore di 'piene'
+            // se minore o uguale la stella vuota viene riempita, altrimenti rimane vuota
+            return Array.from({ length: totale }, (_, i) => `<img src="/Foto/${i < piene ? 'stella_piena' : 'stella_vuota'}.svg" 
+                    width="18" height="18" alt="stella">`).join('');
         }
 
         // permette di mostrare notifiche temporanee (circa 3 secondi) in basso a destra
@@ -121,18 +124,30 @@
         // STELLE INTERATTIVE
         let votoSelezionato = 0;
 
+        // la funzione seguente gestisce la valutazione tramite stelle interattive con tre componenti distinti
         function initStelle() {
             const btns = document.querySelectorAll('.stella-btn');
             btns.forEach((b, i) => {
+                // MOUSEENTER - hover in "entrata"
+                // quando il mouse "entra" su una stella 'i', viene aggiunta la classe 'hov' a tutte le stelle dalla prima fino a quella
+                // con indice corretne creando l'effetto di anteprima del voto assegnato
                 b.addEventListener('mouseenter', () =>
                     btns.forEach((bb, j) => bb.classList.toggle('hov', j <= i))
                 );
+
+                // MOUSELEAVE - hover in "uscita"
+                // quando il mouse "esce", viene fatto il contrario di quanto fatto nella sezione precedente: viene rimossa la classe 'hov'
+                // da tutte le stelle fino alla posizione i-esima (posizione del puntatore)
                 b.addEventListener('mouseleave', () =>
                     btns.forEach((bb, j) => {
                         bb.classList.remove('hov');
                         bb.classList.toggle('sel', j < votoSelezionato);
                     })
                 );
+
+                // CLICK - selezione del voto
+                // una volta eseguito il 'click', il voto diventa "statico": tutte le stelle precendeti a quella cliccata diventano piene
+                // andando a salvare il voto all'interno della variabile 'votoSelezionato'
                 b.addEventListener('click', () => {
                     votoSelezionato = i + 1;
                     btns.forEach((bb, j) => bb.classList.toggle('sel', j < votoSelezionato));
@@ -152,10 +167,12 @@
             } catch { return []; }
         }
 
+        // la funzione costruisce ed inserisce all'interno del DOM l'html di tutte le recensioni
         function renderRecensioni(recensioni) {
             const wrap = document.getElementById('recensioniList');
+            // viene fatto un controllo iniziale sui casi "limite" vedendo se esiste il contenitore della pagina (wrap) e se sono presenti recensioni per 
+            // il locale in questione -> nel caso in cui non dovessero esserci abbiamo un messaggio di default
             if (!wrap) return;
-
             if (!recensioni.length) {
                 wrap.innerHTML = `
                     <div class="rec-empty">
@@ -165,7 +182,11 @@
                 return;
             }
 
+            // se sono presenti delle recensioni e il wrap esiste, allora procediamo con la costruzione e l'inserimento di tutte le recensioni del locale
             wrap.innerHTML = recensioni.map((rec, idx) => {
+                // per ogni recensione viene inserito l'avatar dell'utente (iniziale del nome) ed il nome, seguito da tutte le informazioni per la recensione
+                // se tra i dati sono presenti anche 'fascia_oraria' e 'fornitura' allora vengono inseriti anche tali parametri
+                //  -> non viene fatto il controllo sulla presenza / assenza di entrambi in contemporanea perchè viene già fatto al momento dell'inserimento
                 const iniziale = (rec.consumer?.name || 'U').charAt(0).toUpperCase();
                 const nome = rec.consumer
                     ? `${rec.consumer.name || ''} ${rec.consumer.surname || ''}`.trim()
@@ -187,40 +208,58 @@
             }).join('');
         }
 
+        // AGGIORNAMENTO IN TEMPO REALE
+        // la funzione seguente serve ad aggiornare in tempo reale le "statistiche" del locale subito dopo aver inserito una recensione
         function aggiornaMedia(recensioni) {
+            // vengono recuperati dal DOM la media voto, il numero di stelle e il numero di recensioni fatte
             const elNum = document.getElementById('mediaVoto');
             const elStel = document.getElementById('mediaStelle');
             const elCount = document.getElementById('votoCount');
+            
+            // vengono gestiti i casi limite
+            // il DOM ancora non è "pronto"
             if (!elNum) return;
-
+            // non sono presenti recensioni: in questo caso vengono iseriti valori di default al posto delle statistiche
             if (!recensioni.length) {
                 elNum.textContent = '—';
                 elStel.innerHTML = stelleSVG(5, 0);
                 elCount.textContent = '0 recensioni';
                 return;
             }
+
+            // se non ci sono casi limite, allora si procede a calcolare la media voto facendo la somma tramite la funzione 'reduce' e dividendo
+            // per il numero di recensioni 
             const media = recensioni.reduce((s, r) => s + r.voto, 0) / recensioni.length;
+            // il valore che viene fuori dalla riga precedente viene ottimizzato riducendo il numero di cifre decimali ad una sola
             elNum.textContent   = media.toFixed(1);
+            // in base al valore venuto fuori da media, viene arrotondato e vengono "colorate" le stelle corrispondenti
             elStel.innerHTML    = stelleSVG(5, Math.round(media));
+            // serve semplicemente a gestire il plurale / singolare
             elCount.textContent = `${recensioni.length} recension${recensioni.length === 1 ? 'e' : 'i'}`;
         }
+
 
         let aperturaCorrente = null;
         let chiusuraColazioneCorrente = null;
         let chartFornituraInstance = null;
 
+        // INVIO NUOVA RECENSIONE
+        // la seguente funzione è il centro nevralgico di questa pagina: serve a validare ed inviare una nuova recensione e, successivamente,
+        // ad aggiornare tutti i campi della pagina considerando anche tale recensione appena aggiunta
         async function inviaRecensione(idLuogo) {
             const testo = document.getElementById('recTesto').value.trim();
+            // se il voto non è stato selezionato viene mostrata una notifica
             if (!votoSelezionato) { mostranotifica('Seleziona un voto ⭐', 'error'); return; }
 
             const btnInvia = document.getElementById('btnInviaRec');
             btnInvia.disabled = true;
             btnInvia.textContent = 'Invio...';
-
+           
+            // VALIDAZIONE CAMPI
+            // vengono fatti i controlli su fornitura e fascia_oraria: vengono presi gli elementi dal DOM e successivamente controllati
             const fornitura = parseInt(document.getElementById('fornituraSlider')?.value ?? 0);
             const fascia_oraria = document.querySelector('.fascia-btn.selected')?.getAttribute('data-fascia') || null;
 
-            // VALIDAZIONE CAMPI
             // se è presente il livello di fornitura, allora DEVE essere presente anche la fascia oraria e viceversa
             if ((fornitura && !fascia_oraria) || (!fornitura && fascia_oraria)) {
                 // nel caso in cui uno dei due non dovesse esser selezionato, viene bloccato l'invio della recensione e viene mostrato un alert
@@ -231,6 +270,7 @@
             }
 
             try {
+                // viene fatta una richiesta POST per la recensione appena scritta
                 const r = await fetch('/api/recensioni', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -258,9 +298,14 @@
                 }
                 document.querySelectorAll('.fascia-btn').forEach(b => b.classList.remove('selected'));
 
+                // vengono chiamate tutte le funzioni per l'aggiornamento della pagina
+                // 1. viene chiamata la funzione per il caricamento delle recensioni, passando come argomento l'id del locale corrente, quindi viene chiamata
+                //    la funzione per il render delle recensioni
                 const nuove = await caricaRecensioni(idLuogo);
                 renderRecensioni(nuove);
+                // 2. viene chiamata la funzione per l'aggiornamento della valutazione del locale
                 aggiornaMedia(nuove);
+                // 3. viene chiamata la funzione per il render del grafico del livello di fornitura
                 renderChartFornitura(nuove, aperturaCorrente, chiusuraColazioneCorrente);
 
                 votoSelezionato = 0;
@@ -276,22 +321,29 @@
         }
 
         // CREA FASCE ORARIE
+        // la funzione va a generare delle fasce orarie di 1h/fascia utili poi alle recensioni (riservate ai soli locali che forniscono 
+        // il servizio di colazione) e al render del grafico relativo alla fornitura
         function generaFasceOrarie(apertura, chiusura) {
+            // caso limite: non sono presenti orario di apertura e/o chiusura
             if (!apertura || !chiusura) return [];
-
+            
+            // identifica l'orario di apertura e chiusura del locale e lo divido in due parti (ora - h e minuti - m)
             const fasce = [];
             let [hA, mA] = apertura.split(':').map(Number);
             let [hC, mC] = chiusura.split(':').map(Number);
 
-            // Gestisce orari a cavallo della mezzanotte (es. 18:00 → 02:00)
+            // gestisce orari a cavallo della mezzanotte: se l'orario di chiusura è successivo alla mezzanotte va ad aggiungere 24 
+            // in modo da rendere il calcolo lineare
             if (hC < hA || (hC === hA && mC <= mA)) hC += 24;
-
+            // converto l'orario in minuti
             let current = hA * 60 + mA;
             const end = hC * 60 + mC;
 
+            // finchè c'è spazio, avanza di 60 minuti per fascia riportando l'orario nel formato 24 ore (00:00 - 23:59)
             while (current + 60 <= end) {
                 const hStart = Math.floor(current / 60) % 24;
                 const hEnd   = Math.floor((current + 60) / 60) % 24;
+                // 'padStart() gestisce la formattazione dell'orario aggiungendo uno zero all'inizio
                 fasce.push(`${String(hStart).padStart(2,'0')}:00 – ${String(hEnd).padStart(2,'0')}:00`);
                 current += 60;
             }
@@ -305,6 +357,7 @@
         const from = params.get('from');
         if (!id) window.location.href = '/';
 
+        // serve alla creazione del grafico vero e proprio per le forniture
         function renderChartFornitura(recensioni, apertura, chiusuraColazione) {
             // controllo esistenza del canvas
             const canvas = document.getElementById('chartFornitura');
@@ -313,6 +366,7 @@
             console.log('apertura:', apertura, '| chiusura:', chiusuraColazione);
             console.log('fasce generate:', generaFasceOrarie(apertura, chiusuraColazione));
 
+            // se il canvas esiste, viene "distrutto" e viene posto a "null"
             if (chartFornituraInstance) {
                 chartFornituraInstance.destroy();
                 chartFornituraInstance = null;
@@ -320,20 +374,24 @@
 
             const fasce = generaFasceOrarie(apertura, chiusuraColazione);
 
-            // raggruppa per fascia oraria e calcola la media fornitura
+            // raggruppa le recensioni per fascia oraria e va a calcolare la media di fornitura (valori da 1 a 5)
             const gruppi = {};
             recensioni.forEach(r => {
+                // vengono saltate le recensioni senza fascia oraria o fornitura
+                //  -> affinchè la recensione sia valida devono essere presenti sia la fascia_oraria che la fornitura
                 if (!r.fascia_oraria || r.fornitura == null) return;
+                // costruisce un oggetto 'gruppi' dove ogni chiave è una fascia oraria
                 if (!gruppi[r.fascia_oraria]) gruppi[r.fascia_oraria] = { somma: 0, count: 0 };
                 gruppi[r.fascia_oraria].somma += r.fornitura;
                 gruppi[r.fascia_oraria].count += 1;
             });
 
-            // Ordina le fasce cronologicamente
+            // ordina le fasce cronologicamente
             const labels = fasce;
             const valori = labels.map(f => gruppi[f] ? (gruppi[f].somma / gruppi[f].count).toFixed(1) : null);
             const conteggi = labels.map(f => gruppi[f]?.count ?? 0);
 
+            // creazione del canvas che verrà inserito poi in ogni pagina del locale
             chartFornituraInstance = new Chart(canvas, {
                 type: 'bar',
                 data: {
@@ -354,6 +412,8 @@
                         legend: { display: false }, // nasconde legenda
                         tooltip: {
                             callbacks: {
+                                // quando viene passato il mouse sopra / viene cliccata la colonnina relativa al grado di fornitura 
+                                // viene mostrato un riquadro con ORARIO, la MEDIA e il N. DI RECENSIONI
                                 label: (ctx) => ctx.raw !== null ? `Media: ${ctx.raw}/5` : 'Nessuna recensione',
                                 afterLabel: (ctx) => conteggi[ctx.dataIndex] > 0 ? `Recensioni: ${conteggi[ctx.dataIndex]}` : ''
                             }
@@ -373,6 +433,7 @@
         }
 
         async function caricaDettaglio() {
+            // controllo sessione
             await checkLogin();
 
             try {
@@ -385,11 +446,13 @@
                 const luogo = await resLuogo.json();
                 document.title = `${luogo.nome_locale} - Aperetto`;
 
-                /* banner */
+                // calcolo della media voto di tutte le recensioni
                 const mediaVal = recensioni.length
                     ? (recensioni.reduce((s, r) => s + r.voto, 0) / recensioni.length)
                     : null;
 
+                // BANNER
+                // viene presa l'immagine di sfondo del colare e vengono "inseriti" nome e tag dei servizi offerti
                 document.getElementById('banner').innerHTML = `
                     ${from === 'index' ? `<button class="btn-back-banner" onclick="history.back()">← Torna alla lista</button>` : ''}
                     <img src="${luogo.immagine}" alt="${luogo.nome_locale}" loading="lazy">
@@ -400,16 +463,22 @@
                         </div>
                         <h1 class="banner-nome">${luogo.nome_locale}</h1>
                     </div>`;
-
+                
+                // viene calcolato l'orario limite per il servizio di colazione
+                //  -> se l'orario di chiusura del locale è antecedente alle 13:00, allora viene utilizzato l'orario di chiusura
+                //  -> se l'orario di chiusura del locale è successivo alle 13:00, allora viene impostato come orario limite le 13:00
                 const chiusuraColazione = (() => {
                     const h = parseInt(luogo.chiusura.split(':')[0], 10);
                     console.log('chiusura dal DB:', luogo.chiusura, '| h parsed:', h);
                     return h < 14 ? '14:00' : luogo.chiusura.substring(0,5);
                 })();
 
+                // registro l'orario limite in una variabile locale e salvo anche l'orario di apertura
                 chiusuraColazioneCorrente = chiusuraColazione;
                 aperturaCorrente = luogo.apertura.substring(0, 5);
 
+                // chiamo la funzione per generare fase orarie, dalla quale poi vado a creare tutti i pulsanti da inserire nella sezione "Colazione"
+                // del form per le recensioni
                 const fasce = generaFasceOrarie(aperturaCorrente, chiusuraColazioneCorrente);
                 const fasceOrarie = fasce.length
                     ? fasce.map(f => `<button type="button" class="fascia-btn" data-fascia="${f}">${f}</button>`).join('')
@@ -475,6 +544,8 @@
 
                 // SOCIAL
                 // nella sidebar del locale vengono mostrati link cliccabili per il sito web del locale e per il suo profilo Instagram (se presenti)
+                // andiamo a pushare all'interno dell'array 'socials' tutti i riferimenti presenti (se non sono stati inseriti dall'admin l'array
+                // sarà vuoto e non verrà mostrato nulla)
                 const socials = [];
                 if (luogo.sito_web) socials.push(`    
                     <span class="info-pill-value">
@@ -494,9 +565,10 @@
                                 </a>` : 'N/A'}
                     </span>`);
 
-                // nel caso in cui l'admin del locale non dovesse aver inserito nessun contatto social, viene mostrato "N/A"
                 const socialLocation = socials.length ? socials.join('') : `<span class="info-pill-value">Nessun contatto presente!</span>`;
 
+                // vengon caricate tutte le informazioni prinicpali del locale suddividendo la sidebar nella sezione "informazioni" e "social",
+                // similmente a quanto fatto nel form di registrazione
                 document.getElementById('luogo-body').innerHTML = `
                 <div class="profilo-page">    
                     <div class="profilo-grid">
@@ -527,7 +599,7 @@
                                     </div>
 
                                     <!-- CONTATTI -->
-                                    <h2 class="luogo-card-title mt-4">🔗 Contatti</h2>
+                                    <h2 class="luogo-card-title mt-4">🔗 Social</h2>
                                     <div class="info-grid">
                                         <div class="info-pill gap-3">${socialLocation}</div>
                                     </div>
@@ -572,10 +644,13 @@
                         </div>
                     </div>`;
 
+                // vengono inseriti il grafico per le forniture e le recensioni
                 renderRecensioni(recensioni);
                 renderChartFornitura(recensioni, aperturaCorrente, chiusuraColazione);
 
                 if (utenteLoggato) {
+                    // viene controllato se l'utente ha effettuato il login al sito e, in tal caso, viene inizializzato il form per inserire
+                    // una nuova recensione
                     initStelle();
 
                     document.querySelectorAll('.fascia-btn').forEach(btn => {
@@ -588,7 +663,7 @@
                     document.getElementById('btnInviaRec').addEventListener('click', () => inviaRecensione(id));
 
                     // SLIDER FORNITURA
-                    // inizializza lo slider per il livello di fornitura (form recensione)
+                    // inizializza lo slider per il livello di fornitura (form recensione - sezione Colazione)
                     const slider = document.getElementById('fornituraSlider');
                     if (slider) {
                         const valLabel = document.getElementById('fornituraValore');
@@ -610,6 +685,7 @@
                 }
 
             } catch (err) {
+                // nel caso in cui non si riescano a recuperare le informazioni del locale, viene mostato un placeholder con il messaggio di errore
                 console.error('Errore caricaDettaglio:', err);
                 document.getElementById('banner').innerHTML = '';
                 document.getElementById('luogo-body').innerHTML = `

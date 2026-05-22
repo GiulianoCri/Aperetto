@@ -14,7 +14,7 @@
         <img src="/Foto/profilo_text.png" alt="Profilo" class="mt-3 mb-1 profilo-txt">
     </div>
     <!--Bottone per tornare indietro-->
-    <button class="btn-back-banner-profilo" onclick="window.location.href='/'">← Torna alla lista</button>
+    <button class="btn-back-banner-profilo mb-1" onclick="window.location.href='/'">← Torna alla lista</button>
 
     <!-- PAGINA -->
     <div class="profilo-page">
@@ -164,6 +164,7 @@
         }
  
         // LOGOUT
+        // quando l'utente clicca il pulsante di logout, viene disconnesso e reindirizzato alla home del sito
         document.getElementById('logoutBtn').addEventListener('click', async () => {
             await fetch('/api/logout', { method: 'POST' });
             window.location.href = '/';

@@ -1,10 +1,22 @@
 COSE FATTE:
-    bug recensioni, sistemazione stelle + revisione codice 
+    aggiustamenti grafici / logici e revisione codice
+    - login.html
+    - reset-password.html
+    - profilo.html
     - luogo.html
+
+    relative sezioni di index.js
+
 
 TODO:
     - problemi fasce orarie
     - profilo-supplier / modifica info  -> aggiornaPreviewCover non viene utilizzata
-    - profilo supplier va sistemata responsiveness(inserendo recensioni diventa troppo largo)
+    - profilo-supplier va sistemata responsiveness(inserendo recensioni diventa troppo largo)
     - unificare stile
-    - commentare
+    - commentar
+
+PAGINE REVISIONATE:
+    - login.html
+    - reset-password.html
+    - profilo.html
+    - luogo.html

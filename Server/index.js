@@ -130,9 +130,8 @@ async function geocodifica(indirizzo) {
 }
 
 
-//API
-
-//Ottengo tutti i luoghi dal database
+// API
+// Ottengo tutti i luoghi dal database
 app.get('/api/location', async (req, res) => {
     const { data, error } = await supabase
         .from('location')
@@ -140,10 +139,10 @@ app.get('/api/location', async (req, res) => {
     if (error) {
         return res.status(500).json({ error: error.message });
     }
-    //aggiungo l'url dell'immagine
+    // aggiungo l'url dell'immagine
     res.json(data.map(aggiungiUrl));
 });
-//Ottengo un luogo specifico dal database
+// Ottengo un luogo specifico dal database
 app.get('/api/location/:id', async (req, res) => {
     const id = req.params.id;
     const { data, error } = await supabase
@@ -159,7 +158,7 @@ app.get('/api/location/:id', async (req, res) => {
     res.json(aggiungiUrl(data));
 });
 
-//Ottengo i luoghi vicini a una posizione (usata per la ricerca dei locali vicini a me)
+// Ottengo i luoghi vicini a una posizione (usata per la ricerca dei locali vicini a me)
 app.get("/api/luoghi/vicini", (req, res) => {
     //ottengo lat e lng dalla query string
     const { lat, lng } = req.query;
@@ -177,72 +176,74 @@ app.get("/api/luoghi/vicini", (req, res) => {
     res.json(risultati);
 });
 
-//Login Client
+// LOGIN CONSUMER
 app.post("/api/login", async (req,res) =>{
-    //estraggo i dati dal body della richiesta (email e password)
+    // estraggo i dati dal body della richiesta (email e password)
     const {name, surname, email, password} = req.body;
 
     if (!email || !password) {
         return res.status(400).json({ error: "Tutti i campi sono obbligatori" });
     }
 
-    //effettuo una select sul database per cercare l'utente
+    // effettuo una select sul database per cercare l'utente
     const { data: user, error } = await supabase
         .from('consumer')
         .select('*')
-        .eq('email', email) //lo cerchiamo rispetto alla mail
-        .single();//single() perché ci aspettiamo un solo risultato, se non c'è o ce ne sono più di uno, restituisce un errore
+        .eq('email', email) // lo cerchiamo rispetto alla mail
+        .single();// single() perché ci aspettiamo un solo risultato, se non c'è o ce ne sono più di uno, restituisce un errore
 
     if (!user || error) {
-        //401 -> utente non trovato o errore nella query
+        // 401 -> utente non trovato o errore nella query
         return res.status(401).json({ error: "Utente non trovato" });
     }
 
-    //a stringhe uguali corrispondono hash uguali
-
-    //confronto la password inviata dal client con l'hash salvato nel database usando bcrypt.compare, che restituisce true se la password corrisponde all'hash, false altrimenti. 
+    // a stringhe uguali corrispondono hash uguali
+    // confronto la password inviata dal client con l'hash salvato nel database usando bcrypt.compare, che restituisce true se 
+    // la password corrisponde all'hash, false altrimenti. 
     const isPasswordCorrect = await bcrypt.compare(password, user.password_hash);
-
 
     if(isPasswordCorrect){
         
-        //faccio partire una sessione e anche qui salvo i dati utente di base
+        // faccio partire una sessione e anche qui salvo i dati utente di base
         req.session.user = { 
             email: user.email,
             name: user.name,
             surname: user.surname
         };
-        //ritorno un messaggio di successo e i dati dell'utente (non è necessario restituire i dati dell'utente, ma può essere comodo per il client averli subito dopo il login)
+        // ritorno un messaggio di successo e i dati dell'utente (non è necessario restituire i dati dell'utente, ma può essere 
+        // comodo per il client averli subito dopo il login)
         res.json({ message: "Login effettuato!", user: req.session.user});
     } else {
         res.status(401).json({ error: "Password errata" });
     }
-
 })
 
 
 
-//Registrazione Client
+// REGISTRAZIONE CONSUMER
 app.post("/api/register", async (req, res) =>{
-    //estraggo i dati dal body della richiesta (name, surname, email e password)
+    // estraggo i dati dal body della richiesta (name, surname, email e password)
     const {name, surname, email, password} = req.body;  
 
+    // verifico la presenza dei campi principali: se non ci sono email e password non posso procedere
     if (!email || !password) {
         return res.status(400).json({ error: "Tutti i campi sono obbligatori" });
     }
 
-    //rifaccio il controllo sulla password (questo è un controllo forte, il server non è alterabile)
+    // rifaccio il controllo sulla password (questo è un controllo forte, il server non è alterabile)
     if (password.length < 8) {
         return res.status(400).json({ error: "La password deve avere almeno 8 caratteri" });
     }
 
     try {
-        
-        //faccio un hashing della password usando bcrypt.hash, che restituisce una stringa hash che rappresenta la password in modo sicuro. Il secondo parametro saltRounds indica il numero di iterazioni di hashing, più è alto più è sicuro ma più è lento (10 è un buon compromesso).
+        // faccio un hashing della password usando bcrypt.hash
+        //  ->  che restituisce una stringa hash che rappresenta la password in modo sicuro. Il secondo parametro saltRounds 
+        //      indica il numero di iterazioni di hashing, più è alto più è sicuro ma più è lento (10 è un buon compromesso).
         const saltRounds = 10;
         const hash = await bcrypt.hash(password, saltRounds);
 
-        //inserisco l'utente nel database usando supabase, con i dati inviati dal client e l'hash della password. Se l'inserimento ha successo, data conterrà i dati dell'utente appena creato, altrimenti error conterrà l'errore.
+        // inserisco l'utente nel database usando supabase, con i dati inviati dal client e l'hash della password. Se 
+        // l'inserimento ha successo, data conterrà i dati dell'utente appena creato, altrimenti error conterrà l'errore.
         const { data, error } = await supabase
             .from('consumer')
             .insert([
@@ -255,8 +256,7 @@ app.post("/api/register", async (req, res) =>{
             ])
             .select();
 
-        
-        //quando il vincolo di chiave sulla mail è stato violato, allora postrgre restituisce il codice di errore 23505 IMPORTANTE: se non si usa postgresql c'è un altro codice di errore
+        // quando il vincolo di chiave sulla mail è stato violato, allora postrgre restituisce il codice di errore 23505
         if (error) {
             if (error.code === '23505') { //se la mail è in uso, notifico l'utente con un codice 400
                 return res.status(400).json({ error: "Questa email è già registrata" });
@@ -264,14 +264,15 @@ app.post("/api/register", async (req, res) =>{
             throw error;
         }
 
-        //faccio partire una nuova sessione e riempio il campo "sess" con i dati utente di base
+        // INIZIO SESSIONE
+        // faccio partire una nuova sessione e riempio il campo "sess" con i dati utente di base
+        // da questo momento l'utente risulta loggato
         req.session.user = { 
             email: data[0].email,
             name: data[0].name,
             surname: data[0].surname
         };
 
-       
         res.status(201).json({ 
             message: "Utente creato con successo!",
             user: req.session.user //mandiamo i dati all'utente
@@ -281,18 +282,18 @@ app.post("/api/register", async (req, res) =>{
         console.error("Errore registrazione:", err.message, err.stack);
         res.status(500).json({ error: "Errore interno del server" });
     }
-
 })
 
 
-// Logout Client
+// LOGOUT CONSUMER
 app.post('/api/logout', (req, res) => {
-    //distrugge la sessione dell'utente, in questo modo quando il client farà una richiesta dopo il logout, non avrà più accesso ai dati della sessione e sarà considerato non loggato
+    // distrugge la sessione dell'utente, in questo modo quando il client farà una richiesta dopo il logout, non avrà più 
+    // accesso ai dati della sessione e sarà considerato non loggato
     req.session.destroy();
     res.json({ message: 'Logout effettuato' });
 });
 
-// Recensioni utente
+// RECENSIONI UTENTE
 app.get('/api/recensioni', async (req, res) => {
     //estraggo userId dalla query string (esempio /api/recensioni?userId=123)
     const { userId } = req.query;
@@ -306,54 +307,71 @@ app.get('/api/recensioni', async (req, res) => {
 });
 
 
-// Recupero password Client
-//per il recupero password, creo una rotta POST /api/recover-password che riceve l'email dell'utente, verifica che esista un account associato a quell'email, genera un token univoco e una scadenza, salva queste informazioni in una tabella password_resets, e invia un'email all'utente con un link per reimpostare la password che contiene il token. Il client poi userà questo token per fare una richiesta POST a /api/reset-password con la nuova password, e il server verificherà il token, aggiornerà la password dell'utente e cancellerà il token usato.
+// RECUPERO PASSWORD - CONSUMER
+// creo una rotta POST /api/recover-password che riceve l'email dell'utente, verifica che esista un account 
+// associato a quell'email, genera un token univoco e una scadenza, salva queste informazioni in una tabella password_resets, e invia 
+// un'email all'utente con un link per reimpostare la password che contiene il token. Il client poi userà questo token per fare una 
+// richiesta POST a /api/reset-password con la nuova password, e il server verificherà il token, aggiornerà la password dell'utente e 
+// cancellerà il token usato.
 const nodemailer = require('nodemailer');
 //crypto è un modulo di node che fornisce funzioni crittografiche, in questo caso lo usiamo per generare un token casuale e univoco per il recupero password, che sarà difficile da indovinare o riprodurre.
 const crypto = require('crypto');
 
-//rotta per richiedere il recupero password, riceve l'email dell'utente
+// rotta per richiedere il recupero password, riceve l'email dell'utente
 app.post('/api/recover-password', async (req, res) => {
     try {
         const { email } = req.body;
 
         if (!email) return res.status(400).json({ error: "Email obbligatoria" });
-        // Controllo associazion email - account
+        // verifico associazione email - utente
         const { data: user, error } = await supabase
             .from('consumer')
             .select('*')
             .eq('email', email)
             .single();
 
+        // nel caso in cui tale associazione non esiste genero un errore
         if (!user || error) {
             return res.status(404).json({ error: "Nessun account associato a questa email" });
         }
-        // Generazione token univoco + scadenza e salvataggio nel db
+        // genero un token univoco, imposto una scadenza e lo salvo nel db
         const token = crypto.randomBytes(32).toString('hex');
-        //scadenza del token impostata a 5 minuti dopo la creazione, dopo questo tempo il token non sarà più valido e l'utente dovrà richiederne uno nuovo
+
+        // imposto la scadenza del token a 5 minuti dopo la creazione, passato questo tempo il token non sarà più valido e l'utente
+        // dovrà inviare una nuova richiesta
         const expiry = new Date(Date.now() + 300000).toISOString();
-        //salvo il token, l'email e la scadenza nella tabella password_resets, in questo modo posso poi verificare il token quando l'utente farà la richiesta di reset password. Se c'è un errore durante l'inserimento, restituisco un errore 500.
+
+        // salvo il token, l'email e la scadenza nella tabella 'password_resets'
+        // in questo modo posso poi verificare il token quando l'utente farà la richiesta di reset password
         const { data: insertData, error: insertError } = await supabase
             .from('password_resets')
             .insert([{ email, token, expiry }])
             .select();
-
+        
+        // se c'è un errore durante l'inserimento, restituisco un errore 500    
         if (insertError) {
             return res.status(500).json({ error: "Errore salvataggio token: " + insertError.message });
         }
-        //invio mail
-        //configuro nodemailer per inviare l'email di recupero password, in questo caso uso un account Gmail e una App Password (che è una password speciale generata da Google per consentire a un'app di accedere al tuo account senza usare la tua password normale, è più sicura perché puoi revocarla in qualsiasi momento e non espone la tua password reale).
+
+        // INVIO MAIL
+        // configuro "nodemailer" per inviare l'email di recupero password, in questo caso uso un account Gmail e una App Password 
+        // (che è una password speciale generata da Google per consentire a un'app di accedere al tuo account senza usare la tua 
+        // password normale, è più sicura perché puoi revocarla in qualsiasi momento e non espone la tua password reale).
         const transporter = nodemailer.createTransport({
             service: 'gmail',
             auth: {
                 user: 'noreply.aperetto@gmail.com',
-                pass: 'tcez yues japg skee'// usa una App Password di Google, non la password normale
+                pass: 'tcez yues japg skee'
             }
         });
-        //costruisco il link per il reset password che sarà inviato nell'email, includendo il token come parametro nella query string. Il client poi userà questo token per fare la richiesta di reset password.
+
+        // costruisco il link per il reset password che sarà inviato nell'email, includendo il token come parametro nella query string
+        // il client poi userà questo token per fare la richiesta di reset password
         const resetLink = `http://localhost:3000/reset-password.html?token=${token}`;
-        //invio l'email all'utente con il link per reimpostare la password, usando il transporter configurato. L'email contiene un messaggio e un link cliccabile che porta alla pagina di reset password con il token. Il link scade dopo 5 minuti, quindi se l'utente non lo usa entro quel tempo, dovrà richiederne uno nuovo.
-        await transporter.sendMail({
+
+        // invio l'email all'utente con il link per reimpostare la password, usando il transporter configurato. L'email contiene un 
+        // messaggio e un link cliccabile che porta alla pagina di reset password con il token
+                await transporter.sendMail({
             from: 'noreply.aperetto@gmail.com',
             to: email,
             subject: 'Recupero password - Aperetto',
@@ -370,7 +388,10 @@ app.post('/api/recover-password', async (req, res) => {
     }
 });
 
-//rotta per reimpostare la password, riceve il token e la nuova password, verifica che il token sia valido e non scaduto, aggiorna la password dell'utente associato al token, cancella il token usato e restituisce un messaggio di successo. Se il token non è valido o è scaduto, restituisce un errore.
+// RESET PASSWORD
+// rotta per reimpostare la password, riceve il token e la nuova password, verifica che il token sia valido e non scaduto, aggiorna la 
+// password dell'utente associato al token, cancella il token usato e restituisce un messaggio di successo. Se il token non è valido o 
+// è scaduto, restituisce un errore.
 app.post('/api/reset-password', async (req, res) => {
     const { token, newPassword } = req.body;
 
@@ -378,6 +399,7 @@ app.post('/api/reset-password', async (req, res) => {
         return res.status(400).json({ error: "Dati mancanti" });
     }
 
+    // faccio il solito controllo sulla lunghezza della password
     if (newPassword.length < 8) {
         return res.status(400).json({ error: "La password deve avere almeno 8 caratteri" });
     }
@@ -394,20 +416,20 @@ app.post('/api/reset-password', async (req, res) => {
     }
 
     // 2. Controllo scadenza
+    // se il token è scaduto, allora l'user sarà costretto a inviare una nuova richiesta
     if (new Date() > new Date(reset.expiry)) {
         return res.status(400).json({ error: "Il link è scaduto" });
     }
 
     // 3. Hash della nuova password e aggiornamento utente
     const hash = await bcrypt.hash(newPassword, 10);
-    //aggiorno la password dell'utente associato al token, usando l'email salvata nella tabella password_resets per identificare l'utente da aggiornare. Se c'è un errore durante l'aggiornamento, restituisco un errore 500.
+    // aggiorno la password dell'utente associato al token, usando l'email salvata nella tabella password_resets per identificare 
+    // l'utente da aggiornare. Se c'è un errore durante l'aggiornamento, restituisco un errore 500.
     const { data: updateData, error: updateError } = await supabase
     .from('consumer')
     .update({ password_hash: hash })
     .eq('email', reset.email)
     .select(); 
-
-
 
     if (updateError) {
         return res.status(500).json({ error: "Errore nell'aggiornamento della password" });
@@ -509,7 +531,7 @@ app.get('/api/recensioni/mie', async (req, res) => {
 });
  
 //pagina reset password
-app.get('/client/reset-password.html', (req, res) => {
+app.get('/reset-password.html', (req, res) => {
     res.sendFile(path.join(ROOT, 'reset-password.html'));
 });
 
