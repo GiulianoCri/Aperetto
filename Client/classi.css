@@ -674,12 +674,14 @@ body{
 
 
 /* Classi per login-supplier.html */
+.form-scroll::-webkit-scrollbar {
+    display: none;
+}
 
-
-
-
-
-
+.form-scroll {
+    -ms-overflow-style: none;  /* IE */
+    scrollbar-width: none;     /* Firefox */
+}
 
 /* Permette di ancorare gli elementi al blocco */
 .select-wrapper {
@@ -1536,6 +1538,8 @@ body{
 
 .nav-login-link {
   font-size: .875rem;
+  top: 0;
+  right: 0;
   font-weight: 700;
   color: var(--bs-success);
   text-decoration: none;
@@ -1865,7 +1869,7 @@ body{
     border-radius: 20px;
 }
 
-/* Pulsante back sovrapposto all'banner */
+/* Pulsante back sovrapposto al banner */
 .btn-back-banner {
     position: absolute;
     top: 16px;

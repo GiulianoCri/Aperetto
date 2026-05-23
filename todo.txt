@@ -1,9 +1,6 @@
 COSE FATTE:
     aggiustamenti grafici / logici e revisione codice
-    - login.html
-    - reset-password.html
-    - profilo.html
-    - luogo.html
+    - login-supplier.html
 
     relative sezioni di index.js
 
@@ -11,12 +8,14 @@ COSE FATTE:
 TODO:
     - problemi fasce orarie
     - profilo-supplier / modifica info  -> aggiornaPreviewCover non viene utilizzata
-    - profilo-supplier va sistemata responsiveness(inserendo recensioni diventa troppo largo)
     - unificare stile
     - commentar
 
 PAGINE REVISIONATE:
     - login.html
     - reset-password.html
+    - reset-password-supplier.html
     - profilo.html
     - luogo.html
+    - index.html
+    - login-supplier.html (ancora da finire)
