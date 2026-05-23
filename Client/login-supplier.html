@@ -322,14 +322,20 @@
     </div>
 
     <script>
+        // CHECK STEP
+        // serve a mettere una spunta negli step completati
         const svgCheck = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
             stroke-linecap="round" stroke-linejoin="round" width="16" height="16">
             <polyline points="20 6 9 17 4 12"/></svg>`;
 
+        // ANTEPRIMA IMMAGINE
+        // quando l'utente sceglie un'immagine da inserire come sfondo del proprio locale, ne viene mostrata l'anteprima
         document.getElementById('immagineLocale').addEventListener('change', function () {
             const file = this.files[0];
             const anteprima = document.getElementById('anteprima');
             if (file) {
+                // il metodo 'URL.createObjectURL()' crea un url temporaneo locale, permettendo di mostrare l'immagine 
+                // come anteprima
                 anteprima.src = URL.createObjectURL(file);
                 anteprima.classList.remove('d-none');
             } else {
@@ -337,10 +343,16 @@
             }
         });
 
+        // NAVIGAZIONE TRA STEP
+        // funzione principale per il passaggio da uno step ad un altro
         function goTo(n) {
+            // tutti gli step vengono nascosti, tranne l'n-esimo 
             ['step1','step2','step3','step4'].forEach((id, i) => {
                 document.getElementById(id).classList.toggle('d-none', i + 1 !== n);
             });
+            // vengono aggiornati tutti i cerchi dello stepper: quelli precedenti ad 'n' diventano "done", quello attuale
+            // diventa "active" e gli altri rimangono neutri
+            // vengono aggiornate anche le linee di collegamento tra step
             for (let i = 1; i <= 4; i++) {
                 const s    = document.getElementById('s' + i);
                 const circ = s.querySelector('.step-circle');
@@ -396,11 +408,12 @@
         });
 
         
-        // Step 1 -> 2: la validazione dei campi required avviene automaticamente
+        // STEP 1 -> 2: la validazione dei campi required avviene automaticamente
         const errorMsg = document.getElementById('errorMsg');
         document.getElementById('formStep1').addEventListener('submit', e => {
             e.preventDefault();
 
+            // viene validato il campo password con i controlli soliti fatti anche nelle altre situazioni
             if((psw.value).length < 8){
                 errorMsg.textContent = "La password deve avere almeno 8 caratteri";
                 errorMsg.classList.remove('d-none');
@@ -413,24 +426,29 @@
                 confPsw.value = "";
                 return
             }
+            // nel caso in cui tutti i controlli danno esito positivo, viene chiamata la funzione 'goTo' per lo step 2
             goTo(2);
             
         });
 
-        // Step 2 -> 3: idem
+        // STEP 2 -> 3
         document.getElementById('formStep2').addEventListener('submit', e => {
             e.preventDefault();
             goTo(3);
         });
 
-        // Step 3 -> invio API
+        // STEP 3 -> invio API
+        // vengono raccolte tutte le informazioni necessarie e viene mandata un richiesta al server per la registrazione
+        // dei dati dell'utente nel database
         document.getElementById('formStep3').addEventListener('submit', async (e) => {
             e.preventDefault();
 
+            // viene messo in "stand-by" il pulsante di invio
             const btn = document.getElementById('okSocial');
             btn.disabled = true;
             btn.textContent = 'Invio in corso...';
 
+            // vengono prese tutte le informazioni inserite dall'admin del locale
             // CONTATTO
             const name  = document.getElementById('name').value;
             const surname  = document.getElementById('surname').value;
@@ -456,7 +474,7 @@
             try {
                 const formData = new FormData();
                 console.log("campo password: "+ psw.value);
-                // Campi testo
+                // vengono inseriti tutti i dati presi dal form
                 formData.append('name', name);
                 formData.append('surname', surname);
                 formData.append('email', email);
@@ -473,10 +491,12 @@
                 formData.append('sitoWeb', sitoWeb);
                 formData.append('instagram', instagram);
 
+                // viene inserita anche l'immagine di sfondo del locale
                 if (immagineFile) {
                     formData.append('immagineLocale', immagineFile);
                 }
-                
+
+                // viene mandata la richiesta al server
                 const response = await fetch('/api/register-supplier', {
                     method: 'POST',
                     body: formData
@@ -484,18 +504,21 @@
 
                 const data = await response.json();
                 if (response.ok) { 
+                    // se la richiesta è positiva, viene aggiornato lo stepper con 'goTo'
                     goTo(4); 
                     
+                    // viene preso l'id del locale appena registrato e l'admin viene reindirizzato alla pagina di gestione del locale
                     const localeId = data.id;
+                    // viene settato un timeot di 5 secondi prima del reindirizzamento
                     setTimeout(() => {
                         window.location.href = `/profilo-supplier.html?id=${localeId}&from=register`;
-                    }, 3000);
+                    }, 5000);
                 } else { 
-                    alert(data.error); 
+                    mostraNotifica(data.error, 'error'); 
                 }
             } catch (err) {
                 console.error("Errore di rete:", err);
-                alert("Errore di connessione al server");
+                mostraNotifica("Errore di connessione al server", 'error');
             }
         });
 
@@ -534,6 +557,7 @@
         });
 
         // LOGIN
+        // solita procedura per il login utente, la differenza è che, in questo caso, l'utente viene cercato all'interno di 'location'
         loginForm.addEventListener('submit', async (e) => {
             e.preventDefault();
 
@@ -552,21 +576,35 @@
 
                 if (response.ok) {
 
+                    // viene messo in stand-by il pulsante di submit del form
                     const accediLogin = document.getElementById("accediLogin");
                     accediLogin.disabled = true;
                     accediLogin.classList.add("btn-disabled");
 
+                    // l'utente viene reindirizzato alla pagina di gestione del locale
                     setTimeout(() => {
                         window.location.href = `/profilo-supplier.html?id=${data.user.localeId}&from=register`;
-                    }, 1000);
+                    }, 500);
                 } else {
-                    alert(data.error);
+                    mostraNotifica(data.error, 'error');
                 }
             } catch (err) {
                 console.error("Errore di rete:", err);
-                alert("Errore di connessione al server");
+                mostraNotifica("Errore di connessione al server", 'error');
             }
         });
+
+        // permette di mostrare notifiche temporanee (circa 3 secondi) in basso a destra
+        // serve per mostrare messaggi di errore o di successo all'utente: viene utilizzata, per esempio, per notificare la corretta
+        // pubblicazione di una recensione, oppure per segnalare un errore in caso di problemi (la troviamo anche nelle altre pagine)
+        function mostraNotifica(msg, tipo = 'ok') {
+            const wrap = document.getElementById('notificaWrap');
+            const t = document.createElement('div');
+            t.className = 'ap-notifica' + (tipo === 'error' ? ' error' : '');
+            t.textContent = msg;
+            wrap.appendChild(t);
+            setTimeout(() => t.remove(), 3500);
+        }
 
         // PASSWORD DIMENTICATA
         // viene nascosto il formLogin e viene mostrato il form per la password dimenticata
@@ -606,12 +644,12 @@
                         formLogin.classList.remove('d-none');
                     });
                 } else {
-                    alert(data.error || "Errore durante il recupero della password");
+                    mostraNotifica(data.error || "Errore durante il recupero della password", 'error');
                 }
 
             } catch (err) {
                 console.error("Errore di rete:", err);
-                alert("Errore di connessione al server");
+                mostraNotifica("Errore di connessione al server", 'error');
             }
         })
     </script>

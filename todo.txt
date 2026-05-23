@@ -1,5 +1,5 @@
 COSE FATTE:
-    aggiustamenti grafici / logici e revisione codice
+    correzione fasce orarie e revisione
     - login-supplier.html
 
     relative sezioni di index.js
@@ -8,6 +8,7 @@ COSE FATTE:
 TODO:
     - problemi fasce orarie
     - profilo-supplier / modifica info  -> aggiornaPreviewCover non viene utilizzata
+    - da rivedere logica recupero password supplier
     - unificare stile
     - commentar
 
@@ -18,4 +19,4 @@ PAGINE REVISIONATE:
     - profilo.html
     - luogo.html
     - index.html
-    - login-supplier.html (ancora da finire)
+    - login-supplier.html 
