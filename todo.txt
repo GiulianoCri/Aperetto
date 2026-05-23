@@ -9,6 +9,7 @@ TODO:
     - problemi fasce orarie
     - profilo-supplier / modifica info  -> aggiornaPreviewCover non viene utilizzata
     - da rivedere logica recupero password supplier
+    - aggiustamenti login-supplier      -> lato sinistro
     - unificare stile
     - commentar
 

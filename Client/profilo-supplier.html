@@ -494,14 +494,20 @@
             // aggiorna tab recensioni (utile nel caso in cui vengono modificati gli orari del locale)
             document.getElementById('recListWrap').innerHTML = renderRecensioni(recs);
 
-            // viene controllato se in luogo corrente è checkato "colazione", se true viene renderizzato il grafico
-            if (luogoCorrente.colazione) {
-                const chiusuraColazione = (() => {
-                    const h = parseInt(luogoCorrente.chiusura.split(':')[0], 10);
-                    return h < 13 ? '13:00' : luogoCorrente.chiusura;
-                })();
-                renderChartFornitura(recs, luogoCorrente.apertura, chiusuraColazione);
-            }
+            // viene calcolato l'orario limite per il servizio di colazione
+            //  -> se l'orario di chiusura del locale è antecedente alle 13:00, allora viene utilizzato l'orario di chiusura
+            //  -> se l'orario di chiusura del locale è successivo alle 13:00, allora viene impostato come orario limite le 13:00
+            const chiusuraColazione = (() => {
+                const hApertura = parseInt(luogo.apertura.split(':')[0], 10);
+                const hChiusura = parseInt(luogo.chiusura.split(':')[0], 10);
+                console.log('chiusura dal DB:', luogo.chiusura, '| h parsed:', hChiusura);
+
+                // se chiude dopo mezzanotte (orario notturno), usa sempre 13:00
+                const notturno = hChiusura < hApertura;
+                if (notturno) return '13:00';
+
+                return hChiusura < 13 ? luogo.chiusura.substring(0,5) : '13:00';
+            })();
 
         } catch(err) {
             mostraNotifica(err.message, 'error');
@@ -622,7 +628,7 @@
     document.getElementById('loginLink').addEventListener('click', async (e) => {
         e.preventDefault();
         await fetch('/api/logout', { method: 'POST' });
-        window.location.href = '/';
+        window.location.href = '/login-supplier.html';
     });
 </script>
 
