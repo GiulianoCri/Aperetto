@@ -16,157 +16,158 @@
     
             <div class="row align-items-center justify-content-center g-4">
                 
-            <!-- LATO DESTRO -->
+                <!-- LATO SINISTRO -->
+                <!-- all'interno della parte sinistra troviamo il logo del nostro sito in grande con un bottone per tornare alla schermata 
+                    home del sito-->
                 <div class="col-12 col-md-5 m-auto d-block">
-                    <button class="btn-back-banner mt-3" onclick="window.location.href='/index.html'">← Torna alla home</button>
-                    <img src="/Foto/APERETTO.png" id="logoImg" alt="Logo Aperetto" class=" mt-4 img-fluid">
+                    <button class="btn-back-banner mx-3 mt-3" onclick="window.location.href='/index.html'">← Torna alla home</button>
+                    <img src="/Foto/APERETTO.png" id="logoImg" alt="Logo Aperetto" class="mt-4 img-fluid">
                 </div>
             
-            <!-- LATO SINISTRO -->
+                <!-- LATO DESTRO -->
+                <!-- nella parte destra troviamo il form di accesso / registrazione al sito -->
                 <div class="col-12 col-md-5 mx-auto mb-2">
-                    
-                    <div class="d-flex flex-column rounded-4 shadow w-100" id="formContainer">
+                    <div class="rounded-4 shadow w-100" id="formContainer">
                         
                         <!-- FORM DI ACCESSO -->
                         <form class="luogo-card" id="formLogin">
-                            <!-- campi da compilare -->
-                            <div class="d-flex flex-column">
-                                <label for="email" class="info-pill-label login-color mt-2 mx-2">E-Mail</label>
-                                <input type="email" id="emailLogin" class="info-pill form-control rounded-3">  <br>
-                                
-                                <div class="position-relative">
-                                    <label for="psw" class="info-pill-label login-color mt-4 mx-2">Password</label>
-                                    <input type="password" id="pswField" class="info-pill form-control rounded-3 pe-5">
-                                    
-                                    <button type="button" id="showPswBtn" class="position-absolute border-0 p-0 mt-2 psw-btn">
-                                        <img src="/Foto/eye-on.svg" width="18" alt="Mostra password">
-                                    </button>
-                                    <button type="button" id="hidePswBtn" class="position-absolute border-0 p-0 mt-2 psw-btn d-none">
-                                        <img src="/Foto/eye-off.svg" width="18" alt="Nascondi password">
-                                    </button>
+                            <div class="d-flex flex-column gap-3">
+
+                                <!-- Email -->
+                                <div>
+                                    <label for="emailLogin" class="info-pill-label login-color mb-1 ms-1">E-Mail</label>
+                                    <input type="email" id="emailLogin" class="form-control">
                                 </div>
-                                
-                                <a href="#" id="forgotPsw" class="mt-2 mx-1 link-dark"> Password dimenticata? </a> <br>
+
+                                <!-- Password -->
+                                <div>
+                                    <label for="pswField" class="info-pill-label login-color mb-1 ms-1">Password</label>
+                                    <div class="position-relative">
+                                        <input type="password" id="pswField" class="form-control pe-5">
+                                        <button type="button" id="showPswBtn" class="position-absolute border-0 psw-btn">
+                                            <img src="/Foto/eye-on.svg" width="18" alt="Mostra password">
+                                        </button>
+                                        <button type="button" id="hidePswBtn" class="position-absolute border-0 psw-btn d-none">
+                                            <img src="/Foto/eye-off.svg" width="18" alt="Nascondi password">
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <a href="#" id="forgotPsw" class="link-dark ms-1">Password dimenticata?</a>
                             </div>
 
-                            <!-- bottoni -->
-                            <button type="submit" class="btn btn-success m-auto w-100"> Accedi </button>
+                            <button type="submit" class="btn btn-success rounded-pill w-100 mt-4">Accedi</button>
 
-                            <div class="d-flex align-items-center mt-5 mb-2">
+                            <div class="d-flex align-items-center my-4">
                                 <hr class="flex-grow-1 border-black m-0">
                                 <span class="mx-3 info-pill-label">Non hai un account?</span>
                                 <hr class="flex-grow-1 border-black m-0">
                             </div>
 
-                            <a id="btnRegistrazione" class="btn btn-danger m-auto w-100"> Registrati </a> <br>
+                            <a id="btnRegistrazione" class="btn btn-danger rounded-pill w-100">Registrati</a>
 
                             <div class="text-start mt-3">
-                                <a href="login-supplier.html" class="d-inline-flex align-items-center gap-2 text-dark" target="_blank" >    
-                                    <span class="d-inline-flex justify-content-center align-items-center">
-                                        <img src="/Foto/supplier.svg" class="supplier d-block" alt="Icona ristoranti">
-                                        <span class="mx-1 text-bg-info">Per i locali</span>
-                                    </span>
+                                <a href="login-supplier.html" class="d-inline-flex align-items-center gap-2 text-dark" target="_blank">
+                                    <img src="/Foto/supplier.svg" class="supplier" alt="Icona ristoranti">
+                                    <span class="text-bg-info mx-1">Per i locali</span>
                                 </a>
                             </div>
                         </form>
 
                         <!-- PASSWORD DIMENTICATA -->
                         <div id="pswDimenticata" class="luogo-card text-center rounded-4 d-none m-auto">
-                            <h1 class="text-black d-inline">Hai dimenticato la password?</h3>
-                            <div class id="recuperoForm">
-                                <p class="text-center"> Nessun problema, basta inserire di seguito il tuo indirizzo e-mail e ti invieremo un link per reimpostarla </p>
-                                <div class="d-flex flex-column mt-4">
-                                    <label class="info-pill-label mx-1 text-start"> Inserisci la tua e-mail:</label>
-                                    <input type="email" id="emailRec" placeholder="esempio@dominio.it" class="info-pill form-control rounded-3" required>  <br>
+                            <h2 class="text-black fw-bold">Hai dimenticato la password?</h2>
+
+                            <div id="recuperoForm">
+                                <p class="text-center">Nessun problema, basta inserire di seguito il tuo indirizzo e-mail e ti invieremo un link per reimpostarla.</p>
+                                <div class="d-flex flex-column mt-4 gap-2">
+                                    <label class="info-pill-label ms-1 text-start">Inserisci la tua e-mail:</label>
+                                    <input type="email" id="emailRec" placeholder="esempio@dominio.it" class="form-control" required>
                                 </div>
-                                <button type="submit" id="recuperaPsw" class="btn btn-success m-auto w-100"> Recupera Password</button>
+                                <button type="submit" id="recuperaPsw" class="btn btn-success rounded-pill w-100 mt-3">Recupera Password</button>
                             </div>
+
                             <div class="d-none" id="successMsg">
-                                <h3 class="text-success fw-bold mt-3"> Ti abbiamo inviato un'e-mail con il link per reimpostare la password. </h3>
+                                <h3 class="text-success mt-3">Ti abbiamo inviato un'e-mail con il link per reimpostare la password.</h3>
                                 <p class="text-muted small">Controlla anche la cartella spam.</p>
-                                <button class="btn btn-outline-dark mt-2" id="backToLogin">
-                                    <label class="fw-bold"> Torna al login </label>
-                                </button>
+                                <button class="btn btn-outline-success mt-2" id="backToLogin">Torna al login</button>
                             </div>
                         </div>
-                        
+
                         <!-- FORM DI REGISTRAZIONE -->
                         <form class="luogo-card d-none" id="formRegistrazione">
                             <h2 class="mb-4 text-center text-bg-info">Benvenuto su Aperetto!</h2>
-                                <div class="row g-2 mb-1">
-                                    <div class="col-6">
-                                        <label for="name" class="info-pill-label login-color mt-2 mx-2">Nome*</label>
-                                        <input type="text" class="info-pill form-control rounded-3" id="name" required>
-                                    </div>
-                                    <div class="col-6">
-                                        <label for="surname" class="info-pill-label login-color mt-2 mx-2">Cognome*</label>
-                                        <input type="text" class="info-pill form-control rounded-3" id="surname" required>
-                                    </div>
-                                </div>
-                                <div class="row g-2 mb-3">
-                                    <div class="col-12">
-                                        <label for="email" class="info-pill-label login-color mt-2 mx-2">E-Mail*</label>
-                                        <input type="email" class="info-pill form-control rounded-3" id="email" placeholder="esempio@dominio.it" required>
-                                    </div>
-                                </div>
 
-                                <div class="mb-1 position-relative mt-3">
-                                    <label for="password" class="info-pill-label login-color mt-2 mx-2">Password*</label>
-                                    <input type="password" id="password" class="info-pill form-control rounded-3 pe-5" required>
-                                    
-                                    <button type="button" id="showPsw-reg" class="position-absolute border-0 p-0 mt-2 psw-btn">
+                            <div class="row g-2 mb-2">
+                                <div class="col-6">
+                                    <label for="name" class="info-pill-label login-color mb-1 ms-1">Nome*</label>
+                                    <input type="text" class="form-control" id="name" required>
+                                </div>
+                                <div class="col-6">
+                                    <label for="surname" class="info-pill-label login-color mb-1 ms-1">Cognome*</label>
+                                    <input type="text" class="form-control" id="surname" required>
+                                </div>
+                            </div>
+
+                            <div class="row g-2 mb-3">
+                                <div class="col-12">
+                                    <label for="email" class="info-pill-label login-color mb-1 ms-1">E-Mail*</label>
+                                    <input type="email" class="form-control" id="email" placeholder="esempio@dominio.it" required>
+                                </div>
+                            </div>
+
+                            <!-- Password -->
+                            <div class="mb-3">
+                                <label for="password" class="info-pill-label login-color mb-1 ms-1">Password*</label>
+                                <div class="position-relative">
+                                    <input type="password" id="password" class="form-control pe-5" required>
+                                    <button type="button" id="showPsw-reg" class="position-absolute border-0 psw-btn">
                                         <img src="/Foto/eye-on.svg" width="18" alt="Mostra password">
                                     </button>
-                                    <button type="button" id="hidePsw-reg" class="position-absolute border-0 p-0 mt-2 psw-btn d-none">
+                                    <button type="button" id="hidePsw-reg" class="position-absolute border-0 psw-btn d-none">
                                         <img src="/Foto/eye-off.svg" width="18" alt="Nascondi password">
                                     </button>
                                 </div>
+                            </div>
 
-                                <div class="mb-1 position-relative">
-                                    <label for="confirm-psw" class="info-pill-label login-color mt-2 mx-2">Conferma password*</label>
-                                    <input type="password" class="info-pill form-control rounded-3" id="confirm-psw" required>
-                                    
-                                    <button type="button" id="showConf" class="position-absolute border-0 p-0 mt-2 psw-btn">
+                            <!-- Conferma Password -->
+                            <div class="mb-3">
+                                <label for="confirm-psw" class="info-pill-label login-color mb-1 ms-1">Conferma password*</label>
+                                <div class="position-relative">
+                                    <input type="password" class="form-control pe-5" id="confirm-psw" required>
+                                    <button type="button" id="showConf" class="position-absolute border-0 psw-btn">
                                         <img src="/Foto/eye-on.svg" width="18" alt="Mostra password">
                                     </button>
-                                    <button type="button" id="hideConf" class="position-absolute border-0 p-0 mt-2 psw-btn d-none">
+                                    <button type="button" id="hideConf" class="position-absolute border-0 psw-btn d-none">
                                         <img src="/Foto/eye-off.svg" width="18" alt="Nascondi password">
                                     </button>
                                 </div>
-                                <div id="errorMsg" class="text-danger d-none"></div>
-                                
-                                <div class="d-flex mt-2 gap-2">
-                                    <input type="checkbox" id="consensi" required>
-                                    <label class="info-pill-label login-color my-auto">Acconsento al trattamento dei dati</label>
-                                </div>
+                            </div>
 
-                                <div class="text-start mt-4 mb-2">
-                                <a href="login-supplier.html" class="d-inline-flex align-items-center gap-2 text-dark">    
-                                    <span class="d-inline-flex justify-content-center align-items-center">
-                                        <img src="/Foto/supplier.svg" class="supplier d-block" alt="Icona ristoranti">
-                                        <span class="mx-1 text-bg-info">Per i locali</span>
-                                    </span>
+                            <div id="errorMsg" class="text-danger d-none"></div>
+
+                            <div class="d-flex align-items-center gap-2 mt-2">
+                                <input type="checkbox" id="consensi" required>
+                                <label for="consensi" class="info-pill-label login-color mb-0">Acconsento al trattamento dei dati</label>
+                            </div>
+
+                            <div class="text-start mt-4 mb-3">
+                                <a href="login-supplier.html" class="d-inline-flex align-items-center gap-2 text-dark" target="_blank">
+                                    <img src="/Foto/supplier.svg" class="supplier" alt="Icona ristoranti">
+                                    <span class="text-bg-info mx-1">Per i locali</span>
                                 </a>
-                                </div>
-                                
-                                <div class="d-flex gap-3 align-items-center mb-2">
-                                    <button type="submit" id="registrazione" class="btn btn-success m-auto w-100"> Registrati</button>
-                                </div>
+                            </div>
+
+                            <button type="submit" id="registrazione" class="btn btn-success rounded-pill w-100">Registrati</button>
                         </form>
 
                         <!-- REGISTRAZIONE AVVENUTA -->
                         <div id="confirm" class="text-center m-auto mb-4 d-none">
-                            <img src="/Foto/confirm-log.png" class="confirm-success m-auto">
-                            <div>
-                                <h3 class="text-black d-inline">La tua </h3> 
-                                <h3 class="text-success d-inline">registrazione</h3>
-                                <h3 class="text-black d-inline"> è avvenuta con successo!</h3>
-                            </div>
-
-                            <a href="profilo.html" class="link-dark"> Visita il tuo profilo!</a>
+                            <img src="/Foto/confirm-log.png" class="confirm-success m-auto mb-2">
+                            <h3 class="text-black fw-bold">La tua <span class="text-success fw-bold">registrazione</span> è avvenuta con successo!</h3>
+                            <a href="profilo.html" class="link-dark">Visita il tuo profilo!</a>
                         </div>
                     </div>
-
                 </div>  
             </div>
         </div>
@@ -178,6 +179,8 @@
         // fa comparire / scomparire il form per la registrazione in base alle necessità dell'utente:
         // se l'utente deve registrarsi basta premere sul pulsante "Registrati" (btnRegistrazione) e comparirà il 
         // form per la registrazione, facendo scomparire il form per il login
+        //  ->  per passare da un form all'altro si usano le classi Bootstrap 'd-none' (nasconde) e la sua rimozione (mostra), 
+        //      senza ricaricare la pagina
 
         // è sempre disponibile il pulsante per accesso / registrazione dedicata agli admin dei locali
         const formLogin = document.getElementById('formLogin');
@@ -218,14 +221,12 @@
             pswField.type = 'text';
             showPswBtn.classList.add('d-none');
             hidePswBtn.classList.remove('d-none');
-            hidePswBtn.classList.add('d-block');
         });
 
         hidePswBtn.addEventListener('click', () => {
             pswField.type = 'password';
             hidePswBtn.classList.add('d-none');
             showPswBtn.classList.remove('d-none');
-            showPswBtn.classList.add('d-block');
         });
 
         // PAGINA DI REGISTRAZIONE
@@ -237,14 +238,12 @@
             password.type = 'text';
             showPswReg.classList.add('d-none');
             hidePswReg.classList.remove('d-none');
-            hidePswReg.classList.add('d-block');
         });
 
         hidePswReg.addEventListener('click', () => {
             password.type = 'password';
             hidePswReg.classList.add('d-none');
             showPswReg.classList.remove('d-none');
-            showPswReg.classList.add('d-block');
         });
 
         // PAGINA DI CONFERMA
@@ -256,14 +255,12 @@
             confPsw.type = 'text';
             showConf.classList.add('d-none');
             hideConf.classList.remove('d-none');
-            hideConf.classList.add('d-block');
         });
 
         hideConf.addEventListener('click', () => {
             confPsw.type = 'password';
             hideConf.classList.add('d-none');
             showConf.classList.remove('d-none');
-            showConf.classList.add('d-block');
         });
         
         // permette di mostrare notifiche temporanee (circa 3 secondi) in basso a destra
@@ -330,7 +327,7 @@
 
             // schermata di registrazione confermata
             const confirm = document.getElementById('confirm');
-            console.log("sto per fare una richiesta per: "+ email +", " + password + ", "+ confirmPassword)
+            console.log("sto per fare una richiesta per: "+ email +", " + password + ", "+ confirmPassword.value)
 
             // controllo lunghezza della password (almeno 8 char)
             // questo controllo viene fatto anche lato server per una sicurezza maggiore

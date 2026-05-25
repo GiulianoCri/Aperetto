@@ -1,16 +1,16 @@
 COSE FATTE:
-    revisione codice login-supplier.html
+    revisione stile login.html + generale
 
     relative sezioni di index.js
 
 
 TODO:
     - profilo-supplier / modifica info  -> aggiornaPreviewCover non viene utilizzata
-    - unificare stile
-    - commentar
+    - unificare stile + ordinare 'classi.css'
+    - commentare
 
 PAGINE REVISIONATE:
-    - login.html
+    - login.html (completato)
     - reset-password.html
     - reset-password-supplier.html
     - profilo.html
