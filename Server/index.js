@@ -1,5 +1,17 @@
+//SERVER
+
+//Funzionalita del server
+//Architettura: Express.js (Node.js) + Supabase (PostgreSQL + Storage)
+//Responsabilità:
+//Serve i file statici del client (HTML/CSS/JS)
+//Gestisce l'autenticazione (login/registrazione/logout)
+//per due tipi di utente: Consumer e Supplier
+//Espone le API REST per locali, recensioni e recupero password
+//Gestisce le sessioni server-side tramite express-session
+
 
 //Inizailizzazione del server
+
 
 //express è un framework che semplifica la gestione delle richieste http, delle rotte, dei middleware e tanto altro.
 const express=require('express');
@@ -7,28 +19,34 @@ const express=require('express');
 const path = require("path");
 //multer è un middleware che semplifica la gestione degli upload di file (usato per l'upload dell'immagine del locale da parte del supplier)
 const multer = require('multer');
-//richiediamo la sessione
+//express-session: gestisce le sessioni utente server-side tramite cookie.
 const session = require('express-session');
-//upload è la configurazione di multer, in questo caso stiamo dicendo a multer di salvare i file caricati in memoria (non su disco), così possiamo poi passarli direttamente a supabase storage senza doverli salvare temporaneamente su disco
+//upload è la configurazione di multer, in questo caso stiamo dicendo a multer di salvare i file caricati in RAM (non su disco), così possiamo poi passarli direttamente a supabase storage senza doverli salvare temporaneamente su disco
 const upload = multer({ storage: multer.memoryStorage() });
 //creazione dell'app express
 const app=express();
 
 // Impostiamo la porta
 const PORT=3000;
-const HOST='0.0.0.0';
+const HOST='0.0.0.0';// ascolta su tutte le interfacce di rete
+
 
 // Impostiamo le rotte
-// ROOT è la cartella principale da cui serviremo i file statici (html, css, js lato client)
-const ROOT = path.join(__dirname,'..','client');
+
+// ROOT: percorso assoluto alla cartella Client.
+// __dirname è la directory dove si trova questo file (Server/),
+// con '..' saliamo di un livello e poi entriamo in 'client'.
+const ROOT = path.join(__dirname,'..','Client');
+
+
 // SESSIONI
 // configuriamo express-session come middleware, in questo modo ogni richiesta che arriva al server passerà prima da questa configurazione di sessione. La sessione ci permette di mantenere lo stato dell'utente tra le varie richieste, ad esempio per sapere se è loggato o no, e per salvare i suoi dati di base (esempio email, nome) senza doverli inviare dal client ad ogni richiesta. La configurazione che abbiamo messo prevede un segreto (usato per firmare la sessione), e alcune opzioni per i cookie (durata, sicurezza, ecc). Importante: in produzione è consigliabile usare un store di sessioni più robusto (esempio Redis) invece della memoria del server, che è volatile e non scalabile.
 app.use(session({
-    //secret è una stringa segreta usata per firmare la sessione, è importante che sia lunga e complessa per evitare attacchi di forza bruta.
+    // firma crittografica del cookie di sessione, usata per garantire l'integrità della sessione e prevenire manomissioni. In produzione, questo dovrebbe essere un valore lungo, complesso e segreto, idealmente caricato da una variabile d'ambiente.
     secret: 'una_stringa_segreta_molto_lunga',
-    //resave: false significa che la sessione non verrà salvata nuovamente se non è stata modificata, questo migliora le prestazioni evitando salvataggi inutili.
+    // non riscrivere la sessione se non modificata
     resave: false,
-    //saveUninitialized: false significa che una sessione non verrà creata finché non viene modificata, questo evita di creare sessioni vuote per utenti che non le usano.
+    // non creare sessione per utenti anonimi
     saveUninitialized: false,
     //configurazione dei cookie che vengono usati per identificare la sessione dell'utente. maxAge è la durata del cookie (in questo caso 1 giorno), httpOnly significa che il cookie non è accessibile tramite JavaScript (aumenta la sicurezza contro attacchi XSS), sameSite: 'lax' aiuta a prevenire attacchi CSRF, secure: false significa che il cookie può essere trasmesso anche su connessioni non sicure (in produzione dovrebbe essere true se si usa HTTPS).
     cookie: {
@@ -42,8 +60,15 @@ app.use(session({
 app.use(express.static(ROOT)); 
 // con questa riga diciamo a express di interpretare il body delle richieste in formato json, così possiamo accedere ai dati inviati dal client tramite req.body negli handler
 app.use(express.json());
+/*
+Use serve per creare un middleware, un ulteriore operazione che la richiesta subisce prima di raggiungere destinazione. 
+IMPORTANTE: use applica un middleware a tutte le richieste in entrata.
+IMPORTANTE: l'ordine in cui i middleware sono scritti nel mio file, sarebbe lo stesso con cui vengono applicati (app.use(espress.static(ROOT)) viene applicato prima di app.use(express.json()) )
+IMPORTANTE: è necessario che certi middleware vengano scritti prima di alcune handler (esempio app.use(express.json()) deve essere scritto prima di req.body negli handler)
+*/
 
-// importo le pagine
+//Rotte per le pagine HTML
+
 // pagina home
 // con questa rotta, quando il client fa una richiesta GET alla radice del sito (esempio http://localhost:3000/) allora express risponde inviando il file index.html che si trova nella cartella ROOT
 app.get('/',(req,res)=>{
@@ -60,6 +85,18 @@ app.get('/luogo',(req,res)=>{
     res.sendFile(path.join(ROOT,'luogo.html'));
 });
 
+// Rotta esplicita per la pagina di reset password (raggiunta tramite
+// link via email che contiene il token come query param ?token=...)
+app.get('/reset-password.html', (req, res) => {
+    res.sendFile(path.join(ROOT, 'reset-password.html'));
+});
+
+// Rotta esplicita per la pagina di reset password (raggiunta tramite
+// link via email che contiene il token come query param ?token=...)
+app.get('/reset-password.html', (req, res) => {
+    res.sendFile(path.join(ROOT, 'reset-password.html'));
+});
+
 // CONNESSIONE A SUPABASE
 // createClient è la funzione che ci permette di creare un'istanza del client di supabase, a cui poi possiamo fare le query al database e le operazioni di storage. La funzione prende come parametri l'url del nostro progetto supabase e la chiave anonima (public) 
 const { createClient } = require('@supabase/supabase-js');
@@ -67,30 +104,12 @@ const supabaseApi= 'https://ocoztbtixgjdfadqoxtn.supabase.co';
 const supabaseApiKey= 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9jb3p0YnRpeGdqZGZhZHFveHRuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU3ODIwMzIsImV4cCI6MjA5MTM1ODAzMn0.K0tLeh1T-2zjCl3WSvtueTKRQWEadmR1gBXgguALov0';
 const supabase = createClient(supabaseApi, supabaseApiKey);
 
-//AUTENTICAZIONE
-app.use(express.json()); //consente agli handler di leggere il body (renza questa riga la funzione req.body da errore)
-
-/*
-Use serve per creare un middleware, un ulteriore operazione che la richiesta subisce prima di raggiungere destinazione. 
-IMPORTANTE: use applica un middleware a tutte le richieste in entrata.
-IMPORTANTE: l'ordine in cui i middleware sono scritti nel mio file, sarebbe lo stesso con cui vengono applicati (app.use(espress.static(ROOT)) viene applicato prima di app.use(express.json()) )
-IMPORTANTE: è necessario che certi middleware vengano scritti prima di alcune handler (esempio app.use(express.json()) deve essere scritto prima di req.body negli handler)
-*/
-
+// bcrypt: libreria per hashing sicuro delle password.
 const bcrypt = require('bcrypt') //usiamo bcrypt per fare un hashing della password
 
-app.get('/api/me', (req, res) => {
 
-    //req.session.user ritorna la sessione per l'utente se è presente
-    if (req.session.user) {
-        
-        //se c'è una sessione attiva allora ritorno all'utente i suoi dati
-        res.json(req.session.user);
-    } else {
-        //se non c'è una sessione, mando il codice 401 (non autorizzato)
-        res.status(401).json({ error: "Non sei loggato" });
-    }
-});
+
+
 
 //FUNZIONI AUSILIARIE
 
@@ -108,7 +127,27 @@ const aggiungiUrl = (luogo) => {
 };
 
 
+
+
+
 //Funzione per geocodificare un indirizzo (usata in fase di inserimento nuovo luogo da parte del supplier)
+/**
+ * geocodifica(indirizzo)
+ * Converte un indirizzo testuale in coordinate lat/lng usando Nominatim
+ * (il geocoder open-source di OpenStreetMap). Gratuito e senza API key.
+ *
+ * Usato quando un Supplier registra o modifica il proprio locale:
+ * le coordinate vengono salvate nel DB e usate per il filtro "vicino a me"
+ * e per i marker sulla mappa Leaflet.
+ *
+ * Limitazioni di Nominatim:
+ * - Max 1 richiesta/secondo (rate limit per IP)
+ * - Richiede User-Agent identificativo per evitare blocchi
+ * - Precisione variabile per indirizzi italiani specifici
+ *
+ * Se l'indirizzo non viene trovato, ritorna { lat: null, lng: null }:
+ * il locale viene comunque salvato ma non apparirà sulla mappa.
+ */
 async function geocodifica(indirizzo) {
 
     //geocodifica l'indirizzo usando l'API di Nominatim (OpenStreetMap), che restituisce le coordinate lat e lng corrispondenti all'indirizzo. La funzione prende come parametro l'indirizzo da geocodificare, costruisce l'url della richiesta all'API di Nominatim, effettua la richiesta e restituisce un oggetto con lat e lng. Se l'indirizzo non viene trovato, restituisce lat e lng null.
@@ -130,8 +169,39 @@ async function geocodifica(indirizzo) {
 }
 
 
-// API
-// Ottengo tutti i luoghi dal database
+// API SESSIONE
+
+/**
+ * GET /api/me
+ * Endpoint "chi sono?": il client lo chiama all'avvio di ogni pagina
+ * per sapere se l'utente è loggato e ottenere i suoi dati base.
+ * Se la sessione esiste → 200 + dati utente.
+ * Se non esiste → 401 Unauthorized (il client mostrerà "Accedi").
+ *
+ * Questo pattern (session check via API) evita di dover passare
+ * dati utente nei cookie o in localStorage.
+ */
+app.get('/api/me', (req, res) => {
+
+    //req.session.user ritorna la sessione per l'utente se è presente
+    if (req.session.user) {
+        
+        //se c'è una sessione attiva allora ritorno all'utente i suoi dati
+        res.json(req.session.user);
+    } else {
+        //se non c'è una sessione, mando il codice 401 (non autorizzato)
+        res.status(401).json({ error: "Non sei loggato" });
+    }
+});
+
+//API LOCALI 
+
+
+/**
+ * GET /api/location
+ * Restituisce tutti i locali con URL immagine già risolto.
+ * Usato dalla homepage per popolare lista + marker mappa.
+ */
 app.get('/api/location', async (req, res) => {
     const { data, error } = await supabase
         .from('location')
@@ -142,14 +212,22 @@ app.get('/api/location', async (req, res) => {
     // aggiungo l'url dell'immagine
     res.json(data.map(aggiungiUrl));
 });
-// Ottengo un luogo specifico dal database
+
+
+
+/**
+ * GET /api/location/:id
+ * Restituisce i dettagli di un singolo locale.
+ * maybeSingle() restituisce null (non errore) se non trovato:
+ * gestione esplicita del 404 invece di crash silenzioso.
+ */
 app.get('/api/location/:id', async (req, res) => {
     const id = req.params.id;
     const { data, error } = await supabase
         .from('location')
         .select('*')
         .eq('id', id)//filtro per id
-        .maybeSingle(); // restituisce oggetto singolo, non array     
+        .maybeSingle();    
 
 
     if (error) return res.status(500).json({ error: error.message });
@@ -176,7 +254,21 @@ app.get("/api/luoghi/vicini", (req, res) => {
     res.json(risultati);
 });
 
+
+
 // LOGIN CONSUMER
+
+/**
+ * POST /api/login
+ * Flusso login Consumer:
+ * 1. Estrae email e password dal body
+ * 2. Cerca l'utente nel DB per email
+ * 3. Confronta la password con l'hash usando bcrypt.compare
+ *    (bcrypt.compare è resistente ai timing attack: impiega sempre
+ *     lo stesso tempo indipendentemente da quanti caratteri coincidono)
+ * 4. Se corretta: crea sessione e risponde con i dati utente
+ * 5. Se errata: risponde 401
+ */
 app.post("/api/login", async (req,res) =>{
     // estraggo i dati dal body della richiesta (email e password)
     const {name, surname, email, password} = req.body;
@@ -221,6 +313,16 @@ app.post("/api/login", async (req,res) =>{
 
 
 // REGISTRAZIONE CONSUMER
+
+/**
+ * POST /api/register
+ * Flusso registrazione Consumer:
+ * 1. Valida i campi (email, password obbligatori; min 8 char)
+ * 2. Hash della password con bcrypt
+ * 3. INSERT nel DB — se email duplicata (codice PostgreSQL '23505'),
+ *    risponde con errore specifico invece di errore generico
+ * 4. Avvia sessione automaticamente (l'utente è loggato subito dopo la registrazione)
+ */
 app.post("/api/register", async (req, res) =>{
     // estraggo i dati dal body della richiesta (name, surname, email e password)
     const {name, surname, email, password} = req.body;  
@@ -293,18 +395,7 @@ app.post('/api/logout', (req, res) => {
     res.json({ message: 'Logout effettuato' });
 });
 
-// RECENSIONI UTENTE
-app.get('/api/recensioni', async (req, res) => {
-    //estraggo userId dalla query string (esempio /api/recensioni?userId=123)
-    const { userId } = req.query;
-    //faccio una query al database per ottenere tutte le recensioni dell'utente con quell'id, usando il filtro eq('user_id', userId).
-    const { data, error } = await supabase
-        .from('recensioni')
-        .select('*, location(nome_locale)')
-        .eq('user_id', userId);
-    if (error) return res.status(500).json({ error: error.message });
-    res.json(data);
-});
+
 
 
 // RECUPERO PASSWORD - CONSUMER
@@ -441,6 +532,20 @@ app.post('/api/reset-password', async (req, res) => {
     res.json({ message: "Password aggiornata con successo!" });
 });
 
+
+// RECENSIONI LOCALE
+app.get('/api/recensioni', async (req, res) => {
+    //estraggo userId dalla query string (esempio /api/recensioni?userId=123)
+    const { userId } = req.query;
+    //faccio una query al database per ottenere tutte le recensioni dell'utente con quell'id, usando il filtro eq('user_id', userId).
+    const { data, error } = await supabase
+        .from('recensioni')
+        .select('*, location(nome_locale)')
+        .eq('user_id', userId);
+    if (error) return res.status(500).json({ error: error.message });
+    res.json(data);
+});
+
 // 1. GET tutte le recensioni di un luogo (pubblica, senza login)
 app.get('/api/recensioni/luogo/:id', async (req, res) => {
     const { id } = req.params;
@@ -500,10 +605,16 @@ app.post('/api/recensioni', async (req, res) => {
 });
  
 
-// 3. GET recensioni dell'utente loggato (per la pagina profilo)
-//    Sostituisce la tua rotta GET /api/recensioni esistente
-//    (quella vecchia usava ?userId=... dalla query, questa usa la sessione)
 
+/**
+ * GET /api/recensioni/mie
+ * Restituisce le recensioni dell'utente loggato per la pagina profilo.
+ * L'user_id viene preso dalla sessione server-side (non dal client):
+ * questo impedisce che un utente richieda le recensioni di un altro
+ * passando un id diverso nel body/query.
+ * Usa JOIN implicito Supabase: `location:luogo_id (nome_locale)` aggiunge
+ * il nome del locale senza necessità di query separate.
+ */
 app.get('/api/recensioni/mie', async (req, res) => {
  
     if (!req.session.user) {
@@ -529,14 +640,21 @@ app.get('/api/recensioni/mie', async (req, res) => {
     if (error) return res.status(500).json({ error: error.message });
     res.json(data);
 });
- 
-//pagina reset password
-app.get('/reset-password.html', (req, res) => {
-    res.sendFile(path.join(ROOT, 'reset-password.html'));
-});
+
 
 // REGISTRAZIONE SUPPLIER
-//questa rotta è simile alla registrazione del client, ma in più riceve i dati del locale e un'immagine, che salva su supabase storage. Inoltre, dopo aver creato il luogo nel database, restituisce l'id del luogo appena creato, che sarà utile per fare il redirect alla pagina di gestione del locale dopo la registrazione/login.
+/**
+ * POST /api/register-supplier  (multipart/form-data per via dell'immagine)
+ * Registrazione Supplier: più complessa della Consumer perché include:
+ * 1. Upload immagine locale → Supabase Storage
+ *    Il nome file è "locali/timestamp_nomeoriginale" per evitare collisioni
+ * 2. Hash password con bcrypt
+ * 3. Geocodifica indirizzo → lat/lng (può fallire silenziosamente)
+ * 4. INSERT nella tabella `location` (che contiene TUTTI i dati del locale)
+ *
+ * L'uso di upload.single('immagineLocale') da multer intercetta il file
+ * prima che la rotta venga eseguita e lo rende disponibile in req.file.
+ */
 app.post('/api/register-supplier', upload.single('immagineLocale'), async (req, res) => {
     const {
         name, surname, email, password, ruolo,
@@ -605,6 +723,13 @@ app.post('/api/register-supplier', upload.single('immagineLocale'), async (req, 
 });
 
 // LOGIN SUPPLIER
+/**
+ * POST /api/login-supplier
+ * Login Supplier: uguale al Consumer ma cerca nella tabella `location`.
+ * La sessione salva anche `localeId` (id del locale) oltre all'email:
+ * questo campo viene usato nelle rotte protette (es. PUT /api/location/:id)
+ * per verificare che il Supplier stia modificando solo il proprio locale.
+ */
 app.post("/api/login-supplier", async (req,res) =>{
     const {email, password} = req.body;
 
@@ -643,63 +768,6 @@ app.post("/api/login-supplier", async (req,res) =>{
 
 })
 
-// RECUPERO PASSWORD SUPPLIER
-app.post('/api/recover-password-supplier', async (req, res) => {
-    try {
-        // estraggo l'email dal body della richiesta, la normalizzo (rimuovendo spazi e convertendo in minuscolo) per evitare problemi di formattazione 
-        // o differenze di maiuscole/minuscole che potrebbero impedire di trovare l'account associato all'email. Se l'email è mancante, restituisco un errore 400.
-        const email = req.body.email?.trim().toLowerCase();
-
-        if (!email) return res.status(400).json({ error: "Email obbligatoria" });
-        // Controllo associazion email - account
-        const { data: user, error } = await supabase
-            .from('location')
-            .select('*')
-            .eq('email', email)
-            .single();
-
-        if (!user || error) {
-            return res.status(404).json({ error: "Nessun account associato a questa email" });
-        }
-        // Generazione token univoco + scadenza e salvataggio nel db
-        const token = crypto.randomBytes(32).toString('hex');
-        const expiry = new Date(Date.now() + 300000).toISOString();//+5 minuti
-
-        const { data: insertData, error: insertError } = await supabase
-            .from('password_resets')
-            .insert([{ email, token, expiry }])
-            .select();
-
-        if (insertError) {
-            return res.status(500).json({ error: "Errore salvataggio token: " + insertError.message });
-        }
-        //invio mail
-        const transporter = nodemailer.createTransport({
-            service: 'gmail',
-            auth: {
-                user: 'noreply.aperetto@gmail.com',
-                pass: 'tcez yues japg skee'// usa una App Password di Google, non la password normale
-            }
-        });
-
-        const resetLink = `http://localhost:3000/reset-password-supplier.html?token=${token}`;
-
-        await transporter.sendMail({
-            from: 'noreply.aperetto@gmail.com',
-            to: email,
-            subject: 'Recupero password - Aperetto',
-            html: `<p>Clicca il link per reimpostare la tua password:</p>
-                   <a href="${resetLink}">${resetLink}</a>
-                   <p>Il link scade tra 5 minuti.</p>`
-        });
-
-        res.json({ message: "Email inviata!" });
-
-    } catch (err) {
-        console.error("ERRORE RECOVER-PASSWORD:", err.message, err.stack);
-        res.status(500).json({ error: "Errore interno: " + err.message });
-    }
-});
 
 
 //  MODIFICA INFORMAZIONI LOCALE - PROFILO SUPPLIER
@@ -795,6 +863,64 @@ app.put('/api/location/:id', async (req, res) => {
     }
 });
 
+
+// RECUPERO PASSWORD SUPPLIER
+app.post('/api/recover-password-supplier', async (req, res) => {
+    try {
+        // estraggo l'email dal body della richiesta, la normalizzo (rimuovendo spazi e convertendo in minuscolo) per evitare problemi di formattazione 
+        // o differenze di maiuscole/minuscole che potrebbero impedire di trovare l'account associato all'email. Se l'email è mancante, restituisco un errore 400.
+        const email = req.body.email?.trim().toLowerCase();
+
+        if (!email) return res.status(400).json({ error: "Email obbligatoria" });
+        // Controllo associazion email - account
+        const { data: user, error } = await supabase
+            .from('location')
+            .select('*')
+            .eq('email', email)
+            .single();
+
+        if (!user || error) {
+            return res.status(404).json({ error: "Nessun account associato a questa email" });
+        }
+        // Generazione token univoco + scadenza e salvataggio nel db
+        const token = crypto.randomBytes(32).toString('hex');
+        const expiry = new Date(Date.now() + 300000).toISOString();//+5 minuti
+
+        const { data: insertData, error: insertError } = await supabase
+            .from('password_resets')
+            .insert([{ email, token, expiry }])
+            .select();
+
+        if (insertError) {
+            return res.status(500).json({ error: "Errore salvataggio token: " + insertError.message });
+        }
+        //invio mail
+        const transporter = nodemailer.createTransport({
+            service: 'gmail',
+            auth: {
+                user: 'noreply.aperetto@gmail.com',
+                pass: 'tcez yues japg skee'// usa una App Password di Google, non la password normale
+            }
+        });
+
+        const resetLink = `http://localhost:3000/reset-password-supplier.html?token=${token}`;
+
+        await transporter.sendMail({
+            from: 'noreply.aperetto@gmail.com',
+            to: email,
+            subject: 'Recupero password - Aperetto',
+            html: `<p>Clicca il link per reimpostare la tua password:</p>
+                   <a href="${resetLink}">${resetLink}</a>
+                   <p>Il link scade tra 5 minuti.</p>`
+        });
+
+        res.json({ message: "Email inviata!" });
+
+    } catch (err) {
+        console.error("ERRORE RECOVER-PASSWORD:", err.message, err.stack);
+        res.status(500).json({ error: "Errore interno: " + err.message });
+    }
+});
 //  RESET PASSWORD SUPPLIER
 //  rotta per reimpostare la password del supplier, simile a quella del client ma aggiorna la tabella location invece di consumer
 app.post('/api/reset-password-supplier', async (req, res) => {

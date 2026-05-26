@@ -460,35 +460,33 @@ body{
     color: #1a1a1a;
 }
 
+/* ── TOGGLE VISTA MOBILE ── */
 @media (max-width: 600px) {
-    .toggle-vista {
-        display: flex;
-    }
 
-    /* Di default su mobile: lista visibile, mappa nascosta */
-    #map {
-        display: none;
-        flex: 1;
-        height: 100%;
-        border-radius: 16px;
-        overflow: hidden;
-    }
 
-    .lista {
-        flex: 1;
-        height: auto;
-        max-height: none;
-        display: flex;
-    }
+  /* toggle bottoni*/
+  .toggle-vista { display: flex; }
 
-    /* Classe per mostrare la mappa e nascondere la lista */
-    .app-container.vista-mappa #map {
-        display: block;
-    }
-
-    .app-container.vista-mappa .lista {
-        display: none;
-    }
+  /* Fix lista/mappa */
+  #map {
+    display: none !important;
+    flex: 0;
+  }
+  .lista {
+    flex: 1;
+    height: 100%;
+    display: flex;
+  }
+  .app-container.vista-mappa #map {
+    display: block !important;
+    flex: 1;
+    height: 100%;
+    border-radius: 0;
+  }
+  .app-container.vista-mappa .lista {
+    display: none !important;
+    flex: 0;
+  }
 }
 
 /* RESPONSIVE FILTRI */

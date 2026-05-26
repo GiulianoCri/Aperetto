@@ -500,9 +500,8 @@
             //  -> se l'orario di chiusura del locale è antecedente alle 13:00, allora viene utilizzato l'orario di chiusura
             //  -> se l'orario di chiusura del locale è successivo alle 13:00, allora viene impostato come orario limite le 13:00
             const chiusuraColazione = (() => {
-                const hApertura = parseInt(luogo.apertura.split(':')[0], 10);
-                const hChiusura = parseInt(luogo.chiusura.split(':')[0], 10);
-                console.log('chiusura dal DB:', luogo.chiusura, '| h parsed:', hChiusura);
+                const hApertura = parseInt(luogoCorrente.apertura.split(':')[0], 10);
+                const hChiusura = parseInt(luogoCorrente.chiusura.split(':')[0], 10);
 
                 // se chiude dopo mezzanotte (orario notturno), usa sempre 13:00
                 const notturno = hChiusura < hApertura;

@@ -96,6 +96,12 @@
     </div>
 
 <script>
+    //  Responsabilità script:
+    //   - Mostra la lista dei locali + mappa Leaflet in split view
+    //   - Gestisce ricerca testuale e filtri (tipo, distanza)
+    //   - Permette la geolocalizzazione per ordinare per vicinanza
+    //   - Aggiorna dinamicamente mappa e lista in modo sincronizzato
+
     // MENU A TENDINA
     // salvo gli venti che mi interessano in variabili per comodità
     const btn = document.querySelector(".loginbtn");
@@ -247,7 +253,7 @@
         // prendo il container dei risultati e lo svuoto prima di inserire i nuovi risultati filtrati
         const container = document.getElementById('risultati');
         // aggiungo una classe per lo spazio tra i risultati
-        container.classList.add("spazio");
+        container.classList.add("d-flex","flex-column","gap-2");
         container.innerHTML = '';
 
         luoghi.forEach(luogo => {
