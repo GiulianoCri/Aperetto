@@ -42,33 +42,32 @@
     </div>
     <!-- FILTRI -->
     <div class="filtri-container">
-
-    <!-- Tipo locale -->
-    <div class="filtro-group">
-        <!-- Creo l icona del filtro,viewbox mi specifica le dimensioni partendo da (0,0) a (20,20) fill è per lo sfondo nero -->
-        <img src="/Foto/filtro.svg" alt="filtro" width="15" height="15" class="filtro-icon">
-        <div class="select-wrapper">
-        <select id="filtroTipo" class="filtro-select">
-            <option class="text-center" value="">Tutti i locali</option>
-            <option class="text-center" value="Colazione">Colazione</option>
-            <option class="text-center" value="Aperitivo">Aperitivo</option>
-        </select>
+        <!-- Tipo locale -->
+        <div class="filtro-group">
+            <!-- Creo l icona del filtro,viewbox mi specifica le dimensioni partendo da (0,0) a (20,20) fill è per lo sfondo nero -->
+            <img src="/Foto/filtro.svg" alt="filtro" width="15" height="15" class="filtro-icon">
+            <div class="select-wrapper">
+                <select id="filtroTipo" class="filtro-select">
+                    <option class="text-center" value="">Tutti i locali</option>
+                    <option class="text-center" value="Colazione">Colazione</option>
+                    <option class="text-center" value="Aperitivo">Aperitivo</option>
+                </select>
+            </div>
         </div>
-    </div>
 
-    <!-- Distanza -->
-    <div class="filtro-group">
+        <!-- Distanza -->
+        <div class="filtro-group">
             <img src="/Foto/position.svg" alt="filtro" width="15" height="15" class="filtro-icon">
             <div class="select-wrapper">
-            <select id="filtroDistanza" class="filtro-select">
-                <option class="text-center" value="">Qualsiasi distanza</option>
-                <option class="text-center" value="1">Entro 1 km</option>
-                <option class="text-center" value="3">Entro 3 km</option>
-                <option class="text-center" value="5">Entro 5 km</option>
-                <option class="text-center" value="10">Entro 10 km</option>
-            </select>
-    </div>
-    </div>
+                <select id="filtroDistanza" class="filtro-select">
+                    <option class="text-center" value="">Qualsiasi distanza</option>
+                    <option class="text-center" value="1">Entro 1 km</option>
+                    <option class="text-center" value="3">Entro 3 km</option>
+                    <option class="text-center" value="5">Entro 5 km</option>
+                    <option class="text-center" value="10">Entro 10 km</option>
+                </select>
+            </div>
+        </div>
 
         <!-- Reset -->
         <button id="resetFiltri">
@@ -149,7 +148,7 @@
             const marker = L.marker([luogo.lat, luogo.lng], { 
             icon: 
                 L.icon({
-                iconUrl: '/Foto/location-svgrepo-com.svg', 
+                iconUrl: '/Foto/position-marker.svg', 
                 iconSize: [36, 36],
                 iconAnchor: [18, 36],
                 popupAnchor: [0, -36]
@@ -212,7 +211,7 @@
             const marker = L.marker([luogo.lat, luogo.lng], { 
             icon:
                 L.icon({
-                iconUrl: '/Foto/position-marker.png', 
+                iconUrl: '/Foto/position-marker.svg', 
                 iconSize: [36, 36],
                 iconAnchor: [18, 36],
                 popupAnchor: [0, -36]
@@ -264,8 +263,8 @@
             // aperto restituisco un badge verde, se è chiuso un badge rosso, se non ho orari non mostro nessun badge
             const aperto = isAperto(luogo.apertura, luogo.chiusura);
             const badgeAperto = aperto === null ? '': aperto
-                    ? `<span class="badge-aperto text-center">Aperto</span>`
-                    : `<span class="badge-chiuso text-center">Chiuso</span>`;
+                    ? `<span class="badge aperto text-center">Aperto</span>`
+                    : `<span class="badge chiuso text-center">Chiuso</span>`;
             // creo badge per il tipo di locale, se è aperitivo o colazione, se non ho info mostro "Locale"
             const badges = [];
             if (luogo.aperitivo) badges.push(`<span class="card-badge">Aperitivo</span>`);
@@ -340,10 +339,9 @@
         // aggiorno la vista con i luoghi filtrati, sia la lista che i marker sulla mappa
         aggiornaVista(filtrati);
     }
-
+    
 
     //Script per ottenere la posizione dell'utente
-
 
     function getPosizioneUtente() {
     // restituisce una Promise che si risolve con un oggetto { lat, lng } o si rifiuta con un errore
@@ -365,12 +363,8 @@
         });
         }
 
-
-
-    
-    
+        
     //Calcola distanza in km tra due coordinate(Formula Haversine)
-    
     
     function distanzaKm(lat1, lon1, lat2, lon2) {
         const R = 6371;// raggio della Terra in km
@@ -390,10 +384,7 @@
     }
 
 
-
-
     // Ordina i luoghi in base alla distanza dall'utente e li mostra
-    
     
     async function mostraVicinoAMe() {
         // se non ho ancora i luoghi, li carico prima di tutto
@@ -434,10 +425,7 @@
     });
 
 
-
-    
-    //script per il profilo
-    
+    // Script per il profilo
     
     // Controlla se l'utente è loggato e aggiorna il menu
     async function aggiornaMenu() {
@@ -469,7 +457,6 @@
 
     // Logout
 
-
     document.getElementById('menuLogout').addEventListener('click', async (e) => {
         e.preventDefault();
         await fetch('/api/logout', { method: 'POST' });
@@ -477,14 +464,11 @@
         window.location.reload();
     });
 
-
     // Eseguito subito per aggiornare il menu in base allo stato di login
     aggiornaMenu();
 
 
-
     //script per i filtri
-
 
     const filtroTipo = document.getElementById("filtroTipo");
     const filtroDistanza = document.getElementById("filtroDistanza");
@@ -501,9 +485,7 @@
     });
 
 
-
     // Adatta il margin-top dell'app-container all'altezza reale di navbar + filtri
-    
     
     function adattaLayout() {
         const navbar  = document.querySelector('.navbar-custom');
@@ -517,26 +499,17 @@
     }
 
     
-    
     // Eseguito subito e ad ogni resize (o se i filtri cambiano altezza)
-    
-    
+
     adattaLayout();
     window.addEventListener('resize', adattaLayout);
 
-    
-    
     // Osserva variazioni di altezza del filtri-container (es. wrap su mobile)
-    
-    
+        
     const resizeObs = new ResizeObserver(adattaLayout);
     resizeObs.observe(document.querySelector('.filtri-container'));
-
-
-    
-    
+ 
     // Funzione per toggle Lista/Mappa su mobile
-    
     
     function setVista(vista) {
         //definisco variabili per il container principale e i bottoni

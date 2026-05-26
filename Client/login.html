@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="it">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -20,9 +20,7 @@
                 <!-- all'interno della parte sinistra troviamo il logo del nostro sito in grande con un bottone per tornare alla schermata 
                     home del sito-->
                 <div class="col-12 col-md-5 m-auto d-block">
-                    <button class="
-                    
-                    -banner mx-3 mt-3" onclick="window.location.href='/index.html'">← Torna alla home</button>
+                    <button class="btn-back-banner login" onclick="window.location.href='/index.html'">← Torna alla home</button>
                     <img src="/Foto/APERETTO.png" id="logoImg" alt="Logo Aperetto" class="mt-4 img-fluid">
                 </div>
             
@@ -38,14 +36,14 @@
                                 <!-- Email -->
                                 <div>
                                     <label for="emailLogin" class="info-pill-label login-color mb-1 ms-1">E-Mail</label>
-                                    <input type="email" id="emailLogin" class="form-control">
+                                    <input type="email" id="emailLogin" class="form-control" required>
                                 </div>
 
                                 <!-- Password -->
                                 <div>
                                     <label for="pswField" class="info-pill-label login-color mb-1 ms-1">Password</label>
                                     <div class="position-relative">
-                                        <input type="password" id="pswField" class="form-control pe-5">
+                                        <input type="password" id="pswField" class="form-control pe-5" required>
                                         <button type="button" id="showPswBtn" class="position-absolute border-0 psw-btn">
                                             <img src="/Foto/eye-on.svg" width="18" alt="Mostra password">
                                         </button>
@@ -86,7 +84,7 @@
                                     <label class="info-pill-label ms-1 text-start">Inserisci la tua e-mail:</label>
                                     <input type="email" id="emailRec" placeholder="esempio@dominio.it" class="form-control" required>
                                 </div>
-                                <button type="submit" id="recuperaPsw" class="btn btn-success rounded-pill w-100 mt-3">Recupera Password</button>
+                                <button type="button" id="recuperaPsw" class="btn btn-success rounded-pill w-100 mt-3">Recupera Password</button>
                             </div>
 
                             <div class="d-none" id="successMsg">
@@ -98,7 +96,7 @@
 
                         <!-- FORM DI REGISTRAZIONE -->
                         <form class="luogo-card d-none" id="formRegistrazione">
-                            <h2 class="mb-4 text-center text-bg-info">Benvenuto su Aperetto!</h2>
+                            <h2 class="mb-4 text-center text-bg-info fw-bold">Benvenuto su Aperetto!</h2>
 
                             <div class="row g-2 mb-2">
                                 <div class="col-6">
@@ -270,6 +268,8 @@
         // pubblicazione di una recensione, oppure per segnalare un errore in caso di problemi (la troviamo anche nelle altre pagine)
         function mostraNotifica(msg, tipo = 'ok') {
             const wrap = document.getElementById('notificaWrap');
+            if (!wrap) return;
+            
             const t = document.createElement('div');
             t.className = 'ap-notifica' + (tipo === 'error' ? ' error' : '');
             t.textContent = msg;
@@ -298,12 +298,6 @@
                     // mostra un messaggio di successo
                     document.getElementById('recuperoForm').classList.add('d-none');
                     document.getElementById('successMsg').classList.remove('d-none');
-
-                    // reindirizzamento al form login alla pressione del pulsante "backLogin"
-                    document.getElementById('backToLogin').addEventListener('click', () => {
-                        pswDimenticata.classList.add('d-none');
-                        formLogin.classList.remove('d-none');
-                    });
                 } else {
                     alert(data.error || "Errore durante il recupero della password");
                 }
@@ -313,6 +307,14 @@
                 alert("Errore di connessione al server");
             }
         })
+
+        // reindirizzamento al form login alla pressione del pulsante "backLogin"
+        document.getElementById('backToLogin').addEventListener('click', () => {
+            pswDimenticata.classList.add('d-none');
+            document.getElementById('successMsg').classList.add('d-none');
+            document.getElementById('recuperoForm').classList.remove('d-none');
+            formLogin.classList.remove('d-none');
+        });
         
         // REGISTRAZIONE NEL DB
         document.getElementById('formRegistrazione').addEventListener('submit', async (e) => {

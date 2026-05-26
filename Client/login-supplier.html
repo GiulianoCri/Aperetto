@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="it">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,30 +10,30 @@
     <link rel="stylesheet" href="classi.css">
 </head>
 
-<body class="body-custom">
+<body>
 
     <div class="container-fluid px-0">
         <div class="row g-0 min-vh-100"> 
             
             <!-- LATO SINISTRO: immagine -->
-            <div class="col-12 col-md-6 position-relative overflow-hidden" style=" height: 100vh;">
+            <div class="col-12 col-md-6 position-relative overflow-hidden vh-100">
                 
-                <img src="/Foto/people(1).jpg" alt="Sfondo locale" class="position-absolute mt-0 mr-0 w-100 h-100 object-fit-cover" style="z-index: 0;">
+                <img src="/Foto/people(1).jpg" alt="Sfondo locale" class="position-absolute top-0 right-0 w-100 h-100 object-fit-cover z-0">
 
                 <!-- overlay scuro: aumenta la leggibilità del testo -->
-                <div class="position-absolute mt-0 me-0 w-100 h-100" style="background: rgba(0,0,0,0.45); z-index: 1;"></div>
+                <div class="position-absolute mt-0 me-0 w-100 h-100 z-1" style="background: rgba(0,0,0,0.45);"></div>
 
-                <h1 class="left-headline mt-5 mx-auto position-relative text-white" style="z-index: 2;">
-                    Porta il tuo locale in <span>Aperetto</span>!
+                <h1 class="left-headline fw-bold mt-5 mx-auto position-relative text-white z-2">
+                    Porta il tuo locale in <span class="fw-bold">Aperetto</span>!
                 </h1>
 
             </div>
 
             <!-- LATO DESTRO: form -->
-            <div class="col-12 col-md-6 d-flex justify-content-center p-4 overflow-hidden" style="height: 100vh;" id="container">
+            <div class="col-12 col-md-6 d-flex justify-content-center p-4 overflow-hidden vh-100" id="container">
                 
-                <div class="d-flex flex-column w-100 position-relative form-scroll rounded-4 overflow-y-auto" style="height: 100%";>
-                    <a href="#" class="nav-login-link position-absolute mb-3" style="z-index: 2;" id="loginLink">
+                <div class="d-flex flex-column w-100 position-relative form-scroll rounded-4 overflow-y-auto h-100">
+                    <a href="#" class="nav-login-link position-absolute mb-3 z-2" id="loginLink">
                         Hai già un account? <strong>Accedi</strong>
                     </a>
                     <!-- STEPPER -->
@@ -65,45 +65,45 @@
                     </div>
                     
                     <!-- STEP 1: DETTAGLI DI CONTATTO -->
-                    <div class="form-title d-flex flex-column gap-2 mx-auto w-100 overflow-y-auto form-scroll" id="step1">
+                    <div class=" d-flex flex-column gap-2 mx-auto w-100 overflow-y-auto form-scroll" id="step1">
                         
                         <form class="luogo-card" id="formStep1">
-                            <h2 class="luogo-card-title">Dettagli di contatto</h2>
-                            <div class="row g-2 mb-3 d-flex mx-3">
+                            <h2 class="luogo-card-title fw-bold">Dettagli di contatto</h2>
+                            <div class="row g-2 mb-3">
                                 <div class="col-6">
-                                    <label for="name" class="info-pill-label login-color mx-2">Nome*</label>
-                                    <input type="text" class="info-pill form-control rounded-3" id="name" required>
+                                    <label for="name" class="info-pill-label login-color mb-1 ms-1">Nome*</label>
+                                    <input type="text" class="form-control rounded-3" id="name" required>
                                 </div>
                                 <div class="col-6">
-                                    <label for="surname" class="info-pill-label login-color mx-2">Cognome*</label>
-                                    <input type="text" class="info-pill form-control rounded-3" id="surname" required>
+                                    <label for="surname" class="info-pill-label login-color mb-1 ms-1">Cognome*</label>
+                                    <input type="text" class="form-control rounded-3" id="surname" required>
                                 </div>
                                 
                                 <div class="col-12">
-                                    <label for="email" class="info-pill-label login-color mt-4 mx-2">E-Mail*</label>
-                                    <input type="email" class="info-pill form-control rounded-3" id="email" required>
+                                    <label for="email" class="info-pill-label login-color mb-1 ms-1">E-Mail*</label>
+                                    <input type="email" class="form-control rounded-3" id="email" required>
                                 </div>
 
-                                <div class="col-12">
-                                    <label for="psw" class="info-pill-label login-color mt-4 mx-2">Password*</label>
+                                <div class="col-12 ">
+                                    <label for="psw" class="info-pill-label login-color mb-1 ms-1 mt-4">Password*</label>
                                     <div class="position-relative">
-                                        <input type="password" class="info-pill form-control rounded-3" id="psw" required>
-                                        <button type="button" id="showPswReg" class="position-absolute border-0 p-0 psw-btn">
+                                        <input type="password" class="form-control rounded-3" id="psw" required>
+                                        <button type="button" id="showPswReg" class="position-absolute border-0 psw-btn">
                                             <img src="/Foto/eye-on.svg" width="18" alt="Mostra password">
                                         </button>
-                                        <button type="button" id="hidePswReg" class="position-absolute border-0 p-0 psw-btn d-none">
+                                        <button type="button" id="hidePswReg" class="position-absolute border-0 psw-btn d-none">
                                             <img src="/Foto/eye-off.svg" width="18" alt="Nascondi password">
                                         </button>
                                     </div>
                                 </div>
                                 <div class="col-12">
-                                    <label for="confPsw" class="info-pill-label login-color mt-4 mx-2">Conferma Password*</label>
+                                    <label for="confPsw" class="info-pill-label login-color mb-1 ms-1">Conferma Password*</label>
                                     <div class="position-relative">
-                                        <input type="password" class="info-pill form-control rounded-3" id="confPsw" required>
-                                        <button type="button" id="showConf" class="position-absolute border-0 p-0 psw-btn">
+                                        <input type="password" class="form-control rounded-3" id="confPsw" required>
+                                        <button type="button" id="showConf" class="position-absolute border-0 psw-btn">
                                             <img src="/Foto/eye-on.svg" width="18" alt="Mostra password">
                                         </button>
-                                        <button type="button" id="hideConf" class="position-absolute border-0 p-0 psw-btn d-none">
+                                        <button type="button" id="hideConf" class="position-absolute border-0 psw-btn d-none">
                                             <img src="/Foto/eye-off.svg" width="18" alt="Nascondi password">
                                         </button>
                                     </div>
@@ -112,7 +112,7 @@
 
                                 <div class="col-12">
                                     <label for="ruolo" class="info-pill-label login-color mt-4 mx-2">Ruolo*</label>
-                                    <div class="select-wrapper w-100 mx-auto rounded-1 border-none">
+                                    <div class="select-wrapper w-100">
                                         <select class="info-pill form-select-custom" id="ruolo" required>
                                         <option value="" disabled selected></option>
                                         <option value="proprietario">Proprietario</option>
@@ -128,52 +128,48 @@
                                 </div>
                             </div>
 
-                            <div class="d-flex mt-2 mx-4 gap-2">
+                            <div class="d-flex mt-2 ms-2 gap-2">
                                 <input type="checkbox" id="consensi" required>
-                                <label class="info-pill-label login-color my-auto" >Desidero ricevere comunicazioni da Aperetto</label>
+                                <label for="consensi" class="info-pill-label login-color mb-0">Desidero ricevere comunicazioni da Aperetto</label>
                             </div>
                             
-                            <div class="d-flex gap-3 align-items-center mb-2 mt-5 mx-3">
-                                <button type="submit" class="btn btn-lg btn-success m-auto w-100">Avanti</button>
+                            <div class="align-items-center mb-2 mt-5 mx-3">
+                                <button type="submit" class="btn btn-lg btn-success rounded-pill mt-4 w-100">Avanti</button>
                             </div>
                         </form>
                     </div>
 
                     <!-- STEP 2: IL LOCALE-->
-                    <div class="form-title d-flex flex-column gap-2 mb-3 mx-auto w-100 d-none overflow-y-auto form-scroll" id="step2">                   
+                    <div class="d-flex flex-column gap-2 mb-3 mx-auto w-100 overflow-y-auto form-scroll d-none" id="step2">                   
                         
                         <form class="luogo-card" id="formStep2">
-                            <h3 class="luogo-card-title">Dettagli del locale</h3>
-                            <div class="row g-2 mb-3 d-flex mx-3">
+                            <h2 class="luogo-card-title fw-bold">Dettagli del locale</h2>
+                            <div class="row g-2 mb-3">
                                 <div class="col-12">
-                                    <label for="name" class="info-pill-label login-color mx-2">Come si chiama il tuo locale?*</label>
-                                    <div>
-                                        <input type="text" class="info-pill form-control rounded-3" id="nomeLocale" required>
-                                    </div>
+                                    <label for="nomeLocale" class="info-pill-label login-color mb-1 ms-1">Come si chiama il tuo locale?*</label>
+                                    <input type="text" class="form-control rounded-3" id="nomeLocale" required>
                                 </div>
                                 <div class="col-12">
-                                    <label for="surname" class="info-pill-label login-color mx-2">Qual'è il suo indirizzo?*</label>
-                                    <div>
-                                        <input type="text" class="info-pill form-control rounded-3" id="indirizzoLocale" required>
-                                    </div>
+                                    <label for="indirizzoLocale" class="info-pill-label login-color mb-1 ms-1">Qual'è il suo indirizzo?*</label>
+                                    <input type="text" class="form-control rounded-3" id="indirizzoLocale" required>
                                 </div>
 
                                 <div class="col-12">
-                                    <label for="telefono" class="info-pill-label login-color mt-4 mx-2">Numero di telefono del locale:</label>
-                                    <input type="tel" class="info-pill form-control rounded-3" id="telefonoLocale" value="+39 ">
+                                    <label for="telefono" class="info-pill-label login-color mt-4 mb-1 ms-1">Numero di telefono del locale:</label>
+                                    <input type="tel" class="form-control rounded-3" id="telefonoLocale" value="+39 ">
                                 </div>
 
                                 <div class="col-6">
-                                    <label for="apertura" class="info-pill-label login-color mx-2">Orario di apertura*</label>
-                                    <input type="time" class="info-pill form-control rounded-3" id="apertura" required>
+                                    <label for="apertura" class="info-pill-label login-color mb-1 ms-1">Orario di apertura*</label>
+                                    <input type="time" class="form-control rounded-3" id="apertura" required>
                                 </div>
                                 <div class="col-6">
-                                    <label for="chiusura" class="info-pill-label login-color mx-2">Orario di chiusura*</label>
-                                    <input type="time" class="info-pill form-control rounded-3" id="chiusura" required>
+                                    <label for="chiusura" class="info-pill-label login-color mb-1 ms-1">Orario di chiusura*</label>
+                                    <input type="time" class="form-control rounded-3" id="chiusura" required>
                                 </div>
                                 <div class="col-12">
-                                    <label for="giornoChiusura" class="info-pill-label login-color mt-4 mx-2">Giorno di chiusura</label>
-                                    <select class="info-pill form-select-lg border-0 rounded-3 w-100" id="giornoChiusura">
+                                    <label for="giornoChiusura" class="info-pill-label login-color mt-4 mb-1 ms-1">Giorno di chiusura</label>
+                                    <select class="info-pill form-select border-0 rounded-3 w-100" id="giornoChiusura">
                                         <option value="" disabled selected></option>
                                         <option value="lunedì">Lunedì</option>
                                         <option value="martedì">Martedì</option>
@@ -185,8 +181,8 @@
                                     </select>
                                 </div>
 
-                                <div class="col-12 btn-group mx-1"> 
-                                    <label for="" class="info-pill-label login-color me-2 my-auto">Che servizio offre il tuo locale?</label>
+                                <div class="col-12"> 
+                                    <label class="info-pill-label login-color mb-1 ms-1">Che servizio offre il tuo locale?</label>
                                     <div class="toggle-row">
                                         <span class="toggle-label">Aperitivo</span>
                                         <label class="toggle-switch">
@@ -204,61 +200,56 @@
                                 </div>
                             </div>
                             
-                            <div class="d-flex gap-3 align-items-center mb-4 mt-5 mx-3">
+                            <div class="align-items-center mb-4 mt-5 mx-3">
                                 <button type="submit" class="btn btn-lg btn-success m-auto w-100 mb-3">Avanti</button>
                             </div>
                         </form>
                     </div>
 
                     <!-- STEP 3: SOCIAL -->
-                    <div class="form-title d-flex flex-column gap-2 mb-3 mx-auto w-100 d-none overflow-y-auto form-scroll" id="step3">
+                    <div class="d-flex flex-column gap-2 mb-3 mx-auto w-100 d-none overflow-y-auto form-scroll" id="step3">
                         
                         <form class="luogo-card" id="formStep3">
-                            <h3 class="luogo-card-title">Social del locale</h3>
-                            <div class="row g-2 mb-3 d-flex mx-3">
+                            <h2 class="luogo-card-title">Social del locale</h2>
+                            <div class="row g-2 mb-3">
                                 
                                 <div class="col-12">
-                                    <label for="immagineLocale" class="info-pill-label login-color mt-4 mx-2">Immagine di sfondo del locale</label>
-                                    <input type="file" class="info-pill form-control rounded-3"
+                                    <label for="immagineLocale" class="info-pill-label login-color mt-4 mb-1 ms-1">Immagine di sfondo del locale</label>
+                                    <input type="file" class="form-control rounded-3"
                                         id="immagineLocale" accept="image/*">
                                     <small class="text-muted">Formati accettati: JPG, PNG, WebP. Max 5MB.</small>
                                     
                                     <!-- Anteprima opzionale -->
-                                    <img id="anteprima" src="" alt="Anteprima"
-                                        class="mt-2 rounded-3 shadow-lg d-none" style="max-height: 150px; object-fit: cover; width: 100%;">
+                                    <img id="anteprima" src="" alt="Anteprima" class="mt-2 rounded-3 shadow-lg d-none object-fit-cover w-100">
                                 </div>
 
                                 <div class="col-12">
-                                    <label for="name" class="info-pill-label login-color mx-2">Avete un sito web?</label>
-                                    <div>
-                                        <input type="url" class="info-pill form-control rounded-3" id="sitoWeb" placeholder="https://www.esempio.it">
-                                    </div>
+                                    <label for="sitoWeb" class="info-pill-label login-color mx-2">Avete un sito web?</label>
+                                    <input type="url" class="form-control rounded-3" id="sitoWeb" placeholder="https://www.esempio.it">
                                 </div>
                                 <div class="col-12">
-                                    <label for="surname" class="info-pill-label login-color mx-2">Instagram</label>
-                                    <div>
-                                        <input type="text" class="info-pill form-control rounded-3" id="instagram" placeholder="@nomeutente">
-                                    </div>
+                                    <label for="instagram" class="info-pill-label login-color mx-2">Instagram</label>
+                                    <input type="text" class="form-control rounded-3" id="instagram" placeholder="@nomeutente">
                                 </div>
                             </div>
                             
-                            <div class="d-flex gap-3 align-items-center mb-4 mt-5 mx-3">
-                                <button type="submit" id="okSocial" class="btn btn-lg btn-success m-auto w-100 mb-3">Avanti</button>
+                            <div class="align-items-center mb-4 mt-5 mx-3">
+                                <button type="submit" id="okSocial" class="btn btn-lg btn-success rounded-pill m-auto w-100">Avanti</button>
                             </div>
                         </form>
                     </div>
 
                     <!-- STEP 4: CONFERMA -->
-                    <div class="form-title d-flex flex-column gap-2 mb-3 mx-auto w-100 mt-5 confirm-supplier d-none" id="step4">
+                    <div class="d-flex flex-column gap-2 mb-3 mx-auto w-100 mt-5 confirm-supplier d-none" id="step4">
                         <div class="align-items-center d-flex" id="conferma">
                             <div id="confirm" class="text-center m-auto mb-4">
                                 <img src="/Foto/confirm-log.png" class="confirm-success m-auto">
-                                <div>
+                                <div class="mt-2">
                                     <h3 class="text-black d-inline">La tua </h3> 
                                     <h3 class="text-success d-inline">registrazione</h3>
                                     <h3 class="text-black d-inline"> è avvenuta con successo!</h3>
                                 </div>
-                                <h5 class="text-black d-inline"> Verrai reindirizzato nel giro di qualche secondo! </h5>
+                                <h5 class="text-muted"> Verrai reindirizzato nel giro di qualche secondo! </h5>
                             </div>
                         </div>
                     </div>
@@ -269,14 +260,14 @@
                         <!-- FORM DI ACCESSO -->
                         <form class="luogo-card">
                             <!-- campi da compilare -->
-                            <div class="d-flex flex-column">
+                            <div class="d-flex flex-column gap-3">
 
-                                <label for="email" class="info-pill-label login-color mt-2 mx-2">E-Mail</label>
-                                <input type="emailLogin" id="emailLogin" class="info-pill form-control rounded-3">  <br>
+                                <label for="emailLogin" class="info-pill-label login-color mt-2 mb-1 ms-1">E-Mail</label>
+                                <input type="email" id="emailLogin" class="form-control rounded-3">
 
                                 <div class="position-relative">
-                                    <label for="pswField" class="info-pill-label login-color mt-4 mx-2">Password</label>
-                                    <input type="password" id="pswField" class="info-pill form-control rounded-3 pe-5">
+                                    <label for="pswField" class="info-pill-label login-color mt-4 mb-1 ms-1">Password</label>
+                                    <input type="password" id="pswField" class="form-control rounded-3 pe-5">
                                     
                                     <button type="button" id="showPswBtn" class="position-absolute border-0 p-0 mt-2 psw-btn">
                                         <img src="/Foto/eye-on.svg" width="18" alt="Mostra password">
@@ -285,37 +276,31 @@
                                         <img src="/Foto/eye-off.svg" width="18" alt="Nascondi password">
                                     </button>
                                 </div>
-                                <a href="#" id="forgotPsw" class="link-dark mt-1 mx-2"> Password dimenticata? </a> <br>
+                                <a href="#" id="forgotPsw" class="link-dark mt-1 mb-1 ms-1"> Password dimenticata? </a>
                             </div>
                             <!-- bottoni -->
-                            <button type="submit" class="btn btn-success mt-auto rounded-3 w-100 mb-2" id="accediLogin"> Accedi </button>
+                            <button type="submit" class="btn btn-success rounded-pill mt-4 w-100 mb-2" id="accediLogin"> Accedi </button>
                         </form>
                     </div>  
 
                     <!-- PASSWORD DIMENTICATA -->
                     <div id="pswDimenticata" class="luogo-card text-center rounded-4 d-none m-auto">
-                        <h1 class="text-black d-inline">Hai dimenticato la password?</h3>
-                        <div class id="recuperoForm">
+                        <h1 class="text-black">Hai dimenticato la password?</h1>
+                        <div id="recuperoForm">
                             <p class="text-center"> Nessun problema, basta inserire di seguito il tuo indirizzo e-mail e ti invieremo un link per reimpostarla </p>
-                            <div class="d-flex flex-column mt-4">
+                            <div class="d-flex flex-column mt-4 gap-2">
                                 <label class="info-pill-label mx-1 text-start"> Inserisci la tua e-mail:</label>
                                 <input type="email" id="emailRec" placeholder="esempio@dominio.it" class="info-pill form-control rounded-3" required>  <br>
                             </div>
-                            <button type="submit" id="recuperaPsw" class="btn btn-success m-auto w-100"> Recupera Password</button>
+                            <button type="submit" id="recuperaPsw" class="btn btn-success"> Recupera Password</button>
                         </div>
                         <div class="d-none" id="successMsg">
                             <h3 class="text-success fw-bold mt-3"> Ti abbiamo inviato un'e-mail con il link per reimpostare la password. </h3>
                             <p class="text-muted small">Controlla anche la cartella spam.</p>
-                            <button class="btn btn-outline-dark mt-2" id="backToLogin">
-                                <label class="fw-bold"> Torna al login </label>
-                            </button>
+                            <button class="btn btn-outline-dark raounded-pill mt-2 fw-bold " id="backToLogin">Torna al login</button>
                         </div>
                     </div>
 
-                </div>
-
-                <div class="d-flex flex-column w-100 d-none">
-                    
                 </div>
 
             </div>  
@@ -611,6 +596,8 @@
         // pubblicazione di una recensione, oppure per segnalare un errore in caso di problemi (la troviamo anche nelle altre pagine)
         function mostraNotifica(msg, tipo = 'ok') {
             const wrap = document.getElementById('notificaWrap');
+            if (!wrap) return;
+            
             const t = document.createElement('div');
             t.className = 'ap-notifica' + (tipo === 'error' ? ' error' : '');
             t.textContent = msg;

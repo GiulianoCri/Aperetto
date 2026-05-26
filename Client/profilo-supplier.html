@@ -65,6 +65,8 @@
     // pubblicazione di una recensione, oppure per segnalare un errore in caso di problemi (la troviamo anche nelle altre pagine)
     function mostraNotifica(msg, tipo = 'ok') {
         const wrap = document.getElementById('notificaWrap');
+        if (!wrap) return;
+        
         const t = document.createElement('div');
         t.className = 'ap-notifica' + (tipo === 'error' ? ' error' : '');
         t.textContent = msg;

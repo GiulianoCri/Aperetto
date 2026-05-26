@@ -35,12 +35,12 @@
     </div>
 
     <!-- banner -->
-    <div class="luogo-banner" id="banner">
+    <div class="luogo-banner position-relative overflow-hidden" id="banner">
         <div class="banner-skeleton"></div>
     </div>
 
     <!-- BODY PAGINA -->
-    <div class="luogo-body" id="luogo-body">
+    <div class="luogo-body d-flex flex-column gap-3" id="luogo-body">
         <p class="loading-txt">Caricamento...</p>
     </div>
 
@@ -125,6 +125,8 @@
         // pubblicazione di una recensione, oppure per segnalare un errore in caso di problemi (la troviamo anche nelle altre pagine)
         function mostranotifica(msg, tipo = 'ok') {
             const wrap = document.getElementById('notificaWrap');
+            if (!wrap) return;
+            
             const t = document.createElement('div');
             t.className = 'ap-notifica' + (tipo === 'error' ? ' error' : '');
             t.textContent = msg;
@@ -272,7 +274,7 @@
             const fascia_oraria = document.querySelector('.fascia-btn.selected')?.getAttribute('data-fascia') || null;
 
             // se è presente il livello di fornitura, allora DEVE essere presente anche la fascia oraria e viceversa
-            if ((fornitura && !fascia_oraria) || (!fornitura && fascia_oraria)) {
+            if ((fornitura!=1 && !fascia_oraria) || (!fornitura && fascia_oraria)) {
                 // nel caso in cui uno dei due non dovesse esser selezionato, viene bloccato l'invio della recensione e viene mostrato un alert
                 mostranotifica('Devi selezionare sia il livello di fornitura che la fascia oraria!' , 'error');
                 btnInvia.disabled = false;
@@ -303,9 +305,9 @@
                 document.getElementById('recTesto').value = '';
                 const slider = document.getElementById('fornituraSlider');
                 if(slider) {
-                    slider.value = 1;
+                    slider.value = 0;
                     slider.style.background = 'linear-gradient(to right, #FFC107 0%, #e9ecef 0%)';
-                    document.getElementById('fornituraValore').textContent = '1';
+                    document.getElementById('fornituraValore').textContent = '0';
                 }
                 document.querySelectorAll('.fascia-btn').forEach(b => b.classList.remove('selected'));
 
@@ -523,10 +525,10 @@
 
                     ${luogo.colazione ? `
                     <div class="colazione-sub">
-                        <p class="colazione-sub-title">COLAZIONE</p>
+                        <p class="colazione-sub-title">HAI FATTO COLAZIONE?</p>
                         <div class="colazione-sub-row">
                             <div>
-                                <p class="rec-form-label">Fascia oraria</p>
+                                <p class="rec-form-label">A che ora?</p>
                                 <div class="fascia-grid mt-2">
                                     ${fasceOrarie}
                                 </div>
@@ -535,14 +537,16 @@
                                 <p class="rec-form-label">Quanto era fornito?</p>
                                 <div class="fornitura-header">
                                     <span style="font-size:0.78rem;font-weight:700;color:#888;">Livello fornitura</span>
-                                    <span class="fornitura-valore" id="fornituraValore">1</span>
+                                    <span class="fornitura-valore" id="fornituraValore">0</span>
                                 </div>
                                 <input type="range" class="fornitura-slider" id="fornituraSlider"
-                                    min="1" max="5" step="1" value="1">
+                                    min="0" max="5" step="1" value="0">
                                 <div class="fornitura-labels">
                                     <span>Scarso</span>
                                     <span>Ottimo</span>
                                 </div>
+                                <p class="text-center" style="font-size:0.78rem;font-weight:700;color:#888;">Ti informiamo che 0 è un valore di default, il valore minimo affinchè la recensione risulti
+                                    valida è 1.</p> 
                             </div>
                         </div>
                     </div>` : ''}
@@ -630,7 +634,7 @@
 
                                 ${luogo.colazione ? `
                                     <div class="luogo-card">
-                                        <h2 class="luogo-card-title">Fornitura per fascia oraria</h2>
+                                        <h2 class="luogo-card-title">Livello di fornitura - Colazione</h2>
                                         <canvas id="chartFornitura" height="120"></canvas>
                                     </div>`
                                 : ''}
@@ -693,7 +697,7 @@
                             // e modificando il valore numerico: ogni step rappresenta un incremento del 25%
                             // il "trucco" sta nel calcolare la percentuale di riempimento in base al valore attuale: usiamo 'v-1' in modo da
                             // considerare 0% quando il valore è 1 -> (1-1)/4*100 = 0%
-                            const pct = ((v-1) / 4) * 100;
+                            const pct = (v / 5) * 100;
                             slider.style.background =
                                 `linear-gradient(to right, #FFC107 ${pct}%, #e9ecef ${pct}%)`;
                         });

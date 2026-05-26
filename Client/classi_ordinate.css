@@ -11,7 +11,6 @@
    - Media query responsive.
 */
 
-
 /* 
    1. VARIABILI GLOBALI E TEMA BASE
    
@@ -20,44 +19,11 @@
    - le variabili derivate da Bootstrap;
    - i colori usati in modo consistente nelle varie pagine;
    - i font e i token base per bordi, ombre e raggi.
+*/
 
-   Nota importante:
-   molte variabili mantengono la nomenclatura Bootstrap per compatibilità con gli
-   elementi già presenti nelle pagine HTML.
 /* Colori Bootstrap */
 :root,
 [data-bs-theme=light] {
-  --bs-blue: #0d6efd;
-  --bs-indigo: #6610f2;
-  --bs-purple: #6f42c1;
-  --bs-pink: #d63384;
-  --bs-red: #dc3545;
-  --bs-orange: #fd7e14;
-  --bs-yellow: #ffc107;
-  --bs-green: #198754;
-  --bs-teal: #20c997;
-  --bs-cyan: #0dcaf0;
-  --bs-black: #000;
-  --bs-white: #fff;
-  --bs-gray: #6c757d;
-  --bs-gray-dark: #343a40;
-  --bs-gray-100: #f8f9fa;
-  --bs-gray-200: #e9ecef;
-  --bs-gray-300: #dee2e6;
-  --bs-gray-400: #ced4da;
-  --bs-gray-500: #adb5bd;
-  --bs-gray-600: #6c757d;
-  --bs-gray-700: #495057;
-  --bs-gray-800: #343a40;
-  --bs-gray-900: #212529;
-  --bs-primary: #0d6efd;
-  --bs-secondary: #6c757d;
-  --bs-success: #198754;
-  --bs-info: #0dcaf0;
-  --bs-warning: #ffc107;
-  --bs-danger: #dc3545;
-  --bs-light: #f8f9fa;
-  --bs-dark: #212529;
 
   /* colori generali del sito */
   --bs-primary-rgb: 255, 193, 7;
@@ -68,85 +34,8 @@
   --bs-danger-rgb: 220, 53, 69;
   --bs-light-rgb: 248, 249, 250;
   --bs-dark-rgb: 33, 37, 41;
-
-  --bs-primary-text-emphasis: #052c65;
-  --bs-secondary-text-emphasis: #2b2f32;
-  --bs-success-text-emphasis: #0a3622;
-  --bs-info-text-emphasis: #055160;
-  --bs-warning-text-emphasis: #664d03;
-  --bs-danger-text-emphasis: #58151c;
-  --bs-light-text-emphasis: #495057;
-  --bs-dark-text-emphasis: #495057;
-  --bs-primary-bg-subtle: #cfe2ff;
-  --bs-secondary-bg-subtle: #e2e3e5;
-  --bs-success-bg-subtle: #d1e7dd;
-  --bs-info-bg-subtle: #cff4fc;
-  --bs-warning-bg-subtle: #fff3cd;
-  --bs-danger-bg-subtle: #f8d7da;
-  --bs-light-bg-subtle: #fcfcfd;
-  --bs-dark-bg-subtle: #ced4da;
-  --bs-primary-border-subtle: #9ec5fe;
-  --bs-secondary-border-subtle: #c4c8cb;
-  --bs-success-border-subtle: #a3cfbb;
-  --bs-info-border-subtle: #9eeaf9;
-  --bs-warning-border-subtle: #ffe69c;
-  --bs-danger-border-subtle: #f1aeb5;
-  --bs-light-border-subtle: #e9ecef;
-  --bs-dark-border-subtle: #adb5bd;
-  --bs-white-rgb: 255, 255, 255;
-  --bs-black-rgb: 0, 0, 0;
-  --bs-font-sans-serif: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans", "Liberation Sans", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-  --bs-font-monospace: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-  --bs-gradient: linear-gradient(180deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0));
-  --bs-body-font-family: var(--bs-font-sans-serif);
-  --bs-body-font-size: 1rem;
-  --bs-body-font-weight: 400;
-  --bs-body-line-height: 1.5;
-  --bs-body-color: #212529;
-  --bs-body-color-rgb: 33, 37, 41;
+  
   --bs-body-bg: #FFC107;
-  --bs-body-bg-rgb: 255, 193, 7;
-  --bs-emphasis-color: #000;
-  --bs-emphasis-color-rgb: 0, 0, 0;
-  --bs-secondary-color: rgba(33, 37, 41, 0.75);
-  --bs-secondary-color-rgb: 33, 37, 41;
-  --bs-secondary-bg: #e9ecef;
-  --bs-secondary-bg-rgb: 233, 236, 239;
-  --bs-tertiary-color: rgba(33, 37, 41, 0.5);
-  --bs-tertiary-color-rgb: 33, 37, 41;
-  --bs-tertiary-bg: #f8f9fa;
-  --bs-tertiary-bg-rgb: 248, 249, 250;
-  --bs-heading-color: inherit;
-  --bs-link-color: #0d6efd;
-  --bs-link-color-rgb: 13, 110, 253;
-  --bs-link-decoration: underline;
-  --bs-link-hover-color: #0a58ca;
-  --bs-link-hover-color-rgb: 10, 88, 202;
-  --bs-code-color: #d63384;
-  --bs-highlight-color: #212529;
-  --bs-highlight-bg: #fff3cd;
-  --bs-border-width: 1px;
-  --bs-border-style: solid;
-  --bs-border-color: #dee2e6;
-  --bs-border-color-translucent: rgba(0, 0, 0, 0.175);
-  --bs-border-radius: 0.375rem;
-  --bs-border-radius-sm: 0.25rem;
-  --bs-border-radius-lg: 0.5rem;
-  --bs-border-radius-xl: 1rem;
-  --bs-border-radius-xxl: 2rem;
-  --bs-border-radius-2xl: var(--bs-border-radius-xxl);
-  --bs-border-radius-pill: 50rem;
-  --bs-box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
-  --bs-box-shadow-sm: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
-  --bs-box-shadow-lg: 0 1rem 3rem rgba(0, 0, 0, 0.175);
-  --bs-box-shadow-inset: inset 0 1px 2px rgba(0, 0, 0, 0.075);
-  --bs-focus-ring-width: 0.25rem;
-  --bs-focus-ring-opacity: 0.25;
-  --bs-focus-ring-color: rgba(13, 110, 253, 0.25);
-  --bs-form-valid-color: #198754;
-  --bs-form-valid-border-color: #198754;
-  --bs-form-invalid-color: #dc3545;
-  --bs-form-invalid-border-color: #dc3545;
 }
 
 
@@ -216,8 +105,8 @@ body{
 /* 
    Override di componenti Bootstrap
    Serve a uniformare il colore dei campi input con il tema del progetto.
- */
- /* Stili per i campi di input, con un background chiaro e coerente con il tema del sito */
+*/
+/* Stili per i campi di input, con un background chiaro e coerente con il tema del sito */
 .form-control {
   background-color: var(--bs-light);
 }
@@ -291,11 +180,10 @@ body{
     color: black;
 }
 
-
 /* 
-   Barra filtri fissa sotto la navbar
-   Include contenitore, gruppi icona + select e pulsante reset.
-    */
+    Barra filtri fissa sotto la navbar
+    Include contenitore, gruppi icona + select e pulsante reset.
+*/
 .filtri-container {
   position: fixed;
   top: 72px;
@@ -362,7 +250,7 @@ body{
   font-family: inherit;
   font-size: 0.875rem;
   font-weight: 600;
-  color: #1a1a1a;
+  color: var(--bs-dark);
   cursor: pointer;
   /* outline: none rimuove il bordo di focus predefinito del select, ma è importante assicurarsi che ci siano altri indicatori visivi (come il cambio di background o l'ombra) per indicare quando il select è attivo o ha il focus, per mantenere l'accessibilità */
   outline: none;
@@ -371,7 +259,7 @@ body{
 }
 .filtro-select option {
   background: #fff;
-  color: #1a1a1a;
+  color: var(--bs-dark);
 }
 
 /* Bottone Reset */
@@ -384,7 +272,7 @@ body{
   border: 1px solid rgba(0, 0, 0, 0.15);
   border-radius: 50px;
   background: rgba(0, 0, 0, 0.06);
-  color: #1a1a1a;
+  color: var(--bs-dark);
   font-family: inherit;
   font-size: 0.82rem;
   font-weight: 700;
@@ -404,9 +292,7 @@ body{
     gap: 10px;
 }
 
-/* 
-   Struttura visuale delle card che rappresentano i locali nella lista.
- */
+/* Struttura visuale delle card che rappresentano i locali nella lista. */
 /* Stili per le card dei risultati di ricerca */
 .risultato-card {
     background: #fff;
@@ -480,7 +366,7 @@ body{
     font-size: 1rem;
     font-weight: 700;
     margin: 0;
-    color: #1a1a1a;
+    color: var(--bs-dark);
     line-height: 1.3;
 }
 
@@ -504,8 +390,1014 @@ body{
     align-items: center;
     gap: 4px;
 }
-/* Aggiunge un'icona di posizione prima dell'indirizzo, utilizzando il contenuto '📍' per rappresentare visivamente la localizzazione del locale, e impostando una dimensione del font più piccola per adattarsi al testo dell'indirizzo */
+/*  Aggiunge un'icona di posizione prima dell'indirizzo, utilizzando il contenuto '📍' per rappresentare visivamente la 
+    localizzazione del locale, e impostando una dimensione del font più piccola per adattarsi al testo dell'indirizzo 
+*/
 .risultato-card .card-info .card-address::before {
     content: '📍';
     font-size: 0.75rem;
 }
+
+/* stile base per i badge aperto / chiuso per i locali */
+.badge {
+    /* si comporta come un blocco, ma rimane sempre inline */
+    display: inline-block;
+    flex: 0 0 auto;
+    width: 16.66666667%;
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 2px 10px;
+    border-radius: 20px;
+}
+/* in entrambi i casi, abbiamo il testo più scuro e lo sfondo del badge con una gradazione più chiara in modo da far 
+    risaltare la scritta */
+.badge.aperto {
+    background: #d4edda;
+    color: #155724;
+}
+.badge.chiuso {
+    background: #f8d7da;
+    color: #721c24;
+}
+
+/* ---------------------- LUOGO.HTML ---------------------- */
+/*  banner del luogo: stili per impostare le dimensioni e migliorare la leggibilità e visibilità della parte superiore
+    della pagina dedicata ad ogni locale
+*/
+.luogo-banner {
+    height: 420px;
+}
+.luogo-banner img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+/* gradiente scuro in basso per leggibilità del testo */
+.luogo-banner::after {
+    /* crea un elemento che va a coprire tutta l'area del contenitore */
+    content: '';
+    position: absolute;
+    /* imposta contemporaneamente top, right, bottom e left
+        in questo caso fa sì che l'elemento si estenda fino ai bordi del suo contenitore */
+    inset: 0;
+    /* va ad applicare un gradiente verticale trasparente nella parte superiore: parte da 0% fino al 35%  diventando 
+        progressivamente più scuro fino a raggiungere il 100% nella parte bassa) */
+    background: linear-gradient(to bottom,
+        rgba(0,0,0,0) 35%,
+        rgba(0,0,0,0.70) 100%);
+    pointer-events: none;
+}
+
+/* placeholder del banner durante il caricamento 
+    tutta l'area disponibile viene occupata
+*/
+.banner-skeleton {
+    width: 100%;
+    height: 100%;
+    /* durante il caricamento viene mostrato un gradiente con colori molto chiari che tende a scurirsi leggermente */
+    background: linear-gradient(90deg, #f0f0f0 25%, #e8e8e8 50%, #f0f0f0 75%);
+    /* il gradiente è più grande dello schermo per poterlo "animare" */
+    background-size: 200% 100%;
+    /* l'animazione (shimmer) è un loop infinito che dura 1.4 secondi */
+    animation: shimmer 1.4s infinite;
+}
+/* determina l'andamento dello shimmer (da destra verso sinistra) */
+@keyframes shimmer {
+    0%   { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+/* contiene i badge ed il nome del locale */
+.banner-overlay {
+    position: absolute;
+    /* viene allineato completamente in basso ed esteso completamente da dx verso sx */
+    bottom: 0; left: 0; right: 0;
+    padding: 28px 32px;
+    z-index: 2;
+}
+/* stile per i badge del serivizio offerto */
+.banner-badge {
+    display: inline-block;
+    background: #FFC107;
+    color: var(--bs-dark);
+    font-size: 0.72rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    padding: 4px 14px;
+    border-radius: 20px;
+    margin-bottom: 10px;
+}
+/* stile per il nome del locale: viene scelto un font grande, rotondo e chiaro per dare visibilità
+    e rilevanza al nome */
+.banner-nome {
+    font-family: 'Fredoka One', cursive;
+    font-size: 2.8rem;
+    color: var(--bs-white);
+    line-height: 1.1;
+    /* viene data un'ulteriore ombra al testo, oltre al gradiente, per farlo risaltare maggiormente */
+    text-shadow: 0 2px 16px rgba(0,0,0,0.45);
+    margin: 0;
+}
+
+/* pulsante per tornare indietro */
+.btn-back-banner {
+    /* posizionamento del bottone rispetto al div padre */
+    position: absolute;
+    top: 16px;
+    left: 20px;
+    /* z-index fa in modo che l'elemento, nel caso in cui si dovessero avere elementi sovrapposti, stia sopra */
+    z-index: 3;
+    /* applica uno sfondo bianco molto trasparente, oltre a dare un'effetto di sfocatura a ciò che c'è dietro il
+       bottone, '-webkit-' migliora la compatibilità */ 
+    background: rgba(255,255,255,0.18);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1.5px solid rgba(255,255,255,0.38);
+    /* viene impostato un font nero, grassetto e leggermente piccolo */
+    color: var(--bs-black);
+    font-family: 'Nunito', sans-serif;
+    font-weight: 700;
+    font-size: 0.88rem;
+    padding: 8px 18px;
+    border-radius: 50px;
+    cursor: pointer;
+    /* renderizza il cambio di sfondo al passaggio del mouse */
+    transition: background 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+/* al passaggio del mouse, lo sfondo diventa leggerlmente più visbile in modo da avere un feedback visivo */
+.btn-back-banner:hover { background: rgba(255,255,255,0.32); }
+
+/* BODY PAGINA */
+.luogo-body {
+    margin: 0 auto;
+    padding: 28px 20px 80px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.loading-txt {
+    text-align: center;
+    color: #fff;
+    font-weight: 700;
+    padding: 40px 0;
+}
+
+/* CARD GENERICA */
+.luogo-card {
+    background: #fff;
+    border-radius: 20px;
+    padding: 26px 28px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+}
+
+.luogo-card-title {
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.2rem;
+    color: var(--bs-dark);
+    margin: 0 0 18px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* Lineetta decorativa dopo il titolo */
+.luogo-card-title::after {
+    content: '';
+    flex: 1;
+    height: 2px;
+    background: #f9e195;
+    border-radius: 2px;
+}
+
+.desc-text {
+    color: #555;
+    font-size: 0.97rem;
+    line-height: 1.75;
+    margin-bottom: 20px;
+}
+
+/* ── GRIGLIA INFO ── */
+.info-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+}
+
+.info-pill {
+    background: #f6f5f5df;
+    border-radius: 14px;
+    padding: 12px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.info-pill-label {
+    font-size: 0.75rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.09em;
+
+}
+.luogo-color {
+    color: #bbb;
+}
+.login-color {
+    color: var(--bs-dark);
+}
+
+.info-icon .text {
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+}
+
+.info-icons {
+  width:16px;
+  height:16px;
+}
+
+
+
+.info-pill-value {
+    font-size: 0.94rem;
+    font-weight: 700;
+    color: var(--bs-dark);
+}
+
+.info-pill-value a {
+    color: var(--bs-dark);
+    text-decoration: none;
+    border-bottom: 2px solid #FFC107;
+    transition: color 0.15s;
+}
+.info-pill-value a:hover { color: #a07000; }
+
+/* VALUTAZIONE STELLE */
+.media-voto {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 22px;
+}
+
+.voto-numero {
+    font-family: 'Fredoka One', cursive;
+    font-size: 3.2rem;
+    color: var(--bs-dark);
+    line-height: 1;
+}
+
+.stelle-show {
+    display: flex;
+    gap: 3px;
+    margin-bottom: 4px;
+}
+
+.stella-svg {
+    width: 18px;
+    height: 18px;
+}
+
+.voto-count {
+    font-size: 0.82rem;
+    color: #aaa;
+    font-weight: 600;
+}
+
+/* STELLE INTERATTIVE */
+.stelle-rating {
+    display: flex;
+    gap: 4px;
+    margin: 4px 0 16px;
+}
+
+.stella-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 2px;
+    transition: transform 0.15s;
+    line-height: 0;
+}
+.stella-btn:hover { transform: scale(1.18); }
+
+.stella-btn .stella-svg {
+    width: 34px;
+    height: 34px;
+}
+
+/* path di default grigio */
+.stella-btn .stella-svg path { fill: #e0e0e0; transition: fill 0.12s; }
+/* giallo al hover o selezionata */
+.stella-btn.hov .stella-svg path,
+.stella-btn.sel .stella-svg path { fill: #FFC107; }
+
+.rec-form-label {
+    font-size: 0.8rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #aaa;
+    margin: 0 0 2px;
+}
+
+/* FORM RECENSIONE */
+.rec-form-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 28px;
+}
+
+.rec-textarea {
+    width: 100%;
+    min-height: 96px;
+    padding: 14px 16px;
+    border-radius: 14px;
+    border: 1.5px solid #e9ecef;
+    font-family: 'Nunito', sans-serif;
+    font-size: 0.95rem;
+    color: var(--bs-dark);
+    resize: vertical;
+    background: #f8f9fa;
+    transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+}
+.rec-textarea:focus {
+    outline: none;
+    border-color: #FFC107;
+    box-shadow: 0 0 0 3px rgba(255,193,7,0.18);
+    background: #fff;
+}
+.rec-textarea::placeholder { color: #ccc; }
+
+/* Sottosezione Colazione */
+.colazione-sub {
+    border: 1.5px solid #FFE082;
+    border-radius: 14px;
+    background: #FFFDE7;
+    padding: 14px 16px;
+    width: 100%;
+}
+
+.colazione-sub-title {
+    font-weight: 800;
+    font-size: 0.95rem;
+    color: #F59E0B;
+    letter-spacing: 0.3px;
+}
+
+.colazione-sub-row {
+    display: flex;
+    flex-direction: row;
+    gap: 24px;
+    align-items: flex-start;
+    flex-wrap: wrap;   /* su mobile va a capo automaticamente */
+}
+
+.colazione-sub-row > div {
+    flex: 1 1 180px;   /* ogni colonna si allarga ma ha minimo 180px */
+}
+
+.fascia-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px;
+}
+
+.fascia-btn {
+    padding: 7px 14px;
+    border: 1.5px solid #e9ecef;
+    border-radius: 50px;
+    background: #f8f9fa;
+    font-family: 'Nunito', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: #888;
+    cursor: pointer;
+    transition: all 0.18s;
+}
+
+.fascia-btn:hover {
+    border-color: #FFC107;
+    color: var(--bs-dark);
+    background: #FFFBEF;
+}
+
+.fascia-btn.selected {
+    background: var(--bs-dark);
+    color: #FFC107;
+    border-color: var(--bs-dark);
+}
+
+/* SLIDER FORNITURA */
+.voto-fornitura-row {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 24px;
+    align-items: start;
+}
+
+@media (max-width: 576px) {
+    .voto-fornitura-row {
+        grid-template-columns: 1fr;
+    }
+}
+
+.fornitura-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 4px;
+}
+
+.fornitura-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.fornitura-valore {
+    font-family: 'Fredoka One', cursive;
+    font-size: 1rem;
+    color: var(--bs-dark);
+    background: #FFF3CD;
+    padding: 2px 12px;
+    border-radius: 20px;
+    min-width: 32px;
+    text-align: center;
+}
+
+.fornitura-slider {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 6px;
+    border-radius: 6px;
+    background: linear-gradient(to right, #FFC107 0%, #FFC107 0%, #e9ecef 0%);
+    outline: none;
+    cursor: pointer;
+    transition: background 0.15s;
+}
+
+.fornitura-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: var(--bs-dark);
+    cursor: pointer;
+    border: 3px solid #FFC107;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.18);
+    transition: transform 0.15s;
+}
+
+.fornitura-slider::-webkit-slider-thumb:hover {
+    transform: scale(1.15);
+}
+
+.fornitura-slider::-moz-range-thumb {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: var(--bs-dark);
+    cursor: pointer;
+    border: 3px solid #FFC107;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.18);
+}
+
+.fornitura-labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.68rem;
+    font-weight: 800;
+    color: #bbb;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 0 2px;
+}
+
+.btn-invia-rec {
+    align-self: flex-end;
+    background: var(--bs-dark);
+    color: #FFC107;
+    font-family: 'Fredoka One', cursive;
+    font-size: 1rem;
+    letter-spacing: 0.5px;
+    border: none;
+    padding: 11px 28px;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: transform 0.15s, opacity 0.15s;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.14);
+}
+.btn-invia-rec:hover:not(:disabled) { transform: translateY(-2px); opacity: 0.88; }
+.btn-invia-rec:disabled { opacity: 0.45; cursor: not-allowed; }
+
+
+
+/* PROMPT LOGIN */
+.login-prompt {
+    background: #FFF3CD;
+    border-radius: 14px;
+    padding: 14px 18px;
+    font-size: 0.92rem;
+    font-weight: 600;
+    color: #7a5100;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 24px;
+}
+.login-prompt a {
+    color: var(--bs-dark);
+    font-weight: 800;
+    border-bottom: 2px solid #FFC107;
+    text-decoration: none;
+}
+
+/* LISTA RECENSIONI */
+.recensioni-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.rec-item {
+    background: #f8f9fa;
+    border-radius: 16px;
+    padding: 16px 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    animation: fadeSlideIn 0.35s ease both;
+}
+@keyframes fadeSlideIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+.rec-item-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.rec-utente {
+    font-weight: 800;
+    font-size: 0.93rem;
+    color: var(--bs-dark);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.rec-avatar {
+    border-radius: 50%;
+    background: #FFC107;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Fredoka One', cursive;
+    color: var(--bs-dark);
+    flex-shrink: 0;
+}
+.avatar-size{
+    width: 32px;
+    height: 32px;
+    font-size: 0.88rem;
+}
+.avatar-profilo {
+    width: 45px;
+    height: 45px;
+    font-size: 1.3rem;
+}
+
+.rec-data-txt {
+    font-size: 0.75rem;
+    color: #bbb;
+    font-weight: 600;
+}
+
+.rec-testo-item {
+    font-size: 0.92rem;
+    color: #444;
+    line-height: 1.65;
+    margin: 0;
+}
+
+.rec-empty {
+    text-align: center;
+    padding: 40px 20px;
+    color: #bbb;
+    font-size: 0.95rem;
+    font-weight: 600;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+.rec-empty span { font-size: 2.4rem; }
+
+/* notifica */
+.notifica-wrap {
+    position: fixed;
+    bottom: 28px;
+    right: 22px;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    pointer-events: none;
+}
+
+.ap-notifica {
+    background: var(--bs-dark);
+    color: #FFC107;
+    font-family: 'Fredoka One', cursive;
+    font-size: 0.97rem;
+    padding: 13px 22px;
+    border-radius: 14px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.18);
+    pointer-events: auto;
+    animation: notificaIn 0.3s ease, notificaOut 0.3s ease 2.7s forwards;
+}
+.ap-notifica.error { color: #ff5252; }
+
+@keyframes notificaIn  { from { opacity:0; transform:translateY(14px); } to { opacity:1; transform:translateY(0); } }
+@keyframes notificaOut { to   { opacity:0; transform:translateY(14px); } }
+
+/* ═══════════════════════════════════════════
+   RESPONSIVE luogo
+   ═══════════════════════════════════════════ */
+
+/* ── TABLET (≤900px) ── */
+@media (max-width: 900px) {
+ 
+    /* Pagina luogo: colonne → stack verticale */
+    .profilo-grid {
+        grid-template-columns: 1fr;
+        gap: 14px;
+    }
+ 
+    /* La sidebar del profilo luogo smette di essere sticky */
+    .profilo-sidebar {
+        position: static !important;
+    }
+ 
+    /* Banner leggermente più basso */
+    .luogo-banner {
+        height: 320px;
+    }
+ 
+    /* Nome nel banner più piccolo */
+    .banner-nome {
+        font-size: 2.2rem;
+    }
+ 
+    /* Griglia info torna a 1 colonna */
+    .info-grid {
+        grid-template-columns: 1fr;
+    }
+ 
+    /* Form recensione: voto + fornitura in colonna */
+    .voto-fornitura-row {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+ 
+    /* Chart canvas più basso */
+    #chartFornitura {
+        max-height: 180px;
+    }
+}
+/*per luogo-card, info-pill e altri elementi con padding fisso, considerare di ridurre il padding su tablet se necessario per evitare spazi eccessivi*/
+/* ── MOBILE (≤600px) ── */
+@media (max-width: 600px) {
+ 
+    /* Fix: profilo-page annidato in luogo-body non deve aggiungere margin-top né padding laterale */
+    .luogo-body .profilo-page {
+        margin-top: 0;
+        padding-top: 0;
+        padding-left: 0;
+        padding-right: 0;
+    }
+ 
+    /* Fix: profilo-grid e luogo-card non sforano a destra */
+    .luogo-body .profilo-grid {
+        width: 100%;
+        box-sizing: border-box;
+    }
+ 
+    .luogo-card {
+        width: 100%;
+        box-sizing: border-box;
+    }
+ 
+    /* Navbar: riduce padding e logo */
+    .navbar-custom {
+        height: 60px;
+        padding: 0 12px;
+        gap: 8px;
+    }
+ 
+    /* Banner compatto */
+    .luogo-banner {
+        margin-top: 60px;
+        height: 240px;
+    }
+ 
+    .banner-nome {
+        font-size: 1.6rem;
+        line-height: 1.15;
+    }
+ 
+    .banner-overlay {
+        padding: 18px 16px;
+    }
+ 
+    .banner-badge {
+        font-size: 0.65rem;
+        padding: 3px 10px;
+        margin-bottom: 6px;
+    }
+ 
+    /* Body pagina: meno padding laterale */
+    .luogo-body {
+        padding: 16px 12px 80px;
+        gap: 12px;
+    }
+ 
+    /* Card generica: padding ridotto */
+    .luogo-card {
+        border-radius: 16px;
+        padding: 18px 16px;
+    }
+ 
+    /* Titolo card più piccolo */
+    .luogo-card-title {
+        font-size: 1.05rem;
+        margin-bottom: 14px;
+    }
+ 
+    /* Media voto: numero più compatto */
+    .voto-numero {
+        font-size: 2.6rem;
+    }
+ 
+    /* Stelle interattive: un po' più piccole */
+    .stella-btn .stella-svg {
+        width: 28px;
+        height: 28px;
+    }
+ 
+    /* Fascia oraria: bottoni più stretti */
+    .fascia-btn {
+        font-size: 0.72rem;
+        padding: 6px 10px;
+    }
+ 
+    /* Sottosezione colazione */
+    .colazione-sub {
+        padding: 12px 12px;
+    }
+ 
+    /* Rec item */
+    .rec-item {
+        padding: 14px 14px;
+    }
+ 
+    /* Bottone invia recensione: full width su mobile */
+    .btn-invia-rec {
+        width: 100%;
+        text-align: center;
+        padding: 13px 20px;
+    }
+ 
+    /* Wrap bottone full-width */
+    .d-flex.justify-content-end {
+        justify-content: stretch !important;
+    }
+ 
+    /* Textarea leggermente più alta per il pollice */
+    .rec-textarea {
+        min-height: 110px;
+        font-size: 0.9rem;
+    }
+ 
+    /* Profilo sidebar: row invece di colonna */
+    .profilo-sidebar {
+        flex-direction: row;
+        flex-wrap: wrap;
+        align-items: flex-start;
+        gap: 12px;
+        padding: 16px;
+    }
+ 
+    .profilo-nome {
+        text-align: left;
+        font-size: 1.05rem;
+    }
+ 
+    /* Pill info */
+    .info-pill {
+        padding: 10px 12px;
+    }
+ 
+    .info-pill-value {
+        font-size: 0.88rem;
+    }
+ 
+    /* stat box: griglia 2 col */
+    .stats-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+ 
+    /* Chart canvas: altezza fissa ridotta */
+    #chartFornitura {
+        max-height: 150px;
+    }
+ 
+    /* badge aperto/chiuso */
+    .badge.aperto,
+    .badge.chiuso {
+        width: auto;
+        font-size: 0.68rem;
+    }
+ 
+    /* Lista risultati: 1 colonna piena */
+    .lista {
+        padding: 8px;
+        gap: 10px;
+    }
+ 
+    /* Filtri: due select affiancati + reset full width */
+    .filtri-container {
+        top: 60px;
+        padding: 8px 10px;
+        gap: 7px;
+    }
+ 
+    .filtri-container .form-select {
+        flex: 1 1 calc(50% - 4px);
+        min-width: 0;
+        font-size: 0.8rem;
+        height: 36px;
+    }
+ 
+    #resetFiltri {
+        flex: 1 1 100%;
+        height: 36px;
+        font-size: 0.8rem;
+    }
+ 
+    /* App container: si adatta all'altezza con navbar+filtri più corti */
+    .app-container {
+        padding: 10px;
+        gap: 10px;
+        flex-direction: column;
+    }
+}
+ 
+/* ── SMALL (≤400px) ── */
+@media (max-width: 400px) {
+ 
+    .banner-nome {
+        font-size: 1.3rem;
+    }
+ 
+    .luogo-card {
+        padding: 14px 12px;
+    }
+ 
+    /* Fasce orarie: wrap stretto */
+    .fascia-grid {
+        gap: 5px;
+    }
+ 
+    .fascia-btn {
+        font-size: 0.68rem;
+        padding: 5px 8px;
+    }
+ 
+    /* Colazione sub: colonna singola */
+    .colazione-sub-row {
+        flex-direction: column;
+        gap: 14px;
+    }
+ 
+    /* Stat num più piccolo */
+    .stat-num {
+        font-size: 1.6rem;
+    }
+ 
+    .voto-numero {
+        font-size: 2.2rem;
+    }
+}
+/* ---------------------- FINE LUOGO.HTML ---------------------- */
+
+/* ---------------------- LOGIN.HTML ---------------------- */
+/* stili per la pagina di login */
+.text-bg-info {
+  background-color: RGBA(var(--bs-body-bg), var(--bs-bg-opacity, 1)) !important;
+}
+
+/* pulsante per tornare indietro */
+.btn-back-banner .login {
+  top: 10px;
+  left: 12px;
+  font-size: 0.78rem;
+}
+/* stile per il pulsante per mostrare / nascondere la password nei campi password e conferma */
+.psw-btn{
+  background: none;
+  right: 5px; 
+  top: 50%; 
+  transform: translateY(-50%); /* viene centrato verticalmente rispetto al campo password */
+  cursor: pointer;
+}
+/* ---------------------- FINE LOGIN.HTML ---------------------- */
+
+/* ---------------------- LOGIN-SUPPLIER.HTML ---------------------- */
+.form-scroll::-webkit-scrollbar {
+    display: none;
+}
+
+.form-scroll {
+    -ms-overflow-style: none;  /* IE */
+    scrollbar-width: none;     /* Firefox */
+}
+
+/* Permette di ancorare gli elementi al blocco */
+.select-wrapper {
+  position: relative;
+  display: block;
+}
+
+/* Nasconde la freccia nativa del browser */
+.form-select-custom {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+
+  display: block;
+  width: 100%;
+  padding: 0.75rem 3rem 0.75rem 1rem; /* spazio a destra per il chevron */
+  cursor: pointer;
+
+  font-size: var(--text-base, 1rem);
+  font-family: inherit;
+  color: var(--color-text, #28251d);
+  line-height: 1.5;
+
+  background-color: var(--color-surface, #f9f8f5);
+  border: 1px solid oklch(from var(--color-text, #28251d) l c h / 0.15);
+  outline: none;
+
+  transition: border-color 180ms ease, box-shadow 180ms ease;
+}
+
+/* Stato focus accessibile */
+.form-select-custom:focus-visible {
+  border-color: var(--color-primary, #01696f);
+  box-shadow: 0 0 0 3px oklch(from var(--color-primary, #01696f) l c h / 0.18);
+}
+
+/* Stato hover */
+.form-select-custom:hover {
+  border-color: oklch(from var(--color-text, #28251d) l c h / 0.3);
+}
+
+/* Opzione placeholder (vuota) */
+.form-select-custom option[value=""] {
+  color: var(--color-text-muted, #7a7974);
+}
+
+/* Chevron SVG sovrapposto */
+.select-chevron {
+  position: absolute;
+  right: 0.875rem;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 1.125rem;
+  height: 1.125rem;
+  color: var(--color-text-muted, #7a7974);
+  pointer-events: none; /* non intercetta i click */
+  transition: transform 180ms ease, color 180ms ease;
+}
+
+/* Ruota il chevron quando il select è aperto (focus) */
+.form-select-custom:focus ~ .select-chevron {
+  transform: translateY(-50%) rotate(180deg);
+  color: var(--color-primary, #01696f);
+}
+/* ---------------------- FINE LOGIN-SUPPLIER.HTML ---------------------- */

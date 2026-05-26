@@ -1,12 +1,13 @@
 COSE FATTE:
-    revisione stile login.html + generale
-
-    relative sezioni di index.js
+    revisione generale, stile e pagine login consumer / supplier
 
 
 TODO:
+    - luogo.html    -> sostituire svg con stelle_vuote/piene
+
+    - login-supplier.html   -> finire di commentare codice
     - profilo-supplier / modifica info  -> aggiornaPreviewCover non viene utilizzata
-    - unificare stile + ordinare 'classi.css'
+    - revisione generale delle classi + riordinare per pagine (ordine logico di presentazione)
     - commentare
 
 PAGINE REVISIONATE:
