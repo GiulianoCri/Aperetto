@@ -1,11 +1,10 @@
 COSE FATTE:
-    Continuata revisione,sistemato definitivamente index.html e luogo.html
-    aggiunta sezione finale css,in cui sono presenti le classi condivise nei vari file
+    riordinate per pagine (ordine logico di presentazione)
+    e continuata revisione codice
 
 
 TODO:
-    - luogo.html    -> sostituire svg con stelle_vuote/piene
-
+    -fixare i bug inviati per messaggio
     - login-supplier.html   -> finire di commentare codice
     - revisione generale delle classi + riordinare per pagine (ordine logico di presentazione)
 
@@ -13,7 +12,7 @@ PAGINE REVISIONATE:
     - index.html (completato)
     - luogo.html (completato)
     - login.html (completato)
-    - profilo.html
+    - profilo.html(completato)
     - reset-password.html
     - login-supplier.html (completato)
     - reset-password-supplier.html
