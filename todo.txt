@@ -1,5 +1,6 @@
 COSE FATTE:
-    revisione generale, stile e pagine login consumer / supplier
+    Continuata revisione,sistemato definitivamente index.html e luogo.html
+    aggiunta sezione finale css,in cui sono presenti le classi condivise nei vari file
 
 
 TODO:
@@ -16,6 +17,6 @@ PAGINE REVISIONATE:
     - reset-password-supplier.html
     - profilo.html
     - profilo-supplier.html
-    - luogo.html
-    - index.html
+    - luogo.html(completato)
+    - index.html(completato)
     - login-supplier.html 

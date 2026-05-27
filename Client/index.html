@@ -496,6 +496,7 @@
         const altezzaTotale = navbar.offsetHeight + filtri.offsetHeight;
         appCont.style.marginTop = altezzaTotale + 'px';
         appCont.style.height    = `calc(100vh - ${altezzaTotale}px)`;
+        setTimeout(() => map.invalidateSize(), 50); // invalida la mappa per farla ridisegnare correttamente dopo il cambio di dimensione
     }
 
     
