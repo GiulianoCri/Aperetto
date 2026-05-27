@@ -91,37 +91,8 @@ body{
  */
 
 /* INDEX.HTML */ 
-/* Stili per la navbar, con un design moderno e pulito, e un logo ben visibile */
-.navbar-custom{
-    height: 72px;
-    display: flex;
-    align-items: center;
-    background-color: var(--bs-body-bg);
-    box-shadow: 0 2px 16px rgba(0,0,0,0.06);
-    gap: 12px;
-    padding: 0 20px;
-    border-bottom: 2px solid rgba(0, 0, 0, 0.12);
-}
-/* 
-   Override di componenti Bootstrap
-   Serve a uniformare il colore dei campi input con il tema del progetto.
-*/
-/* Stili per i campi di input, con un background chiaro e coerente con il tema del sito */
-.form-control {
-  background-color: var(--bs-light);
-}
-/*focus è lo stato attivo del campo input, quando l'utente ci clicca sopra o ci naviga con la tastiera*/
-.form-control:focus {
-  background-color: var(--bs-light);
-}
-/* Stili per il logo all'interno della navbar*/
-.logo {
-    height: 100px;
-    width: auto;
-    margin-bottom: 0.5rem;
-    /* object-fit: contain mantiene le proporzioni dell'immagine senza distorcerla, adattandola al contenitore */
-    object-fit: contain;
-}
+
+
 
 /* Stili per bottone della geolocalizzazione */
 .zoom-hover {
@@ -132,53 +103,7 @@ body{
     transform: scale(1.2);
 }
 
-/* Stili per il pulsante di login/profilo/logout*/
-.loginbtn {
-    height: 50px;
-    width: 50px;
-    background-image: url('/Foto/profilo_img.png');
-    /* background-size: cover fa sì che l'immagine riempia completamente il contenitore del pulsante, mantenendo le proporzioni e ritagliando se necessario */
-    background-size: cover;
-    /* background-position: center centra l'immagine all'interno del pulsante, assicurando che la parte più importante dell'immagine sia visibile anche se viene ritagliata */
-    background-position: center;
-    /* background-repeat: no-repeat impedisce la ripetizione dell'immagine */
-    background-repeat: no-repeat;
-    cursor: pointer;
-}
 
-/* Stili per il menu a tendina del profilo*/
-.dropdown {
-    position: absolute;
-    top: 120%;
-    right: 0;
-    background-color: RGBA(var(--bs-white-rgb), var(--bs-bg-opacity, 1));
-    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-    min-width: 150px;
-
-    /* Animazione */
-    /* Di default, il dropdown è nascosto e posizionato leggermente più in alto per l'effetto di discesa */
-    opacity: 0;
-    /* translateY(-10px) sposta il dropdown 10px verso l'alto, creando un effetto di discesa quando viene attivato */
-    transform: translateY(-10px);
-    /* pointer-events: none disabilita l'interazione con il dropdown quando è nascosto, evitando clic accidentali */
-    pointer-events: none;
-    /*  transition definisce una transizione fluida per tutte le proprietà, con una durata di 0.3 secondi e un effetto di easing */
-    transition: all 0.3s ease;
-}
-
-/* Quando è attivo */
-.dropdown.show {
-    opacity: 1;
-    transform: translateY(0);
-    pointer-events: auto;
-}
-
-/* Link */
-.dropdown a {
-    padding: 10px;
-    text-decoration: none;
-    color: black;
-}
 
 /* 
     Barra filtri fissa sotto la navbar
@@ -308,6 +233,22 @@ body{
     min-height: 300px;
 }
 
+/* Badge tipologia */
+.risultato-card .card-badge {
+    top: 10px;
+    left: 10px;
+    background: #FFC107;
+    color: #1a1a1a;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding: 3px 10px;
+    border-radius: 20px;
+    z-index: 2;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+}
+
 /* Effetti di hover e active per le card */
 .risultato-card:hover {
     transform: translateY(-4px);
@@ -420,7 +361,91 @@ body{
     color: #721c24;
 }
 
-/* ---------------------- LUOGO.HTML ---------------------- */
+/* TOGGLE VISTA MOBILE */
+.toggle-vista {
+    display: none;
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1100;
+    background: #1a1a1a;
+    border-radius: 50px;
+    padding: 5px;
+    gap: 4px;
+    box-shadow: 0 6px 24px rgba(0,0,0,0.22);
+}
+
+.toggle-vista-btn {
+    padding: 10px 24px;
+    border: none;
+    border-radius: 50px;
+    font-family: inherit;
+    font-size: 0.88rem;
+    font-weight: 700;
+    cursor: pointer;
+    background: transparent;
+    color: rgba(255,255,255,0.55);
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    transition: background 0.2s, color 0.2s;
+}
+
+.toggle-vista-btn.active {
+    background: #FFC107;
+    color: #1a1a1a;
+}
+
+@media (max-width: 600px) {
+  /* toggle bottoni */
+  .toggle-vista { display: flex; }
+}
+/* Badge aperto/chiuso: stili per i badge che indicano se un locale è attualmente aperto o chiuso, con colori distintivi per migliorare la visibilità e la comprensione rapida dello stato del locale */
+.badge-aperto {
+    display: inline-block;
+    flex: 0 0 auto;
+    width: 16.66666667%;
+    background: #d4edda;
+    color: #155724;
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 2px 10px;
+    border-radius: 20px;
+}
+
+.badge-chiuso {
+    display: inline-block;
+    flex: 0 0 auto;
+    width: 16.66666667%;
+    background: #f8d7da;
+    color: #721c24;
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 2px 10px;
+    border-radius: 20px;
+}
+
+@media (max-width: 600px) {
+  /* badge aperto/chiuso */
+  .badge-aperto,
+  .badge-chiuso {
+    width: 25%;
+    font-size: 0.68rem;
+    padding: 2px 1px;
+  }
+}
+
+/*FINE INDEX.HTML  */
+
+
+
+/* LUOGO.HTML */
+
+
+
+
+
 /*  banner del luogo: stili per impostare le dimensioni e migliorare la leggibilità e visibilità della parte superiore
     della pagina dedicata ad ogni locale
 */
@@ -500,36 +525,6 @@ body{
     margin: 0;
 }
 
-/* pulsante per tornare indietro */
-.btn-back-banner {
-    /* posizionamento del bottone rispetto al div padre */
-    position: absolute;
-    top: 16px;
-    left: 20px;
-    /* z-index fa in modo che l'elemento, nel caso in cui si dovessero avere elementi sovrapposti, stia sopra */
-    z-index: 3;
-    /* applica uno sfondo bianco molto trasparente, oltre a dare un'effetto di sfocatura a ciò che c'è dietro il
-       bottone, '-webkit-' migliora la compatibilità */ 
-    background: rgba(255,255,255,0.18);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border: 1.5px solid rgba(255,255,255,0.38);
-    /* viene impostato un font nero, grassetto e leggermente piccolo */
-    color: var(--bs-black);
-    font-family: 'Nunito', sans-serif;
-    font-weight: 700;
-    font-size: 0.88rem;
-    padding: 8px 18px;
-    border-radius: 50px;
-    cursor: pointer;
-    /* renderizza il cambio di sfondo al passaggio del mouse */
-    transition: background 0.2s;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-}
-/* al passaggio del mouse, lo sfondo diventa leggerlmente più visbile in modo da avere un feedback visivo */
-.btn-back-banner:hover { background: rgba(255,255,255,0.32); }
 
 /* BODY PAGINA */
 .luogo-body {
@@ -547,13 +542,6 @@ body{
     padding: 40px 0;
 }
 
-/* CARD GENERICA */
-.luogo-card {
-    background: #fff;
-    border-radius: 20px;
-    padding: 26px 28px;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-}
 
 .luogo-card-title {
     font-family: 'Fredoka One', cursive;
@@ -588,27 +576,8 @@ body{
     gap: 12px;
 }
 
-.info-pill {
-    background: #f6f5f5df;
-    border-radius: 14px;
-    padding: 12px 16px;
-    display: flex;
-    flex-direction: column;
-    gap: 3px;
-}
-
-.info-pill-label {
-    font-size: 0.75rem;
-    font-weight: 800;
-    text-transform: uppercase;
-    letter-spacing: 0.09em;
-
-}
 .luogo-color {
     color: #bbb;
-}
-.login-color {
-    color: var(--bs-dark);
 }
 
 .info-icon .text {
@@ -959,22 +928,6 @@ body{
     align-items: center;
     gap: 8px;
 }
-
-.rec-avatar {
-    border-radius: 50%;
-    background: #FFC107;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-family: 'Fredoka One', cursive;
-    color: var(--bs-dark);
-    flex-shrink: 0;
-}
-.avatar-size{
-    width: 32px;
-    height: 32px;
-    font-size: 0.88rem;
-}
 .avatar-profilo {
     width: 45px;
     height: 45px;
@@ -1007,18 +960,6 @@ body{
 }
 .rec-empty span { font-size: 2.4rem; }
 
-/* notifica */
-.notifica-wrap {
-    position: fixed;
-    bottom: 28px;
-    right: 22px;
-    z-index: 9999;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    pointer-events: none;
-}
-
 .ap-notifica {
     background: var(--bs-dark);
     color: #FFC107;
@@ -1035,23 +976,12 @@ body{
 @keyframes notificaIn  { from { opacity:0; transform:translateY(14px); } to { opacity:1; transform:translateY(0); } }
 @keyframes notificaOut { to   { opacity:0; transform:translateY(14px); } }
 
-/* ═══════════════════════════════════════════
-   RESPONSIVE luogo
-   ═══════════════════════════════════════════ */
+/*
+   Responsive luogo
+*/
 
 /* ── TABLET (≤900px) ── */
 @media (max-width: 900px) {
- 
-    /* Pagina luogo: colonne → stack verticale */
-    .profilo-grid {
-        grid-template-columns: 1fr;
-        gap: 14px;
-    }
- 
-    /* La sidebar del profilo luogo smette di essere sticky */
-    .profilo-sidebar {
-        position: static !important;
-    }
  
     /* Banner leggermente più basso */
     .luogo-banner {
@@ -1080,34 +1010,8 @@ body{
     }
 }
 /*per luogo-card, info-pill e altri elementi con padding fisso, considerare di ridurre il padding su tablet se necessario per evitare spazi eccessivi*/
-/* ── MOBILE (≤600px) ── */
+/* MOBILE (≤600px)*/
 @media (max-width: 600px) {
- 
-    /* Fix: profilo-page annidato in luogo-body non deve aggiungere margin-top né padding laterale */
-    .luogo-body .profilo-page {
-        margin-top: 0;
-        padding-top: 0;
-        padding-left: 0;
-        padding-right: 0;
-    }
- 
-    /* Fix: profilo-grid e luogo-card non sforano a destra */
-    .luogo-body .profilo-grid {
-        width: 100%;
-        box-sizing: border-box;
-    }
- 
-    .luogo-card {
-        width: 100%;
-        box-sizing: border-box;
-    }
- 
-    /* Navbar: riduce padding e logo */
-    .navbar-custom {
-        height: 60px;
-        padding: 0 12px;
-        gap: 8px;
-    }
  
     /* Banner compatto */
     .luogo-banner {
@@ -1134,12 +1038,6 @@ body{
     .luogo-body {
         padding: 16px 12px 80px;
         gap: 12px;
-    }
- 
-    /* Card generica: padding ridotto */
-    .luogo-card {
-        border-radius: 16px;
-        padding: 18px 16px;
     }
  
     /* Titolo card più piccolo */
@@ -1182,34 +1080,15 @@ body{
         padding: 13px 20px;
     }
  
-    /* Wrap bottone full-width */
-    .d-flex.justify-content-end {
-        justify-content: stretch !important;
-    }
- 
     /* Textarea leggermente più alta per il pollice */
     .rec-textarea {
         min-height: 110px;
         font-size: 0.9rem;
     }
  
-    /* Profilo sidebar: row invece di colonna */
-    .profilo-sidebar {
-        flex-direction: row;
-        flex-wrap: wrap;
-        align-items: flex-start;
-        gap: 12px;
-        padding: 16px;
-    }
- 
     .profilo-nome {
         text-align: left;
         font-size: 1.05rem;
-    }
- 
-    /* Pill info */
-    .info-pill {
-        padding: 10px 12px;
     }
  
     .info-pill-value {
@@ -1267,15 +1146,11 @@ body{
     }
 }
  
-/* ── SMALL (≤400px) ── */
+/* SMALL (≤400px) */
 @media (max-width: 400px) {
  
     .banner-nome {
         font-size: 1.3rem;
-    }
- 
-    .luogo-card {
-        padding: 14px 12px;
     }
  
     /* Fasce orarie: wrap stretto */
@@ -1303,31 +1178,31 @@ body{
         font-size: 2.2rem;
     }
 }
-/* ---------------------- FINE LUOGO.HTML ---------------------- */
+/* FINE LUOGO.HTML */
 
-/* ---------------------- LOGIN.HTML ---------------------- */
+
+/* LOGIN.HTML */
+
+
+
 /* stili per la pagina di login */
 .text-bg-info {
   background-color: RGBA(var(--bs-body-bg), var(--bs-bg-opacity, 1)) !important;
 }
+/*FINE LOGIN.HTML  */
 
-/* pulsante per tornare indietro */
-.btn-back-banner .login {
-  top: 10px;
-  left: 12px;
-  font-size: 0.78rem;
-}
-/* stile per il pulsante per mostrare / nascondere la password nei campi password e conferma */
-.psw-btn{
-  background: none;
-  right: 5px; 
-  top: 50%; 
-  transform: translateY(-50%); /* viene centrato verticalmente rispetto al campo password */
-  cursor: pointer;
-}
-/* ---------------------- FINE LOGIN.HTML ---------------------- */
 
-/* ---------------------- LOGIN-SUPPLIER.HTML ---------------------- */
+
+
+
+
+
+/* LOGIN-SUPPLIER.HTML  */
+
+
+
+
+
 .form-scroll::-webkit-scrollbar {
     display: none;
 }
@@ -1335,12 +1210,6 @@ body{
 .form-scroll {
     -ms-overflow-style: none;  /* IE */
     scrollbar-width: none;     /* Firefox */
-}
-
-/* Permette di ancorare gli elementi al blocco */
-.select-wrapper {
-  position: relative;
-  display: block;
 }
 
 /* Nasconde la freccia nativa del browser */
@@ -1400,4 +1269,749 @@ body{
   transform: translateY(-50%) rotate(180deg);
   color: var(--color-primary, #01696f);
 }
-/* ---------------------- FINE LOGIN-SUPPLIER.HTML ---------------------- */
+/*FINE LOGIN-SUPPLIER.HTML  */
+
+
+/*CLASSI CONDIVISE*/
+
+
+
+/* STILI NAVBAR */
+/*
+ * .navbar-custom
+ * Barra di navigazione fissa superiore. Altezza 72px, sfondo bianco, ombra leggera. Usata in: index, luogo, profilo, profilo-supplier.
+ *
+ * Usata in 4 pagine: index.html, luogo.html, profilo-supplier.html, profilo.html
+ */
+.navbar-custom{
+    height: 72px;
+    display: flex;
+    align-items: center;
+    background-color: var(--bs-body-bg);
+    box-shadow: 0 2px 16px rgba(0,0,0,0.06);
+    gap: 12px;
+    padding: 0 20px;
+    border-bottom: 2px solid rgba(0, 0, 0, 0.12);
+}
+
+@media (max-width: 576px) {
+  .navbar-custom {
+          height: 64px;
+          gap: 8px;
+          padding: 0 10px;
+      }
+}
+
+@media (max-width: 600px) {
+  .navbar-custom {
+          height: 60px;
+          padding: 0 12px;
+          gap: 8px;
+      }
+}
+
+/*
+ * .logo
+ * Logo applicazione nella navbar. Dimensioni 100×auto con object-fit contain. Usata in: index, luogo, profilo, profilo-supplier.
+ *
+ * Usata in 4 pagine: index.html, luogo.html, profilo-supplier.html, profilo.html
+ */
+.logo {
+    height: 100px;
+    width: auto;
+    margin-bottom: 0.5rem;
+    object-fit: contain;
+    cursor: pointer;
+}
+
+@media (max-width: 576px) {
+  .logo {
+          height: 80px;
+      }
+  #vicinoBtn img.logo {
+          height: 36px;
+          padding: 0 !important;
+          margin: 0 !important;
+      }
+}
+
+/* Stili per il menu a tendina del profilo*/
+.dropdown {
+    position: absolute;
+    top: 120%;
+    right: 0;
+    background-color: RGBA(var(--bs-white-rgb), var(--bs-bg-opacity, 1));
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    min-width: 150px;
+
+    /* Animazione */
+    /* Di default, il dropdown è nascosto e posizionato leggermente più in alto per l'effetto di discesa */
+    opacity: 0;
+    /* translateY(-10px) sposta il dropdown 10px verso l'alto, creando un effetto di discesa quando viene attivato */
+    transform: translateY(-10px);
+    /* pointer-events: none disabilita l'interazione con il dropdown quando è nascosto, evitando clic accidentali */
+    pointer-events: none;
+    /*  transition definisce una transizione fluida per tutte le proprietà, con una durata di 0.3 secondi e un effetto di easing */
+    transition: all 0.3s ease;
+}
+
+/* Quando è attivo */
+.dropdown.show {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+}
+
+/* Link */
+.dropdown a {
+    padding: 10px;
+    text-decoration: none;
+    color: black;
+}
+
+/*
+ * .loginbtn
+ * Pulsante avatar utente nella navbar (icona profilo circolare 50×50px). Apre il dropdown di login/profilo. Usata in: index, luogo.
+ *
+ * Usata in 2 pagine: index.html, luogo.html
+ */
+.loginbtn {
+    height: 50px;
+    width: 50px;
+    background-image: url('/Foto/profilo_img.png');
+    /* background-size: cover fa sì che l'immagine riempia completamente il contenitore del pulsante, mantenendo le proporzioni e ritagliando se necessario */
+    background-size: cover;
+    /* background-position: center centra l'immagine all'interno del pulsante, assicurando che la parte più importante dell'immagine sia visibile anche se viene ritagliata */
+    background-position: center;
+    /* background-repeat: no-repeat impedisce la ripetizione dell'immagine */
+    background-repeat: no-repeat;
+    cursor: pointer;
+}
+
+@media (max-width: 576px) {
+  .loginbtn {
+      height: 44px;
+      width: 44px;
+      background-image: url('/Foto/profilo_img.png');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      cursor: pointer;
+      border: 2.5px solid rgba(0,0,0,0.15) !important;
+      border-radius: 50% !important;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      }
+  .loginbtn:hover {
+          border-color: rgba(0,0,0,0.4) !important;
+          box-shadow: 0 0 0 3px rgba(0,0,0,0.08);
+      }
+}
+
+/*FINE STILI NAVBAR*/
+
+/*STILI LAYOUT PROFILO*/
+
+/*
+ * .profilo-page
+ * Contenitore principale della pagina profilo. Margin-top 70px (per compensare navbar fixed), min-height calc(100vh - 70px). Usata in: luogo, profilo.
+ *
+ * Usata in 2 pagine: luogo.html, profilo.html
+ */
+.profilo-page {
+    margin-top: 70px;
+    padding: 30px 24px;
+    min-height: calc(100vh - 70px);
+}
+
+@media (max-width: 768px) {
+  .profilo-page {
+          margin-top: 0;
+          padding-top: 0;
+      }
+}
+
+@media (max-width: 480px) {
+  .profilo-page { padding: 20px 14px; }
+}
+
+@media (max-width: 600px) {
+  .luogo-body .profilo-page {
+          margin-top: 0;
+          padding-top: 0;
+          padding-left: 0;
+          padding-right: 0;
+      }
+}
+
+/*
+ * .profilo-sidebar
+ * Sidebar bianca con bordo arrotondato (20px) e ombra. Contiene info utente/filtri. Usata in: luogo, profilo.
+ *
+ * Usata in 2 pagine: luogo.html, profilo.html
+ */
+.profilo-sidebar {
+    background: #fff;
+    border-radius: 20px;
+    padding: 28px 22px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.10);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+    position: sticky;
+    top: 88px;
+}
+
+@media (max-width: 768px) {
+  .profilo-sidebar {
+          position: static;
+          flex-direction: row;
+          flex-wrap: wrap;
+          align-items: flex-start;
+          gap: 16px;
+          padding: 20px;
+      }
+}
+
+@media (max-width: 900px) {
+  .profilo-sidebar {
+          position: static !important;
+      }
+}
+
+@media (max-width: 600px) {
+  .profilo-sidebar {
+          flex-direction: row;
+          flex-wrap: wrap;
+          align-items: flex-start;
+          gap: 12px;
+          padding: 16px;
+      }
+}
+
+/*
+ * .profilo-grid
+ * Griglia a due colonne per layout profilo: sidebar fissa 300px + area contenuto 1fr. Diventa colonna singola su mobile. Usata in: luogo, profilo.
+ *
+ * Usata in 2 pagine: luogo.html, profilo.html
+ */
+.profilo-grid {
+    display: grid;
+    grid-template-columns: 300px 1fr;
+    gap: 24px;
+    max-width: 1100px;
+    margin: 0 auto;
+    align-items: start;
+}
+
+@media (max-width: 768px) {
+  .profilo-grid {
+          grid-template-columns: 1fr;
+      }
+}
+
+@media (max-width: 900px) {
+  .profilo-grid {
+          grid-template-columns: 1fr;
+          gap: 14px;
+      }
+}
+
+@media (max-width: 600px) {
+  .luogo-body .profilo-grid {
+          width: 100%;
+          box-sizing: border-box;
+      }
+}
+
+/*
+ * .profilo-content
+ * Area contenuto principale del profilo (flex column, gap 16px). Contiene cards e sezioni dinamiche. Usata in: luogo, profilo.
+ *
+ * Usata in 2 pagine: luogo.html, profilo.html
+ */
+.profilo-content {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+/* FINE STILI LAYOUT PROFILO */
+
+
+
+/*STILI CARD LUOGO*/
+
+/*
+ * .luogo-card
+ * Card principale per visualizzare un luogo/venue. Sfondo bianco, border-radius 20px, padding 26px 28px, ombra leggera. Responsive. Usata in: login, login-supplier, luogo, reset-password, reset-password-supplier.
+ *
+ * Usata in 5 pagine: login-supplier.html, login.html, luogo.html, reset-password-supplier.html, reset-password.html
+ */
+.luogo-card {
+    background: #fff;
+    border-radius: 20px;
+    padding: 26px 28px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+}
+
+@media (max-width: 600px) {
+  .luogo-card {
+    width: 100%;
+    box-sizing: border-box;
+    border-radius: 16px;
+    padding: 20px 16px; /* vince l'ultimo dichiarato */
+  }
+}
+
+@media (max-width: 400px) {
+  .luogo-card {
+          padding: 14px 12px;
+      }
+}
+
+/*
+ * .luogo-card-title
+ * Titolo della card luogo. Font Fredoka One 1.2rem, colore scuro #1a1a1a. Usata in: login-supplier, luogo.
+ *
+ * Usata in 2 pagine: login-supplier.html, luogo.html
+ */
+.luogo-card-title {
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.2rem;
+    color: #1a1a1a;
+    margin: 0 0 18px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.luogo-card-title::after {
+    content: '';
+    flex: 1;
+    height: 2px;
+    background: #f9e195;
+    border-radius: 2px;
+}
+
+@media (max-width: 600px) {
+  .luogo-card-title {
+          font-size: 1.05rem;
+          margin-bottom: 14px;
+      }
+}
+/*FINE STILI CARD LUOGO*/
+
+
+/*STILI INFO PILL*/
+
+/*
+ * .info-pill-label
+ * Etichetta uppercase all'interno di un info-pill. Font-size 0.75rem, font-weight 800, text-transform uppercase, letter-spacing. Usata in: login, login-supplier, luogo, reset-password, reset-password-supplier.
+ *
+ * Usata in 5 pagine: login-supplier.html, login.html, luogo.html, reset-password-supplier.html, reset-password.html
+ */
+.info-pill-label {
+    font-size: 0.75rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.09em;
+
+}
+
+/*
+ * .info-pill
+ * Contenitore pill/badge per informazioni. Sfondo grigio chiaro semitrasparente, border-radius 14px, padding 12px 16px, display flex. Usata in: login-supplier, luogo, reset-password, reset-password-supplier.
+ *
+ * Usata in 4 pagine: login-supplier.html, luogo.html, reset-password-supplier.html, reset-password.html
+ */
+.info-pill {
+    background: #f6f5f5df;
+    border-radius: 14px;
+    padding: 12px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+@media (max-width: 600px) {
+  .info-pill {
+          padding: 10px 12px;
+      }
+}
+/*FINE STILI INFO PILL*/
+
+
+/*STILI FORM*/
+
+/*
+ * .form-control
+ * Override Bootstrap form-control: sfondo variabile --bs-light, bordo arrotondato. Usata in: index, login, login-supplier, reset-password, reset-password-supplier.
+ *
+ * Usata in 5 pagine: index.html, login-supplier.html, login.html, reset-password-supplier.html, reset-password.html
+ */
+.form-control {
+  background-color: var(--bs-light);
+}
+
+.form-control:focus {
+  background-color: var(--bs-light);
+}
+
+/*
+ * .select-wrapper
+ * Wrapper per elementi select custom. Position relative, display block. Usata in: index, login-supplier.
+ *
+ * Usata in 2 pagine: index.html, login-supplier.html
+ */
+.select-wrapper {
+  position: relative;
+  display: block;
+}
+
+/*
+ * .psw-btn
+ * Pulsante show/hide password. Posizionato in assoluto a destra dell'input, background none, border none. Usata in: login, login-supplier, reset-password, reset-password-supplier.
+ *
+ * Usata in 4 pagine: login-supplier.html, login.html, reset-password-supplier.html, reset-password.html
+ */
+.psw-btn{
+  background: none;
+  right: 5px; 
+  top: 50%; 
+  transform: translateY(-50%); /* viene centrato verticalmente rispetto al campo password */
+  cursor: pointer;
+}
+/*FINE STILI FORM*/
+
+
+/*STILI AUTENTICAZIONE*/
+
+/*
+ * .confirm-success
+ * Icona/elemento di conferma successo (60×60px). Mostrato dopo operazioni come registrazione o reset password. Usata in: login, login-supplier.
+ *
+ * Usata in 2 pagine: login-supplier.html, login.html
+ */
+.confirm-success {
+  width: 60px;
+  height: 60px;
+}
+
+/*
+ * .btn-back-banner
+ * Pulsante "torna indietro" sovrapposto al banner/immagine di sfondo. Posizionato in assoluto in alto a sinistra (top:10px, left:12px). Usata in: login, login-supplier, luogo, reset-password.
+ *
+ * Usata in 4 pagine: login-supplier.html, login.html, luogo.html, reset-password.html
+ */
+.btn-back-banner {
+  top: 10px;
+  left: 12px;
+  font-size: 0.78rem;
+}
+/* pulsante per tornare indietro */
+.btn-back-banner {
+    /* posizionamento del bottone rispetto al div padre */
+    position: absolute;
+    top: 16px;
+    left: 20px;
+    /* z-index fa in modo che l'elemento, nel caso in cui si dovessero avere elementi sovrapposti, stia sopra */
+    z-index: 3;
+    /* applica uno sfondo bianco molto trasparente, oltre a dare un'effetto di sfocatura a ciò che c'è dietro il
+       bottone, '-webkit-' migliora la compatibilità */ 
+    background: rgba(255,255,255,0.18);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1.5px solid rgba(255,255,255,0.38);
+    /* viene impostato un font nero, grassetto e leggermente piccolo */
+    color: var(--bs-black);
+    font-family: 'Nunito', sans-serif;
+    font-weight: 700;
+    font-size: 0.88rem;
+    padding: 8px 18px;
+    border-radius: 50px;
+    cursor: pointer;
+    /* renderizza il cambio di sfondo al passaggio del mouse */
+    transition: background 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+/* al passaggio del mouse, lo sfondo diventa leggerlmente più visbile in modo da avere un feedback visivo */
+.btn-back-banner:hover { background: rgba(255,255,255,0.32); }
+
+/*
+ * .login-color
+ * Colore testo principale per le pagine di login (#1a1a1a). Override colore di default per titoli e testi nelle schermate auth. Usata in: login, login-supplier, reset-password, reset-password-supplier.
+ *
+ * Usata in 4 pagine: login-supplier.html, login.html, reset-password-supplier.html, reset-password.html
+ */
+.login-color {
+    color: var(--bs-dark);
+}
+
+/*
+ * .left-headline
+ * Titolo principale del pannello sinistro nelle pagine supplier. Font Fredoka One 46px, line-height 1.15. Usata in: login-supplier, reset-password-supplier.
+ *
+ * Usata in 2 pagine: login-supplier.html, reset-password-supplier.html
+ */
+.left-headline {
+  font-family: 'Fredoka One', cursive;
+  font-size: 46px;
+  line-height: 1.15;
+  color: var(--dark);
+  margin-bottom: 28px;
+  max-width: 480px;
+}
+
+.left-headline span {
+  background: linear-gradient(160deg, #D94F00, #E07800);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  -webkit-text-stroke: 1px #1A1A1A;
+  paint-order: stroke fill;
+}
+
+/*
+ * .nav-login-link
+ * Link di navigazione nella zona auth (es. "Accedi" / "Registrati"). Font 0.875rem, font-weight 700, posizionato in assoluto top:0 right:0. Usata in: login-supplier, profilo-supplier, reset-password.
+ *
+ * Usata in 3 pagine: login-supplier.html, profilo-supplier.html, reset-password.html
+ */
+.nav-login-link {
+  font-size: .875rem;
+  top: 0;
+  right: 0;
+  font-weight: 700;
+  color: var(--bs-success);
+  text-decoration: none;
+  padding: 7px 16px;
+  border: 2px solid var(--bs-success);
+  border-radius: 50px;
+  transition: background .2s, color .2s;
+}
+
+.nav-login-link:hover { background: var(--bs-success); color: #fff; }
+
+.nav-login-link.logout {
+  color: var(--bs-danger);
+  border-color: var(--bs-danger);
+}
+
+.nav-login-link.logout:hover { background: var(--bs-danger); color: #fff; }
+
+/*FINE STILI AUTENTICAZIONE*/
+
+
+
+/*STILI TOGGLE*/
+
+/*
+ * .toggle-slider
+ * Slider interno dello switch toggle. Sfondo #ddd, border-radius 26px, transizione colore al checked. Usata in: login-supplier, profilo-supplier.
+ *
+ * Usata in 2 pagine: login-supplier.html, profilo-supplier.html
+ */
+.toggle-slider {
+    position: absolute;
+    inset: 0;
+    background: #ddd;
+    border-radius: 26px;
+    cursor: pointer;
+    transition: background 0.25s;
+}
+
+.toggle-slider::before {
+    content: '';
+    position: absolute;
+    width: 20px; height: 20px;
+    left: 3px; top: 3px;
+    background: #fff;
+    border-radius: 50%;
+    transition: transform 0.25s;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+}
+
+.toggle-switch input:checked + .toggle-slider { background: #FFC107; }
+
+.toggle-switch input:checked + .toggle-slider::before { transform: translateX(22px); }
+
+/*
+ * .toggle-switch
+ * Contenitore dello switch toggle personalizzato (48×26px, position relative). Usata in: login-supplier, profilo-supplier.
+ *
+ * Usata in 2 pagine: login-supplier.html, profilo-supplier.html
+ */
+.toggle-switch {
+    position: relative;
+    width: 48px;
+    height: 26px;
+}
+
+.toggle-switch input { display: none; }
+
+.toggle-switch input:checked + .toggle-slider { background: #FFC107; }
+
+.toggle-switch input:checked + .toggle-slider::before { transform: translateX(22px); }
+
+/*
+ * .toggle-label
+ * Etichetta testuale accanto al toggle switch (font-weight 700, 0.92rem). Usata in: login-supplier, profilo-supplier.
+ *
+ * Usata in 2 pagine: login-supplier.html, profilo-supplier.html
+ */
+.toggle-label { font-weight: 700; font-size: 0.92rem; }
+
+/*
+ * .toggle-row
+ * Riga contenitore per un toggle + etichetta. Flex, space-between, align-center. Usata in: login-supplier, profilo-supplier.
+ *
+ * Usata in 2 pagine: login-supplier.html, profilo-supplier.html
+ */
+.toggle-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #f8f9fa;
+    padding: 12px 16px;
+    border-radius: 12px;
+}
+
+/*FINE STILI TOGGLE*/
+
+
+/*STILI RECENSIONI*/
+
+/*
+ * .avatar-size
+ * Dimensione standard avatar piccolo (32×32px, font 0.88rem). Usata in: luogo, profilo-supplier.
+ *
+ * Usata in 2 pagine: luogo.html, profilo-supplier.html
+ */
+.avatar-size{
+    width: 32px;
+    height: 32px;
+    font-size: 0.88rem;
+}
+
+/*
+ * .rec-avatar
+ * Avatar circolare per recensioni utente. Sfondo giallo #FFC107, flex centrato, border-radius 50%. Usata in: luogo, profilo, profilo-supplier.
+ *
+ * Usata in 3 pagine: luogo.html, profilo-supplier.html, profilo.html
+ */
+.rec-avatar {
+    border-radius: 50%;
+    background: #FFC107;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Fredoka One', cursive;
+    color: #1a1a1a;
+    flex-shrink: 0;
+}
+
+/*
+ * .rec-data
+ * Data/timestamp di una recensione (font-size 0.78rem, colore grigio #aaa). Usata in: profilo, profilo-supplier.
+ *
+ * Usata in 2 pagine: profilo-supplier.html, profilo.html
+ */
+.rec-data {
+  font-size: 0.75rem;
+  color: #bbb;
+  font-weight: 600;
+  margin-top: 2px;
+}
+
+/*
+ * .rec-testo
+ * Testo del corpo di una recensione (font-size 0.92rem, colore #444, line-height 1.55). Usata in: profilo, profilo-supplier.
+ *
+ * Usata in 2 pagine: profilo-supplier.html, profilo.html
+ */
+.rec-testo {
+  font-size: 0.92rem;
+  color: #444;
+  line-height: 1.65;
+  margin: 10px 0 0;
+}
+/*
+ * .empty-state
+ * Blocco "stato vuoto" (es. nessuna recensione). Sfondo bianco, border-radius 16px, padding 40px 20px, testo centrato. Usata in: profilo, profilo-supplier.
+ *
+ * Usata in 2 pagine: profilo-supplier.html, profilo.html
+ */
+.empty-state {
+    background: #fff;
+    border-radius: 16px;
+    padding: 40px 20px;
+    text-align: center;
+    color: #aaa;
+    font-size: 0.95rem;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.06);
+}
+
+.empty-state .empty-icon { font-size: 2.5rem; margin-bottom: 10px; }
+/*FINE STILI RECENSIONI*/
+
+/*STILI NOTIFICHE*/
+
+/*
+ * .notifica-wrap
+ * Contenitore notifiche fixed in basso a destra (bottom 28px, right 22px, z-index 9999). Flex column, gap. Usata in: luogo, profilo-supplier.
+ *
+ * Usata in 2 pagine: luogo.html, profilo-supplier.html
+ */
+.notifica-wrap {
+    position: fixed;
+    bottom: 28px;
+    right: 22px;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    pointer-events: none;
+}
+
+/*FINE STILI NOTIFICHE*/
+
+
+/*BOOTSTRAP OVERRIDE*/
+
+/*
+ * .img-fluid
+ * Override/estensione Bootstrap img-fluid: max-width 100%, height auto. Usata in: login, reset-password.
+ *
+ * Usata in 2 pagine: login.html, reset-password.html
+ */
+.img-fluid {
+  max-width: 100%;
+  height: auto;
+}
+
+/*
+ * .d-flex
+ * Override media query per d-flex: aggiunge justify-content stretch. Presente nel CSS custom per modificare comportamento Bootstrap. Usata in tutte le 8 pagine.
+ *
+ * Usata in 8 pagine: index.html, login-supplier.html, login.html, luogo.html, profilo-supplier.html, profilo.html, reset-password-supplier.html, reset-password.html
+ */
+@media (max-width: 600px) {
+  .d-flex.justify-content-end {
+          justify-content: stretch !important;
+      }
+}
+
+/*
+ * .row
+ * Override Bootstrap row: aggiunge --bs-gutter-y: 0.5rem in responsive. Usata in: login, login-supplier, reset-password, reset-password-supplier.
+ *
+ * Usata in 4 pagine: login-supplier.html, login.html, reset-password-supplier.html, reset-password.html
+ */
+@media (max-width: 768px) {
+  .row.g-4 {
+          --bs-gutter-y: 0.5rem;
+      }
+}
+/*FINE BOOTSTRAP OVERRIDE*/
