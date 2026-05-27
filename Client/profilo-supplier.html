@@ -7,7 +7,7 @@
     <link rel="icon" type="image/x-icon" href="/Foto/APERETTO (1).png">
     
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="classi.css">
+    <link rel="stylesheet" href="classi_ordinate.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap" >
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -433,19 +433,10 @@
                 </div>
             </div>
     
-            <button class="btn-salva" id="btnSalva" onclick="salvaModifiche()">
-                💾 Salva modifiche
-            </button>
+            <button class="btn-salva" id="btnSalva" onclick="salvaModifiche()"> Salva modifiche </button>
         </div>`;
     }
-    
-    // aggiorna l'immagine del locale e mostra un'anteprima
-    // ATTUALMENTE NON UTILIZZATA
-    function aggiornaPreviewCover(url) {
-        const img = document.getElementById('coverPreview');
-        if (img && url) img.src = url;
-    }
-    
+        
     // serve a salvare le modifiche nel tab 'MODIFICA INFO'
     async function salvaModifiche() {
         const btnSalva = document.getElementById('btnSalva');
@@ -465,7 +456,6 @@
             apertura: document.getElementById('edit-apertura')?.value,
             chiusura: document.getElementById('edit-chiusura')?.value,
             giorno_chiusura: document.getElementById('edit-giorno-chiusura')?.value,
-            immagine: document.getElementById('edit-immagine')?.value.trim(),
             aperitivo: document.getElementById('edit-aperitivo')?.checked || false,
             colazione: document.getElementById('edit-colazione')?.checked || false,
         };

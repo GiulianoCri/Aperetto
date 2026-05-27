@@ -7,16 +7,14 @@ TODO:
     - luogo.html    -> sostituire svg con stelle_vuote/piene
 
     - login-supplier.html   -> finire di commentare codice
-    - profilo-supplier / modifica info  -> aggiornaPreviewCover non viene utilizzata
     - revisione generale delle classi + riordinare per pagine (ordine logico di presentazione)
-    - commentare
 
 PAGINE REVISIONATE:
+    - index.html (completato)
+    - luogo.html (completato)
     - login.html (completato)
-    - reset-password.html
-    - reset-password-supplier.html
     - profilo.html
+    - reset-password.html
+    - login-supplier.html (completato)
+    - reset-password-supplier.html
     - profilo-supplier.html
-    - luogo.html(completato)
-    - index.html(completato)
-    - login-supplier.html 

@@ -33,7 +33,7 @@
   --bs-warning-rgb: 255, 0, 0;
   --bs-danger-rgb: 220, 53, 69;
   --bs-light-rgb: 248, 249, 250;
-  --bs-dark-rgb: 33, 37, 41;
+  --bs-dark-rgb: 26, 26, 26;
   
   --bs-body-bg: #FFC107;
 }
@@ -77,22 +77,7 @@ body{
 }
 
 
-/* 
-   3. PAGINA INDEX / HOME / RICERCA LOCALI
-   
-   Questa è la sezione più ampia del progetto e comprende:
-   - navbar e logo;
-   - dropdown profilo/login;
-   - filtri di ricerca;
-   - contenitore principale con lista e mappa;
-   - card dei risultati;
-   - elementi accessori come badge, pulsanti, form e componenti di supporto.
-
- */
-
-/* INDEX.HTML */ 
-
-
+/* -------------------------- INDEX.HTML -------------------------- */ 
 
 /* Stili per bottone della geolocalizzazione */
 .zoom-hover {
@@ -102,9 +87,6 @@ body{
 .zoom-hover:hover {
     transform: scale(1.2);
 }
-
-
-
 /* 
     Barra filtri fissa sotto la navbar
     Include contenitore, gruppi icona + select e pulsante reset.
@@ -237,8 +219,8 @@ body{
 .risultato-card .card-badge {
     top: 10px;
     left: 10px;
-    background: #FFC107;
-    color: #1a1a1a;
+    background: var(--bs-body-bg);
+    color: var(--bs-dark);
     font-size: 0.7rem;
     font-weight: 700;
     text-transform: uppercase;
@@ -509,7 +491,7 @@ body{
     left: 50%;
     transform: translateX(-50%);
     z-index: 1100;
-    background: #1a1a1a;
+    background: var(--bs-dark);
     border-radius: 50px;
     padding: 5px;
     gap: 4px;
@@ -533,8 +515,8 @@ body{
 }
 
 .toggle-vista-btn.active {
-    background: #FFC107;
-    color: #1a1a1a;
+    background: var(--bs-body-bg);
+    color: var(--bs-dark);
 }
 
 @media (max-width: 600px) {
@@ -575,7 +557,6 @@ body{
     padding: 2px 1px;
   }
 }
-
 
 .backbtn {
     width: 35px;
@@ -679,16 +660,11 @@ body{
   color: var(--bs-secondary-color);
 }
 
-/*FINE INDEX.HTML  */
+/* -------------------------- FINE INDEX.HTML -------------------------- */
 
 
 
-/* LUOGO.HTML */
-
-
-
-
-
+/* -------------------------- LUOGO.HTML -------------------------- */
 /*  banner del luogo: stili per impostare le dimensioni e migliorare la leggibilità e visibilità della parte superiore
     della pagina dedicata ad ogni locale
 */
@@ -749,7 +725,7 @@ body{
 /* stile per i badge del serivizio offerto */
 .banner-badge {
     display: inline-block;
-    background: #FFC107;
+    background: var(--bs-body-bg);
     color: var(--bs-dark);
     font-size: 0.72rem;
     font-weight: 800;
@@ -770,7 +746,6 @@ body{
     text-shadow: 0 2px 16px rgba(0,0,0,0.45);
     margin: 0;
 }
-
 
 /* BODY PAGINA */
 .luogo-body {
@@ -815,7 +790,7 @@ body{
     margin-bottom: 20px;
 }
 
-/* ── GRIGLIA INFO ── */
+/* GRIGLIA INFO */
 .info-grid {
     display: grid;
     grid-template-columns: 1fr;
@@ -837,8 +812,6 @@ body{
   height:16px;
 }
 
-
-
 .info-pill-value {
     font-size: 0.94rem;
     font-weight: 700;
@@ -848,7 +821,7 @@ body{
 .info-pill-value a {
     color: var(--bs-dark);
     text-decoration: none;
-    border-bottom: 2px solid #FFC107;
+    border-bottom: 2px solid var(--bs-body-bg);
     transition: color 0.15s;
 }
 .info-pill-value a:hover { color: #a07000; }
@@ -911,7 +884,7 @@ body{
 .stella-btn .stella-svg path { fill: #e0e0e0; transition: fill 0.12s; }
 /* giallo al hover o selezionata */
 .stella-btn.hov .stella-svg path,
-.stella-btn.sel .stella-svg path { fill: #FFC107; }
+.stella-btn.sel .stella-svg path { fill: var(--bs-body-bg); }
 
 .rec-form-label {
     font-size: 0.8rem;
@@ -945,7 +918,7 @@ body{
 }
 .rec-textarea:focus {
     outline: none;
-    border-color: #FFC107;
+    border-color: var(--bs-body-bg);
     box-shadow: 0 0 0 3px rgba(255,193,7,0.18);
     background: #fff;
 }
@@ -999,14 +972,14 @@ body{
 }
 
 .fascia-btn:hover {
-    border-color: #FFC107;
+    border-color: var(--bs-body-bg);
     color: var(--bs-dark);
     background: #FFFBEF;
 }
 
 .fascia-btn.selected {
     background: var(--bs-dark);
-    color: #FFC107;
+    color: var(--bs-body-bg);
     border-color: var(--bs-dark);
 }
 
@@ -1054,7 +1027,7 @@ body{
     width: 100%;
     height: 6px;
     border-radius: 6px;
-    background: linear-gradient(to right, #FFC107 0%, #FFC107 0%, #e9ecef 0%);
+    background: linear-gradient(to right, var(--bs-body-bg) 0%, var(--bs-body-bg) 0%, #e9ecef 0%);
     outline: none;
     cursor: pointer;
     transition: background 0.15s;
@@ -1068,7 +1041,7 @@ body{
     border-radius: 50%;
     background: var(--bs-dark);
     cursor: pointer;
-    border: 3px solid #FFC107;
+    border: 3px solid var(--bs-body-bg);
     box-shadow: 0 2px 8px rgba(0,0,0,0.18);
     transition: transform 0.15s;
 }
@@ -1083,7 +1056,7 @@ body{
     border-radius: 50%;
     background: var(--bs-dark);
     cursor: pointer;
-    border: 3px solid #FFC107;
+    border: 3px solid var(--bs-body-bg);
     box-shadow: 0 2px 8px rgba(0,0,0,0.18);
 }
 
@@ -1101,7 +1074,7 @@ body{
 .btn-invia-rec {
     align-self: flex-end;
     background: var(--bs-dark);
-    color: #FFC107;
+    color: var(--bs-body-bg);
     font-family: 'Fredoka One', cursive;
     font-size: 1rem;
     letter-spacing: 0.5px;
@@ -1133,7 +1106,7 @@ body{
 .login-prompt a {
     color: var(--bs-dark);
     font-weight: 800;
-    border-bottom: 2px solid #FFC107;
+    border-bottom: 2px solid var(--bs-body-bg);
     text-decoration: none;
 }
 
@@ -1206,21 +1179,6 @@ body{
 }
 .rec-empty span { font-size: 2.4rem; }
 
-.ap-notifica {
-    background: var(--bs-dark);
-    color: #FFC107;
-    font-family: 'Fredoka One', cursive;
-    font-size: 0.97rem;
-    padding: 13px 22px;
-    border-radius: 14px;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.18);
-    pointer-events: auto;
-    animation: notificaIn 0.3s ease, notificaOut 0.3s ease 2.7s forwards;
-}
-.ap-notifica.error { color: #ff5252; }
-
-@keyframes notificaIn  { from { opacity:0; transform:translateY(14px); } to { opacity:1; transform:translateY(0); } }
-@keyframes notificaOut { to   { opacity:0; transform:translateY(14px); } }
 
 /*
    Responsive luogo
@@ -1424,31 +1382,19 @@ body{
         font-size: 2.2rem;
     }
 }
-/* FINE LUOGO.HTML */
+/* -------------------------- FINE LUOGO.HTML -------------------------- */
 
 
-/* LOGIN.HTML */
-
-
-
+/* -------------------------- LOGIN.HTML -------------------------- */
 /* stili per la pagina di login */
 .text-bg-info {
   background-color: RGBA(var(--bs-body-bg), var(--bs-bg-opacity, 1)) !important;
 }
-/*FINE LOGIN.HTML  */
+/* -------------------------- FINE LOGIN.HTML -------------------------- */
 
 
-
-
-
-
-
-/* LOGIN-SUPPLIER.HTML  */
-
-
-
-
-
+/* -------------------------- LOGIN-SUPPLIER.HTML -------------------------- */
+/* stili per nascondere visivamente la scrollbar mantenendo le funzionalità di scroll*/
 .form-scroll::-webkit-scrollbar {
     display: none;
 }
@@ -1459,70 +1405,442 @@ body{
 }
 
 /* Nasconde la freccia nativa del browser */
+/* stile custom per il select rimuovendo la "faccia" nativa del browser: servono ad "azzerare" lo stile 
+    ed a ridisegnarlo */
 .form-select-custom {
-  appearance: none;
-  -webkit-appearance: none;
-  -moz-appearance: none;
+/* rimuove la freccia nativa del browser (Chrome, Firefox, Safari)  */
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
 
-  display: block;
-  width: 100%;
-  padding: 0.75rem 3rem 0.75rem 1rem; /* spazio a destra per il chevron */
-  cursor: pointer;
+    display: block;
+    width: 100%;
+    /* padding asimmetrico: più spazio a destra per non coprire il
+        chevron SVG che verrà posizionato sopra */
+    padding: 0.75rem 3rem 0.75rem 1rem;
+    cursor: pointer;
 
-  font-size: var(--text-base, 1rem);
-  font-family: inherit;
-  color: var(--color-text, #28251d);
-  line-height: 1.5;
+    /* eredita il font del documento */
+    font-size: var(--text-base, 1rem);
+    font-family: inherit;
+    color: var(--color-text, #28251d);
+    line-height: 1.5;
 
-  background-color: var(--color-surface, #f9f8f5);
-  border: 1px solid oklch(from var(--color-text, #28251d) l c h / 0.15);
-  outline: none;
-
-  transition: border-color 180ms ease, box-shadow 180ms ease;
+    /* sfondo chiaro, leggermente caldo */
+    background-color: var(--color-surface, #f9f8f5);
+    /* bordo semitrasparente */
+    /* la funzione 'oklch()' permette di ricavare il colore del testo e abbassa l'opacità al 15%, è utile
+        per non definire un colore fisso separato */ 
+    border: 1px solid oklch(from var(--color-text, #28251d) l c h / 0.15);
+    /* rimuove contorno blu di default */
+    outline: none;
+    /* transizione fluida sul bordo e ombra al focus / hover */
+    transition: border-color 180ms ease, box-shadow 180ms ease;
 }
 
 /* Stato focus accessibile */
+/* evidenzia il campo quando si naviga da tastiera, utilizziamo questa classe custom per non mostrare il
+    comportamento di default del browser */
 .form-select-custom:focus-visible {
-  border-color: var(--color-primary, #01696f);
-  box-shadow: 0 0 0 3px oklch(from var(--color-primary, #01696f) l c h / 0.18);
+    /* anello di "focus" semitrasparente attorno al campo selezionato */
+    border-color: var(--color-primary, #01696f);
+    box-shadow: 0 0 0 3px oklch(from var(--color-primary, #01696f) l c h / 0.18);
 }
 
 /* Stato hover */
+/* rinforza di poco il bordo quando il mouse è sopra */
 .form-select-custom:hover {
-  border-color: oklch(from var(--color-text, #28251d) l c h / 0.3);
+    border-color: oklch(from var(--color-text, #28251d) l c h / 0.3);
 }
 
-/* Opzione placeholder (vuota) */
+/* Opzione placeholder (vuota, con value="") */
+/* tale scelta appare più tenute in modo da poter suggerire all'utente di dover fare obbligatoriamente una scelta */
 .form-select-custom option[value=""] {
-  color: var(--color-text-muted, #7a7974);
+    color: var(--color-text-muted, #7a7974);
 }
 
-/* Chevron SVG sovrapposto */
+/* CHEVRON SVG */
+/* freccia personalizzata che viene sovrapposta al select (mediante 'position: absolute')
+    per un corretto funzionamento, deve stare dentro un contenitore con 'position: relative' */
 .select-chevron {
-  position: absolute;
-  right: 0.875rem;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 1.125rem;
-  height: 1.125rem;
-  color: var(--color-text-muted, #7a7974);
-  pointer-events: none; /* non intercetta i click */
-  transition: transform 180ms ease, color 180ms ease;
+    /* posizione rispetto al select-wrapper */
+    position: absolute;
+    right: 0.875rem;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 1.125rem;
+    height: 1.125rem;
+    color: var(--color-text-muted, #7a7974);
+    /* pointer-events:none "intercetta" i click al select sottostante, come se il chevron non esistesse per il mouse */
+    pointer-events: none;
+    /* transition per la rotazione ed il cambio colore del focus */
+    transition: transform 180ms ease, color 180ms ease;
 }
 
-/* Ruota il chevron quando il select è aperto (focus) */
+/* quando il 'select' è aperto (focus), il chevron ruota di 180 gradi puntando la freccia verso l'alto, cambiando colore
+    per dare un feedback visivo */
+/* il selettore '~' indica un "fratello" successivo: il chevron deve trovarsi subito dopo il 'select' */
 .form-select-custom:focus ~ .select-chevron {
   transform: translateY(-50%) rotate(180deg);
   color: var(--color-primary, #01696f);
 }
-/*FINE LOGIN-SUPPLIER.HTML  */
 
+/* STEPPER */
+/* container principale che tiene tutti gli step dentro una riga orizzontale */
+.stepper {
+    display: flex;
+    align-items: center;
+    margin-bottom: 36px;
+}
+/* step singolo: ogni step contiene 'step-circle' e 'step-label'*/
+.step {
+    display: flex;
+    /* dispone gli elementi in colonna (cerchio sopra ed etichetta sotto) */
+    flex-direction: column;
+    align-items: center;
+    /* spazio tra cerchio ed etichetta */
+    gap: 6px;
+}
 
-/*CLASSI CONDIVISE*/
+/* cerchio che contiene i numeri / spunta (step 4) per ogni step */
+.step-circle {
+    /* dimensioni cerchio */
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    /* bordo nero spesso */
+    border: 2.5px solid var(--bs-black);
+    background: #ff702d;
+    /* centra il contenuto interno */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Fredoka One', cursive;
+    font-size: 1rem;
+    color: var(--bs-black);
+    /* animazione fluida stati */
+    transition: all .3s;
+}
 
+/* stile per lo stato attivo dello stepper: questo stato è quello corrente quando l'utente si trova nello step e sta compilando
+    il form corrispondente */
+.step.active .step-circle {
+    border-color: var(--bs-dark);
+    background: var(--bs-dark);
+    color: var(--bs-body-bg);
+    /* alone attorno al cerchio */
+    box-shadow: 0 0 0 4px rgba(0, 0, 0, .15);
+}
 
+/* la label diventa scuro per corrispondere al cerchio attivo */
+.step.active .step-label { color: var(--bs-dark); }
 
-/* STILI NAVBAR */
+/* quando lo step è stato superato, diventa 'step-done'
+    il cerchio diventa con lo sfondo verde con una spunta bianca (inserita mediante JavaScript) */
+.step.done .step-circle {
+    border-color: #34c759;
+    background: #34c759;
+    color: #fff;
+}
+
+/* stile per il testo sotto ogni cerchio */
+.step-label {
+    font-size: .72rem;
+    font-weight: 800;
+    color: var(--bs-black);
+    text-transform: uppercase;
+    letter-spacing: .5px;
+}
+
+.step.active .step-label { color: var(--bs-dark); }
+/* label dello step completato diventa verde in corrispondenza dello step completato */
+.step.done .step-label   { color: #34c759; }
+
+/* tratto di "collegamento" tra due step consecutivi */
+.step-line {
+    /* occupa 1 spazio disponibile */
+    flex: 1;
+    height: 2.5px;
+    background: var(--bs-black);
+    /* spazio ai lati e sotto la linea */
+    margin: 0 6px;
+    margin-bottom: 22px;
+    border-radius: 4px;
+    /* animazione per il colore */
+    transition: background .3s;
+}
+/* tratto di "collegamento" dopo uno step completato diventa verde */
+.step-line.done { background: #34c759; }
+
+/* stile per il messaggio di successo in caso di registrazione del locale avvenuta con successo */
+.confirm-supplier {
+  min-height: 60vh;
+}
+
+/* -------------------------- FINE LOGIN-SUPPLIER.HTML -------------------------- */
+
+/* -------------------------- PROFILO-SUPPLIER.HTML -------------------------- */
+/* pulsante principale per confermare il form (contrasto elevato) */
+.btn-salva {
+    padding: 14px;
+    border: none;
+    border-radius: 50px;
+    /* font display e colore come lo sfondo con elevato contrasto */
+    background: var(--bs-dark);
+    color: var(--bs-body-bg);
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.1rem;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    /* aggiunge un'ombra leggerissima sotto l'elemento (opacità 15%) */
+    box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+    /* determina il tempo per le transizioni riguardanti l'animazione e l'opacità */
+    transition: transform 0.15s, opacity 0.15s;
+}
+/* l'hover del pulsante lo solleva leggermente e abbassa leggermente l'opacità in modo da dare un feedback visivo */
+.btn-salva:hover:not(:disabled) { transform: translateY(-2px); opacity: 0.9; }
+/* quando disabilitato, rende il bottone meno visibile e disattiva il cursore */
+.btn-salva:disabled { opacity: 0.45; cursor: not-allowed; }
+
+.edit-form { display: flex; flex-direction: column; gap: 18px; }
+
+.form-group { display: flex; flex-direction: column; gap: 5px; }
+.form-group label {
+    font-size: 0.72rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #999;
+}
+.form-group input,
+.form-group textarea,
+.form-group select {
+    padding: 12px 14px;
+    border: 1.5px solid #e9ecef;
+    border-radius: 12px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 0.92rem;
+    color: #1a1a1a;
+    background: #f8f9fa;
+    transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+    outline: none;
+}
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+    border-color: #FFC107;
+    background: var(--bs-white);
+    box-shadow: 0 0 0 3px rgba(255,193,7,0.18);
+}
+.form-group textarea { min-height: 100px; resize: vertical; }
+
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.form-row.single { grid-template-columns: 1fr; }
+
+.form-section-title {
+    font-family: 'Fredoka One', cursive;
+    font-size: 1rem;
+    color: #5d5d5d;
+    margin: 4px 0 -4px;
+    padding-bottom: 8px;
+    border-bottom: 1.5px dashed #f0f0f0;
+}
+
+.lc-card {
+    background: var(--bs-white);
+    border-radius: 22px;
+    padding: 24px 22px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+}
+
+.lc-card-title {
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.15rem;
+    color: #1a1a1a;
+    margin: 0 0 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.lc-card-title::after {
+    content: '';
+    flex: 1;
+    height: 2px;
+    background: #FFF3CD;
+    border-radius: 2px;
+}
+
+.locale-cover {
+    width: 100%;
+    height: 160px;
+    border-radius: 16px;
+    object-fit: cover;
+    display: block;
+    margin-bottom: 14px;
+    background: #f0f0f0;
+}
+
+.locale-grid {
+    display: grid;
+    grid-template-columns: 320px 1fr;
+    gap: 24px;
+    max-width: 1200px;
+    margin: 0 auto;
+    align-items: start;
+}
+
+.locale-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+}
+.locale-meta-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.85rem;
+    color: #666;
+    font-weight: 600;
+}
+.locale-meta-row span:first-child { font-size: 1rem; }
+
+.locale-nome {
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.5rem;
+    line-height: 1.2;
+    margin-bottom: 6px;
+}
+
+.locale-page {
+    margin-top: 72px;
+    padding: 28px 20px 80px;
+}
+
+.locale-sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    position: sticky;
+    top: 90px;
+}
+
+.locale-tipo {
+    display: inline-block;
+    background: #FFC107;
+    color: #1a1a1a;
+    font-size: 0.72rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding: 4px 12px;
+    border-radius: 20px;
+    margin-bottom: 12px;
+}
+
+.rec-card {
+    background: var(--bs-white);
+    border-radius: 18px;
+    padding: 18px 20px;
+    box-shadow: 0 3px 12px rgba(0,0,0,0.07);
+    border: 1.5px solid rgba(0,0,0,0.04);
+    transition: box-shadow 0.2s;
+    animation: fadeSlideIn 0.35s ease both;
+}
+.rec-card:hover { box-shadow: 0 6px 20px rgba(0,0,0,0.11); }
+
+.rec-list { display: flex; flex-direction: column; gap: 14px; }
+.rec-user-info { display: flex; align-items: center; gap: 10px; }
+.rec-user-name { font-weight: 800; font-size: 0.95rem; }
+
+.rec-header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.skeleton {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e8e8e8 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.4s infinite;
+    border-radius: 8px;
+}
+
+.stat-box {
+    background: #f8f9fa;
+    border-radius: 14px;
+    padding: 14px 12px;
+    text-align: center;
+}
+.stat-num {
+    font-family: 'Fredoka One', cursive;
+    font-size: 2rem;
+    color: #1a1a1a;
+    line-height: 1;
+    margin-bottom: 2px;
+}
+.stat-label {
+    font-size: 0.72rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: #bbb;
+}
+.stat-box.voto-big .stat-num { color: #FFC107; font-size: 2.4rem; }
+.stelle-mini { display: flex; justify-content: center; gap: 2px; margin-top: 3px; }
+.stella-mini { width: 13px; height: 13px; }
+
+.stella-r { width: 16px; height: 16px; }
+
+.tab-nav {
+    display: flex;
+    gap: 6px;
+    background: #f0f0f0;
+    border-radius: 14px;
+    padding: 5px;
+    margin-bottom: 20px;
+}
+.tab-btn {
+    flex: 1;
+    padding: 10px 8px;
+    border: none;
+    border-radius: 10px;
+    background: transparent;
+    font-family: 'Nunito', sans-serif;
+    font-size: 0.82rem;
+    font-weight: 800;
+    color: #888;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+.tab-btn.active {
+    background: var(--bs-white);
+    color: #1a1a1a;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+}
+.tab-btn:hover:not(.active) { color: #1a1a1a; }
+
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+
+/* RESPONSIVE PROFILO-SUPPLIER.HTML */
+@media (max-width: 900px) {
+    .locale-grid { grid-template-columns: 1fr; }
+    .locale-sidebar { position: static; }
+    .form-row { grid-template-columns: 1fr; }
+}
+@media (max-width: 576px) {
+    .locale-page { padding: 20px 14px 60px; }
+    .tab-btn { font-size: 0.72rem; padding: 8px 4px; }
+}
+
+/* -------------------------- FINE PROFILO-SUPPLIER.HTML -------------------------- */
+
+/* -------------------------- CLASSI CONDIVISE --------------------------*/
+/* -------------------------- STILI NAVBAR --------------------------*/
 /*
  * .navbar-custom
  * Barra di navigazione fissa superiore. Altezza 72px, sfondo bianco, ombra leggera. Usata in: index, luogo, profilo, profilo-supplier.
@@ -1653,10 +1971,9 @@ body{
       }
 }
 
-/*FINE STILI NAVBAR*/
+/* -------------------------- FINE STILI NAVBAR -------------------------- */
 
-/*STILI LAYOUT PROFILO*/
-
+/* -------------------------- STILI LAYOUT f -------------------------- */
 /*
  * .profilo-page
  * Contenitore principale della pagina profilo. Margin-top 70px (per compensare navbar fixed), min-height calc(100vh - 70px). Usata in: luogo, profilo.
@@ -1781,12 +2098,9 @@ body{
     flex-direction: column;
     gap: 16px;
 }
-/* FINE STILI LAYOUT PROFILO */
+/* -------------------------- FINE STILI LAYOUT PROFILO -------------------------- */
 
-
-
-/*STILI CARD LUOGO*/
-
+/* -------------------------- STILI CARD LUOGO -------------------------- */
 /*
  * .luogo-card
  * Card principale per visualizzare un luogo/venue. Sfondo bianco, border-radius 20px, padding 26px 28px, ombra leggera. Responsive. Usata in: login, login-supplier, luogo, reset-password, reset-password-supplier.
@@ -1817,14 +2131,14 @@ body{
 
 /*
  * .luogo-card-title
- * Titolo della card luogo. Font Fredoka One 1.2rem, colore scuro #1a1a1a. Usata in: login-supplier, luogo.
+ * Titolo della card luogo. Font Fredoka One 1.2rem, colore scuro var(--bs-dark). Usata in: login-supplier, luogo.
  *
  * Usata in 2 pagine: login-supplier.html, luogo.html
  */
 .luogo-card-title {
     font-family: 'Fredoka One', cursive;
     font-size: 1.2rem;
-    color: #1a1a1a;
+    color: var(--bs-dark);
     margin: 0 0 18px;
     display: flex;
     align-items: center;
@@ -1845,11 +2159,10 @@ body{
           margin-bottom: 14px;
       }
 }
-/*FINE STILI CARD LUOGO*/
+/* -------------------------- FINE STILI CARD LUOGO -------------------------- */
 
 
-/*STILI INFO PILL*/
-
+/* -------------------------- STILI INFO PILL -------------------------- */
 /*
  * .info-pill-label
  * Etichetta uppercase all'interno di un info-pill. Font-size 0.75rem, font-weight 800, text-transform uppercase, letter-spacing. Usata in: login, login-supplier, luogo, reset-password, reset-password-supplier.
@@ -1884,11 +2197,10 @@ body{
           padding: 10px 12px;
       }
 }
-/*FINE STILI INFO PILL*/
+/* -------------------------- FINE STILI INFO PILL -------------------------- */
 
 
-/*STILI FORM*/
-
+/* -------------------------- STILI FORM -------------------------- */
 /*
  * .form-control
  * Override Bootstrap form-control: sfondo variabile --bs-light, bordo arrotondato. Usata in: index, login, login-supplier, reset-password, reset-password-supplier.
@@ -1927,11 +2239,10 @@ body{
   transform: translateY(-50%); /* viene centrato verticalmente rispetto al campo password */
   cursor: pointer;
 }
-/*FINE STILI FORM*/
+/* -------------------------- FINE STILI FORM -------------------------- */
 
 
-/*STILI AUTENTICAZIONE*/
-
+/* -------------------------- STILI AUTENTICAZIONE -------------------------- */
 /*
  * .confirm-success
  * Icona/elemento di conferma successo (60×60px). Mostrato dopo operazioni come registrazione o reset password. Usata in: login, login-supplier.
@@ -1987,7 +2298,7 @@ body{
 
 /*
  * .login-color
- * Colore testo principale per le pagine di login (#1a1a1a). Override colore di default per titoli e testi nelle schermate auth. Usata in: login, login-supplier, reset-password, reset-password-supplier.
+ * Colore testo principale per le pagine di login (var(--bs-dark)). Override colore di default per titoli e testi nelle schermate auth. Usata in: login, login-supplier, reset-password, reset-password-supplier.
  *
  * Usata in 4 pagine: login-supplier.html, login.html, reset-password-supplier.html, reset-password.html
  */
@@ -2015,7 +2326,7 @@ body{
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  -webkit-text-stroke: 1px #1A1A1A;
+  -webkit-text-stroke: 1px var(--bs-dark);
   paint-order: stroke fill;
 }
 
@@ -2047,46 +2358,48 @@ body{
 
 .nav-login-link.logout:hover { background: var(--bs-danger); color: #fff; }
 
-/*FINE STILI AUTENTICAZIONE*/
+/* -------------------------- FINE STILI AUTENTICAZIONE -------------------------- */
 
 
 
-/*STILI TOGGLE*/
-
+/* -------------------------- STILI TOGGLE -------------------------- */
 /*
  * .toggle-slider
  * Slider interno dello switch toggle. Sfondo #ddd, border-radius 26px, transizione colore al checked. Usata in: login-supplier, profilo-supplier.
- *
  * Usata in 2 pagine: login-supplier.html, profilo-supplier.html
  */
+
+/* contenitore visivo all'interno del quale il toggle viene attivato */
 .toggle-slider {
     position: absolute;
     inset: 0;
+    /* sfondo grigio chiaro (stato OFF) */
     background: #ddd;
+    /* bordi molto arrotondati */
     border-radius: 26px;
     cursor: pointer;
+    /* animazione fluida per la selezione ed il cambio colore */
     transition: background 0.25s;
 }
 
+/* stile per il cerchio bianco mobile che si sposta se attivi / disattivi il toggle */
 .toggle-slider::before {
+    /* crea un elemento pseudo-figlio */
     content: '';
+    /* dimensioni e posizionamento del cerchio */
     position: absolute;
     width: 20px; height: 20px;
     left: 3px; top: 3px;
     background: #fff;
     border-radius: 50%;
+    /* animazione per il movimento e ombra leggera del cerchio per la profondità */
     transition: transform 0.25s;
     box-shadow: 0 1px 4px rgba(0,0,0,0.2);
 }
 
-.toggle-switch input:checked + .toggle-slider { background: #FFC107; }
-
-.toggle-switch input:checked + .toggle-slider::before { transform: translateX(22px); }
-
 /*
  * .toggle-switch
  * Contenitore dello switch toggle personalizzato (48×26px, position relative). Usata in: login-supplier, profilo-supplier.
- *
  * Usata in 2 pagine: login-supplier.html, profilo-supplier.html
  */
 .toggle-switch {
@@ -2095,16 +2408,18 @@ body{
     height: 26px;
 }
 
+/* rende non visibile l'input (esiste ed è cliccabile) */
 .toggle-switch input { display: none; }
 
-.toggle-switch input:checked + .toggle-slider { background: #FFC107; }
+/* quando il check è ON viene cambiato lo sfondo del pulsante da grigio a body */
+.toggle-switch input:checked + .toggle-slider { background: var(--bs-body-bg); }
 
+/* il cerchio bianco trasla verso sinsitra creando l'effetto di scorrimento */
 .toggle-switch input:checked + .toggle-slider::before { transform: translateX(22px); }
 
 /*
  * .toggle-label
  * Etichetta testuale accanto al toggle switch (font-weight 700, 0.92rem). Usata in: login-supplier, profilo-supplier.
- *
  * Usata in 2 pagine: login-supplier.html, profilo-supplier.html
  */
 .toggle-label { font-weight: 700; font-size: 0.92rem; }
@@ -2112,7 +2427,6 @@ body{
 /*
  * .toggle-row
  * Riga contenitore per un toggle + etichetta. Flex, space-between, align-center. Usata in: login-supplier, profilo-supplier.
- *
  * Usata in 2 pagine: login-supplier.html, profilo-supplier.html
  */
 .toggle-row {
@@ -2124,11 +2438,10 @@ body{
     border-radius: 12px;
 }
 
-/*FINE STILI TOGGLE*/
+/* -------------------------- FINE STILI TOGGLE -------------------------- */
 
 
-/*STILI RECENSIONI*/
-
+/* -------------------------- STILI RECENSIONI -------------------------- */
 /*
  * .avatar-size
  * Dimensione standard avatar piccolo (32×32px, font 0.88rem). Usata in: luogo, profilo-supplier.
@@ -2143,18 +2456,18 @@ body{
 
 /*
  * .rec-avatar
- * Avatar circolare per recensioni utente. Sfondo giallo #FFC107, flex centrato, border-radius 50%. Usata in: luogo, profilo, profilo-supplier.
+ * Avatar circolare per recensioni utente. Sfondo giallo var(--bs-body-bg), flex centrato, border-radius 50%. Usata in: luogo, profilo, profilo-supplier.
  *
  * Usata in 3 pagine: luogo.html, profilo-supplier.html, profilo.html
  */
 .rec-avatar {
     border-radius: 50%;
-    background: #FFC107;
+    background: var(--bs-body-bg);
     display: flex;
     align-items: center;
     justify-content: center;
     font-family: 'Fredoka One', cursive;
-    color: #1a1a1a;
+    color: var(--bs-dark);
     flex-shrink: 0;
 }
 
@@ -2200,10 +2513,9 @@ body{
 }
 
 .empty-state .empty-icon { font-size: 2.5rem; margin-bottom: 10px; }
-/*FINE STILI RECENSIONI*/
+/* -------------------------- FINE STILI RECENSIONI -------------------------- */
 
-/*STILI NOTIFICHE*/
-
+/* -------------------------- STILI NOTIFICHE -------------------------- */
 /*
  * .notifica-wrap
  * Contenitore notifiche fixed in basso a destra (bottom 28px, right 22px, z-index 9999). Flex column, gap. Usata in: luogo, profilo-supplier.
@@ -2221,22 +2533,10 @@ body{
     pointer-events: none;
 }
 
-/*FINE STILI NOTIFICHE*/
+/* -------------------------- FINE STILI NOTIFICHE -------------------------- */
 
 
 /*BOOTSTRAP OVERRIDE*/
-
-/*
- * .img-fluid
- * Override/estensione Bootstrap img-fluid: max-width 100%, height auto. Usata in: login, reset-password.
- *
- * Usata in 2 pagine: login.html, reset-password.html
- */
-.img-fluid {
-  max-width: 100%;
-  height: auto;
-}
-
 /*
  * .d-flex
  * Override media query per d-flex: aggiunge justify-content stretch. Presente nel CSS custom per modificare comportamento Bootstrap. Usata in tutte le 8 pagine.
@@ -2244,9 +2544,9 @@ body{
  * Usata in 8 pagine: index.html, login-supplier.html, login.html, luogo.html, profilo-supplier.html, profilo.html, reset-password-supplier.html, reset-password.html
  */
 @media (max-width: 600px) {
-  .d-flex.justify-content-end {
+    .d-flex.justify-content-end {
           justify-content: stretch !important;
-      }
+    }
 }
 
 /*
@@ -2256,8 +2556,8 @@ body{
  * Usata in 4 pagine: login-supplier.html, login.html, reset-password-supplier.html, reset-password.html
  */
 @media (max-width: 768px) {
-  .row.g-4 {
-          --bs-gutter-y: 0.5rem;
-      }
+    .row.g-4 {
+        --bs-gutter-y: 0.5rem;
+    } 
 }
 /*FINE BOOTSTRAP OVERRIDE*/
