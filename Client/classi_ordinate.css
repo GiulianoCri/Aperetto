@@ -234,7 +234,6 @@ body{
     z-index: 2;
     box-shadow: 0 2px 6px rgba(0,0,0,0.15);
 }
-
 .badges-wrap {
     position: absolute;
     top: 10px;
@@ -308,7 +307,7 @@ body{
     gap: 6px;
     background: #fff;
 }
-
+/* Stili per il titolo del locale all'interno della card, con un font chiaro e ben visibile per attirare l'attenzione dell'utente */
 .risultato-card .card-info h2 {
     font-size: 1rem;
     font-weight: 700;
@@ -316,7 +315,7 @@ body{
     color: var(--bs-dark);
     line-height: 1.3;
 }
-
+/* Stili per la descrizione del locale all'interno della card, con un font più piccolo e un colore più chiaro per differenziarlo dal titolo, e con un layout che limita la descrizione a 2 linee per mantenere un aspetto ordinato e uniforme tra le card, anche quando le descrizioni sono di lunghezza variabile */
 .risultato-card .card-info .card-desc {
     font-size: 0.82rem;
     color: #666;
@@ -330,7 +329,7 @@ body{
     -webkit-box-orient: vertical;
     overflow: hidden;
 }
-
+/* Stili per l'indirizzo del locale all'interno della card, con un font più piccolo e un colore più chiaro per differenziarlo dal titolo e dalla descrizione, e con un layout che include un'icona di posizione prima dell'indirizzo per migliorare la leggibilità e fornire un'indicazione visiva della localizzazione del locale */
 .risultato-card .card-info .card-address {
     font-size: 0.78rem;
     color: #999;
@@ -339,7 +338,7 @@ body{
     align-items: center;
     gap: 4px;
 }
-
+/* Stili per le icone di posizione nei risultati della card, con dimensioni ridotte e un colore più chiaro per integrarsi bene con il testo dell'indirizzo, e con pointer-events: none per disabilitare l'interazione con l'icona, evitando che interferisca con il click sulla card o su altri elementi interattivi all'interno della card */
 .back-black { background-image: url('/Foto/arrow-back.svg'); }
 .back-white { background-image: url('/Foto/arrow-white.svg'); }
 
@@ -369,7 +368,7 @@ body{
 .lista::-webkit-scrollbar {
     display: none;              
 }
-
+/* Stili per il contenitore della mappa, con dimensioni fisse al 50% dello spazio disponibile e un'altezza del 100% per garantire che la mappa si adatti correttamente all'interno del layout, e con una min-height di 400px per assicurare che la mappa rimanga visibile e utilizzabile anche su schermi più piccoli o quando la finestra del browser viene ridimensionata */
 #map {
     flex: 0 0 50%;
     height: 100%;
@@ -469,17 +468,20 @@ body{
       background: #fff;
   }
 }
-
 /* stile base per i badge aperto / chiuso per i locali */
 .badge {
     /* si comporta come un blocco, ma rimane sempre inline */
-    display: inline-block;
+    display: inline-flex;
     /* flex: 0 0 auto indica che il badge non si espande per occupare spazio extra e non si riduce al di sotto della sua dimensione naturale */
+    align-items: center;
+    gap: 5px;
     flex: 0 0 auto;
-    width: 16%;
-    font-size: 0.75rem;
+    width: fit-content;
+    font-size: 0.68rem;
     font-weight: 700;
-    padding: 2px 10px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    padding: 3px 10px 3px 8px;
     border-radius: 20px;
 }
 /* in entrambi i casi, abbiamo il testo più scuro e lo sfondo del badge con una gradazione più chiara in modo da far 
@@ -488,9 +490,31 @@ body{
     background: #d4edda;
     color: #155724;
 }
+
 .badge.chiuso {
     background: #f8d7da;
     color: #721c24;
+}
+
+/* Puntino colorato prima del testo */
+.badge.aperto::before {
+    content: '';
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #28a745;
+    flex-shrink: 0;
+}
+
+.badge.chiuso::before {
+    content: '';
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #dc3545;
+    flex-shrink: 0;
 }
 
 /* TOGGLE VISTA MOBILE MAPPA */
@@ -509,7 +533,7 @@ body{
     gap: 4px;
     box-shadow: 0 6px 24px rgba(0,0,0,0.22);
 }
-
+/* Stili per il bottone di toggle della vista mappa, con un design rotondo e un contrasto elevato per garantire la visibilità su dispositivi mobili, e con un effetto di transizione per il cambio di stato attivo/inattivo */
 .toggle-vista-btn {
     padding: 10px 24px;
     border: none;
@@ -525,7 +549,7 @@ body{
     gap: 7px;
     transition: background 0.2s, color 0.2s;
 }
-
+/* Quando il bottone è attivo, cambia lo sfondo e il colore del testo per indicare chiaramente all'utente che la vista mappa è attiva, migliorando l'usabilità e l'esperienza utente su dispositivi mobili */
 .toggle-vista-btn.active {
     background: var(--bs-body-bg);
     color: var(--bs-dark);
@@ -637,7 +661,7 @@ body{
     flex-direction: column;
     gap: 18px;
 }
-
+/* placeholder del contenuto durante il caricamento, con un gradiente che si muove da sinistra a destra per simulare un effetto di caricamento dinamico */
 .loading-txt {
     text-align: center;
     color: #fff;
@@ -645,7 +669,7 @@ body{
     padding: 40px 0;
 }
 
-
+/* stili per la descrizione del locale, con un font chiaro e ben leggibile, e con una spaziatura che migliora la leggibilità del testo */
 .desc-text {
     color: #555;
     font-size: 0.97rem;
@@ -654,33 +678,34 @@ body{
 }
 
 /* GRIGLIA INFO */
+/* stili per la griglia che contiene le informazioni principali del locale (orari, contatti, servizi), con un layout a colonna singola e una spaziatura uniforme tra gli elementi per migliorare la leggibilità e l'organizzazione visiva delle informazioni */
 .info-grid {
     display: grid;
     grid-template-columns: 1fr;
     gap: 12px;
 }
-
+/* stili per le icone e i testi all'interno della griglia delle informazioni, con un layout che allinea verticalmente le icone e i testi, e con una spaziatura uniforme tra di loro per migliorare la leggibilità e l'estetica della sezione */
 .luogo-color {
     color: #bbb;
 }
-
+/* info-icon è un contenitore che raggruppa un'icona e un testo, con un layout che li allinea verticalmente e con una spaziatura uniforme tra di loro per migliorare la leggibilità e l'estetica della sezione */
 .info-icon .text {
   display:inline-flex;
   align-items:center;
   gap:6px;
 }
-
+/* stili per le icone all'interno della griglia delle informazioni, con dimensioni ridotte e un colore più chiaro per integrarsi bene con il testo, e con pointer-events: none per disabilitare l'interazione con le icone, evitando che interferiscano con il click sui link o altri elementi interattivi all'interno della sezione delle informazioni */
 .info-icons {
   width:16px;
   height:16px;
 }
-
+/* stili per i testi all'interno della griglia delle informazioni, con un font chiaro e ben leggibile, e con un colore più scuro rispetto alle icone per garantire un buon contrasto e una facile lettura, e con un layout che consente ai link di essere evidenziati al passaggio del mouse per migliorare l'usabilità e l'esperienza utente */
 .info-pill-value {
     font-size: 0.94rem;
     font-weight: 700;
     color: var(--bs-dark);
 }
-
+/* stili per i link all'interno dei testi della griglia delle informazioni, con un colore che si distingue dal testo normale e con un effetto di sottolineatura al passaggio del mouse per indicare chiaramente che sono cliccabili, migliorando l'usabilità e l'esperienza utente */
 .info-pill-value a {
     color: var(--bs-dark);
     text-decoration: none;
@@ -696,25 +721,25 @@ body{
     gap: 14px;
     margin-bottom: 22px;
 }
-
+/* stili per il numero della valutazione, con un font grande, rotondo e chiaro per dare visibilità e rilevanza alla media dei voti, e con una spaziatura che migliora la leggibilità del testo */
 .voto-numero {
     font-family: 'Fredoka One', cursive;
     font-size: 3.2rem;
     color: var(--bs-dark);
     line-height: 1;
 }
-
+/* stili per la rappresentazione grafica della valutazione tramite stelle, con un layout che allinea le stelle e il numero della valutazione, e con una spaziatura uniforme tra di loro per migliorare la leggibilità e l'estetica della sezione */
 .stelle-show {
     display: flex;
     gap: 3px;
     margin-bottom: 4px;
 }
-
+/* stili per le icone delle stelle, con dimensioni ridotte e un colore più chiaro per integrarsi bene con il numero della valutazione, e con pointer-events: none per disabilitare l'interazione con le icone, evitando che interferiscano con il click sui link o altri elementi interattivi all'interno della sezione della valutazione */
 .stella-svg {
     width: 18px;
     height: 18px;
 }
-
+/* stili per il numero di voti, con un font più piccolo e un colore più chiaro per differenziarlo dal numero della valutazione, e con una spaziatura che migliora la leggibilità del testo */
 .voto-count {
     font-size: 0.82rem;
     color: #aaa;
@@ -722,6 +747,8 @@ body{
 }
 
 /* STELLE INTERATTIVE */
+
+/*stelli interattive per il form recensione: sono bottoni che permettono all'utente di selezionare un voto da 1 a 5 stelle, con un layout che allinea le stelle in una riga e con una spaziatura uniforme tra di loro per migliorare la leggibilità e l'estetica della sezione, e con effetti di hover e selezione per fornire un feedback visivo all'utente durante l'interazione */
 .stelle-rating {
     display: flex;
     gap: 4px;
@@ -748,7 +775,7 @@ body{
 /* giallo al hover o selezionata */
 .stella-btn.hov .stella-svg path,
 .stella-btn.sel .stella-svg path { fill: var(--bs-body-bg); }
-
+/* stili per l'etichetta del form di recensione, con un font chiaro e ben leggibile, e con un colore più scuro rispetto al testo normale per garantire un buon contrasto e una facile lettura, e con un layout che consente di distinguere chiaramente l'etichetta dal campo di input o dalle altre sezioni del form, migliorando l'usabilità e l'esperienza utente */
 .rec-form-label {
     font-size: 0.8rem;
     font-weight: 800;
@@ -759,13 +786,14 @@ body{
 }
 
 /* FORM RECENSIONE */
+/* stili per il form di recensione, con un layout che organizza gli elementi in una colonna verticale e con una spaziatura uniforme tra di loro per migliorare la leggibilità e l'estetica del form, e con stili specifici per i campi di input e le aree di testo per garantire un'esperienza utente coerente e piacevole durante la compilazione del form */
 .rec-form-wrap {
     display: flex;
     flex-direction: column;
     gap: 10px;
     margin-bottom: 28px;
 }
-
+/* stili per le aree di testo all'interno del form di recensione, con dimensioni adeguate, un design pulito e moderno, e con effetti di focus per migliorare l'usabilità e l'esperienza utente durante la compilazione del form */
 .rec-textarea {
     width: 100%;
     min-height: 96px;
@@ -993,12 +1021,13 @@ body{
 .btn-invia-rec:disabled { opacity: 0.45; cursor: not-allowed; }
 
 /* LISTA RECENSIONI */
+/* stili per la lista delle recensioni, con un layout che organizza le recensioni in una colonna verticale e con una spaziatura uniforme tra di loro per migliorare la leggibilità e l'estetica della sezione, e con stili specifici per ogni recensione per garantire un'esperienza utente coerente e piacevole durante la lettura delle recensioni */
 .recensioni-list {
     display: flex;
     flex-direction: column;
     gap: 12px;
 }
-
+/* stili per ogni singola recensione, con un design pulito e moderno, e con un'animazione di ingresso per rendere la visualizzazione delle recensioni più dinamica e piacevole */
 .rec-item {
     background: #f8f9fa;
     border-radius: 16px;
@@ -1008,11 +1037,12 @@ body{
     gap: 8px;
     animation: fadeSlideIn 0.35s ease both;
 }
+/* definisce l'animazione fadeSlideIn, che combina un effetto di dissolvenza (fade) con uno spostamento verticale (slide) per creare un ingresso fluido e piacevole delle recensioni nella pagina */
 @keyframes fadeSlideIn {
     from { opacity: 0; transform: translateY(10px); }
     to   { opacity: 1; transform: translateY(0); }
 }
-
+/* stili per l'intestazione di ogni recensione, con un layout che allinea il nome dell'utente e la data della recensione, e con una spaziatura uniforme tra di loro per migliorare la leggibilità e l'estetica della sezione */
 .rec-item-header {
     display: flex;
     justify-content: space-between;
@@ -1020,7 +1050,7 @@ body{
     flex-wrap: wrap;
     gap: 6px;
 }
-
+/* stili per il nome dell'utente che ha scritto la recensione, con un font chiaro e ben leggibile, e con un colore più scuro rispetto al testo normale per garantire un buon contrasto e una facile lettura, e con un layout che consente di distinguere chiaramente il nome dell'utente dalla data della recensione e dagli altri elementi dell'intestazione, migliorando l'usabilità e l'esperienza utente durante la lettura delle recensioni */
 .rec-utente {
     font-weight: 800;
     font-size: 0.93rem;
@@ -1029,25 +1059,26 @@ body{
     align-items: center;
     gap: 8px;
 }
+/* stili per l'avatar dell'utente che ha scritto la recensione, con dimensioni ridotte e un design rotondo per integrarsi bene con il nome dell'utente e migliorare l'estetica della sezione delle recensioni, e con un font più grande rispetto al testo normale per garantire una buona visibilità dell'avatar anche a dimensioni ridotte */
 .avatar-profilo {
     width: 45px;
     height: 45px;
     font-size: 1.3rem;
 }
-
+/* stili per la data della recensione, con un font più piccolo e un colore più chiaro per differenziarlo dal nome dell'utente e dagli altri elementi dell'intestazione, e con una spaziatura che migliora la leggibilità del testo */
 .rec-data-txt {
     font-size: 0.75rem;
     color: #bbb;
     font-weight: 600;
 }
-
+/* stili per il testo della recensione, con un font chiaro e ben leggibile, e con un colore più scuro rispetto alla data della recensione per garantire un buon contrasto e una facile lettura, e con una spaziatura che migliora la leggibilità del testo */
 .rec-testo-item {
     font-size: 0.92rem;
     color: #444;
     line-height: 1.65;
     margin: 0;
 }
-
+/* stili per il messaggio mostrato quando non ci sono recensioni, con un design pulito e moderno, e con un layout che centra il messaggio all'interno della sezione delle recensioni per migliorare l'estetica e la leggibilità del messaggio */
 .rec-empty {
     text-align: center;
     padding: 40px 20px;
@@ -1102,16 +1133,16 @@ body{
         margin-top: 60px;
         height: 280px;
     }
- 
+    /* Nome nel banner più piccolo e con line-height più stretto per evitare rotture su più righe */
     .banner-nome {
         font-size: 2rem;
         line-height: 1.15;
     }
- 
+    /* Overlay del banner con padding ridotto per adattarsi meglio a schermi piccoli */
     .banner-overlay {
         padding: 18px 16px;
     }
- 
+    /* Badge del banner più piccolo per evitare di occupare troppo spazio */
     .banner-badge {
         font-size: 0.65rem;
         padding: 3px 10px;
@@ -1192,7 +1223,7 @@ body{
     /* badge aperto/chiuso */
     .badge.aperto,
     .badge.chiuso {
-        width: auto;
+        width: fit-content;
         font-size: 0.68rem;
     }
  
@@ -1208,14 +1239,14 @@ body{
         padding: 8px 10px;
         gap: 7px;
     }
- 
+    /* ogni select occupa metà spazio disponibile, con un gap di 4px tra di loro, e con font più piccolo per adattarsi meglio a schermi piccoli */
     .filtri-container .form-select {
         flex: 1 1 calc(50% - 4px);
         min-width: 0;
         font-size: 0.8rem;
         height: 36px;
     }
- 
+    /* il bottone di reset occupa tutta la larghezza disponibile, con un font più piccolo per adattarsi meglio a schermi piccoli */
     #resetFiltri {
         flex: 1 1 100%;
         height: 36px;
@@ -1512,7 +1543,7 @@ body{
     font-weight: 700;
     text-align: center;
 }
-
+/* Contenitore verticale per le informazioni del profilo, con spaziatura uniforme tra di loro */
 .profilo-info {
     width: 100%;
     display: flex;
@@ -1529,6 +1560,7 @@ body{
     border-radius: 10px;
     padding: 10px 14px;
 }
+/* stili per le etichette all'interno delle righe di informazioni, con un design distintivo e un colore più chiaro per differenziarle dai valori delle informazioni, e con un layout che migliora la leggibilità e l'estetica della sezione delle informazioni del profilo */
 .info-row label {
     font-size: 0.72rem;
     font-weight: 600;
@@ -1537,6 +1569,7 @@ body{
     letter-spacing: 0.06em;
     color: #999;
 }
+/* stili per i valori delle informazioni all'interno delle righe di informazioni, con un font chiaro e ben leggibile, e con un colore più scuro rispetto alle etichette per garantire un buon contrasto e una facile lettura, e con un layout che consente di distinguere chiaramente i valori delle informazioni dalle etichette e dagli altri elementi della riga, migliorando l'usabilità e l'esperienza utente durante la visualizzazione delle informazioni del profilo */
 .info-row span {
     font-size: 0.95rem;
     font-weight: 500;
@@ -1556,18 +1589,24 @@ body{
     transition: opacity 0.2s;
 }
 .btn-logout:hover { opacity: 0.8; }
-
+/* Stili per il titolo delle sezioni all'interno del profilo, con un font distintivo e un design che migliora la leggibilità e l'estetica della sezione */
 .section-title {
     font-family: 'Fredoka One', cursive;
     font-size: 1.5rem;
     line-height: 1.2;
     font-weight: bold;
 }
+/* Stili per l immagine del profilo, con dimensioni fisse e un design rotondo per integrarsi bene con il layout del profilo e migliorare l'estetica della sezione del profilo */
 .profilo-txt {
-    height: 140%;
+    height: 50px;
     width: auto;
     object-fit: contain;
-    align-self: stretch;
+}
+/* su schermi molto piccoli, riduce l'altezza dell'immagine del profilo per adattarsi meglio al layout e migliorare l'estetica della sezione del profilo su dispositivi mobili */
+@media (max-width: 576px) {
+    .profilo-txt {
+        height: 32px;
+    }
 }
 /* RECENSIONI */
 /* Stili per le card delle recensioni all'interno del profilo, con effetti di hover e un layout pulito */

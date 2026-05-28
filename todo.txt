@@ -4,7 +4,6 @@ COSE FATTE:
 
 TODO:
     - fixare i bug inviati per messaggio
-    - luogo.html    -> stelle
     - revisione generale delle classi
 
 PAGINE REVISIONATE:

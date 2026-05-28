@@ -140,30 +140,44 @@
         // la funzione seguente gestisce la valutazione tramite stelle interattive con tre componenti distinti
         function initStelle() {
             const btns = document.querySelectorAll('.stella-btn');
+
+            // aggiorna le immagini in base alle classi attive
+            function aggiornaImmagini() {
+                btns.forEach(b => {
+                    const img = b.querySelector('.stella-img');
+                    if (img) {
+                        img.src = (b.classList.contains('sel') || b.classList.contains('hov'))
+                            ? '/Foto/stella_piena.svg'
+                            : '/Foto/stella_vuota.svg';
+                    }
+                });
+            }
+
             btns.forEach((b, i) => {
                 // MOUSEENTER - hover in "entrata"
-                // quando il mouse "entra" su una stella 'i', viene aggiunta la classe 'hov' a tutte le stelle dalla prima fino a quella
-                // con indice corretne creando l'effetto di anteprima del voto assegnato
-                b.addEventListener('mouseenter', () =>
-                    btns.forEach((bb, j) => bb.classList.toggle('hov', j <= i))
-                );
-
+                        // quando il mouse "entra" su una stella 'i', viene aggiunta la classe 'hov' a tutte le stelle dalla prima fino a quella
+                        // con indice corretne creando l'effetto di anteprima del voto assegnato
+                b.addEventListener('mouseenter', () => {
+                    btns.forEach((bb, j) => bb.classList.toggle('hov', j <= i));
+                    aggiornaImmagini();
+                });
                 // MOUSELEAVE - hover in "uscita"
-                // quando il mouse "esce", viene fatto il contrario di quanto fatto nella sezione precedente: viene rimossa la classe 'hov'
-                // da tutte le stelle fino alla posizione i-esima (posizione del puntatore)
-                b.addEventListener('mouseleave', () =>
+                        // quando il mouse "esce", viene fatto il contrario di quanto fatto nella sezione precedente: viene rimossa la classe 'hov'
+                        // da tutte le stelle fino alla posizione i-esima (posizione del puntatore)
+                b.addEventListener('mouseleave', () => {
                     btns.forEach((bb, j) => {
                         bb.classList.remove('hov');
                         bb.classList.toggle('sel', j < votoSelezionato);
-                    })
-                );
-
+                    });
+                    aggiornaImmagini();
+                });
                 // CLICK - selezione del voto
-                // una volta eseguito il 'click', il voto diventa "statico": tutte le stelle precendeti a quella cliccata diventano piene
-                // andando a salvare il voto all'interno della variabile 'votoSelezionato'
+                        // una volta eseguito il 'click', il voto diventa "statico": tutte le stelle precendeti a quella cliccata diventano piene
+                        // andando a salvare il voto all'interno della variabile 'votoSelezionato'
                 b.addEventListener('click', () => {
                     votoSelezionato = i + 1;
                     btns.forEach((bb, j) => bb.classList.toggle('sel', j < votoSelezionato));
+                    aggiornaImmagini();
                 });
             });
         }
@@ -274,7 +288,7 @@
             const fascia_oraria = document.querySelector('.fascia-btn.selected')?.getAttribute('data-fascia') || null;
 
             // se è presente il livello di fornitura, allora DEVE essere presente anche la fascia oraria e viceversa
-            if ((fornitura && !fascia_oraria) || (!fornitura && fascia_oraria)) {
+            if ((fornitura!=1 && !fascia_oraria) || (!fornitura && fascia_oraria)) {
                 // nel caso in cui uno dei due non dovesse esser selezionato, viene bloccato l'invio della recensione e viene mostrato un alert
                 mostranotifica('Devi selezionare sia il livello di fornitura che la fascia oraria!' , 'error');
                 btnInvia.disabled = false;
@@ -322,7 +336,11 @@
                 renderChartFornitura(nuove, aperturaCorrente, chiusuraColazioneCorrente);
 
                 votoSelezionato = 0;
-                document.querySelectorAll('.stella-btn').forEach(b => b.classList.remove('sel', 'hov'));
+                document.querySelectorAll('.stella-btn').forEach(b => {
+                    b.classList.remove('sel', 'hov');
+                    const img = b.querySelector('.stella-img');
+                    if (img) img.src = '/Foto/stella_vuota.svg';
+                });
 
             } catch (err) {
                 mostranotifica(err.message, 'error');
@@ -494,7 +512,7 @@
 
                 // registro l'orario limite in una variabile locale e salvo anche l'orario di apertura
                 chiusuraColazioneCorrente = chiusuraColazione;
-                aperturaCorrente = parseInt(luogo.apertura.substring(0, 2)) > 6 ? luogo.apertura.substring(0, 5) : '06:00';
+                aperturaCorrente = luogo.apertura.substring(0, 5);
 
                 // chiamo la funzione per generare fase orarie, dalla quale poi vado a creare tutti i pulsanti da inserire nella sezione "Colazione"
                 // del form per le recensioni
@@ -512,13 +530,9 @@
                             <p class="rec-form-label">Il tuo voto</p>
                             <div class="stelle-rating" id="stelleInput">
                                 ${[1,2,3,4,5].map(n => `
-                                <button class="stella-btn" aria-label="${n} stelle">
-                                    <svg class="stella-svg" viewBox="0 0 24 24">
-                                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88
-                                                L12 17.77l-6.18 3.25L7 14.14 2 9.27
-                                                l6.91-1.01L12 2z"/>
-                                    </svg>
-                                </button>`).join('')}
+                                    <button class="stella-btn" aria-label="${n} stelle">
+                                        <img src="/Foto/stella_vuota.svg" width="28" height="28" alt="${n} stelle" class="stella-img">
+                                    </button>`).join('')}
                             </div>
                         </div>
                     </div>
