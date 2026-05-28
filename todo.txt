@@ -1,10 +1,10 @@
 COSE FATTE:
-    Continuata revisione codice
+    revisione codice e risoluzione piccoli bug
 
 
 TODO:
-    -fixare i bug inviati per messaggio
-    - login-supplier.html   -> finire di commentare codice
+    - fixare i bug inviati per messaggio
+    - luogo.html    -> stelle
     - revisione generale delle classi
 
 PAGINE REVISIONATE:
@@ -12,7 +12,7 @@ PAGINE REVISIONATE:
     - luogo.html (completato)
     - login.html (completato)
     - profilo.html(completato)
-    - reset-password.html
+    - reset-password.html (completato)
     - login-supplier.html (completato)
-    - reset-password-supplier.html
-    - profilo-supplier.html
+    - reset-password-supplier.html (completato)
+    - profilo-supplier.html (completato)

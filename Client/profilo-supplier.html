@@ -333,7 +333,7 @@
                                 <div class="rec-data">${fmt(rec.created_at)}</div>
                             </div>
                         </div>
-                        <div class="flex-column text-end">
+                        <div class="flex-column">
                             <div> ${stelleSVG(5, rec.voto)}</div>
                             <div> ${rec.fascia_oraria ? `<strong>Fascia oraria:</strong> ${rec.fascia_oraria}` : ''}</div>
                             <div> ${rec.fornitura ? `<strong>Livello fornitura:</strong> ${rec.fornitura} su 5` : ''}</div>
@@ -365,15 +365,6 @@
                     <input type="tel" id="edit-telefono" value="${luogo.telefono||''}" placeholder="+39 000 0000000">
                 </div>
             </div>
-            
-            <!--
-            <div class="form-row single">
-                <div class="form-group">
-                    <label>Descrizione</label>
-                    <textarea id="edit-descrizione" placeholder="Descrivi il locale…">${luogo.descrizione||''}</textarea>
-                </div>
-            </div>
-            -->
 
             <div class="form-row single">
                 <div class="form-group">

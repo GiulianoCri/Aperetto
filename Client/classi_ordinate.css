@@ -769,59 +769,76 @@ body{
 }
 .rec-textarea::placeholder { color: #ccc; }
 
-/* Sottosezione Colazione */
+/* SEZIONE COLAZIONE */
+/* stili per la subsection inerente la colazione nel form recensioni */
+
+/* contenitore "base" per la subsection*/
 .colazione-sub {
+    /* il bordo è sottile con un colore leggermente più intenso rispetto allo sfondo in modo da risaltare maggiormente */
     border: 1.5px solid #FFE082;
     border-radius: 14px;
+    /* il colore di sfondo è chiaro, una sfumatura del colore principale del sito */
     background: #FFFDE7;
     padding: 14px 16px;
     width: 100%;
 }
-
+/* titolo della subsection: stile massiccio, abbastanza largo e con un colore più intenso rispetto a quello di sfondo in modo 
+    da risaltare maggiormente */
 .colazione-sub-title {
     font-weight: 800;
     font-size: 0.95rem;
     color: #F59E0B;
     letter-spacing: 0.3px;
 }
-
+/* stile per il contenuto effettivo del contenitore */
 .colazione-sub-row {
+    /* gli elementi vengono disposti automaticamente il riga */
     display: flex;
     flex-direction: row;
     gap: 24px;
     align-items: flex-start;
     flex-wrap: wrap;   /* su mobile va a capo automaticamente */
 }
-
+/* serve per "stabilizzare" tutti i 'div' figli diretti dentro il contenitore con lo stile precedente:
+    ogni blocco può crescere e restringersi, ma parte da una larghezza minima di 180px */
 .colazione-sub-row > div {
-    flex: 1 1 180px;   /* ogni colonna si allarga ma ha minimo 180px */
+    flex: 1 1 180px;
 }
 
+/* FASCE ORARIE */
+/* servono a creare i bottoni per le fasce orarie selezionabili */
+
+/* contenitore dei bottoni per le fasce orarie */
 .fascia-grid {
     display: flex;
     flex-wrap: wrap;
     gap: 7px;
 }
-
+/* bottone singolo per le fasce orarie */
 .fascia-btn {
     padding: 7px 14px;
+    /* bordo tondo chiaro e sottile */
     border: 1.5px solid #e9ecef;
     border-radius: 50px;
+    /* sfondo del bottone chiaro e neutro */
     background: #f8f9fa;
     font-family: 'Nunito', sans-serif;
     font-size: 0.8rem;
     font-weight: 700;
     color: #888;
+    /* quando il cursore viene passato sopra diventa un 'pointer' e viene avviata un'animazione (tempo 0.18 secondi) */
     cursor: pointer;
     transition: all 0.18s;
 }
-
+/* classe hover, quando viene passato il mouse viene "illuminato" il bottone:
+    il bottone prende colori simili rispetto al contenitore principale nel quale si trova */
 .fascia-btn:hover {
     border-color: var(--bs-body-bg);
     color: var(--bs-dark);
     background: #FFFBEF;
 }
-
+/* una volta selezionato il bottone, lo sfondo diventa scuro e il colore del testo diventa uguale al colore principale del sito
+    in modo da avere alto contrasto */
 .fascia-btn.selected {
     background: var(--bs-dark);
     color: var(--bs-body-bg);
@@ -829,8 +846,11 @@ body{
 }
 
 /* SLIDER FORNITURA */
+/* griglia principale he contiene i blocchi della sezione voto / fornitura */
+
 .voto-fornitura-row {
     display: grid;
+    /* crea due colonne: la prima larga quanto il suo contenuto, la seconda con larghezza fissa */
     grid-template-columns: auto 1fr;
     gap: 24px;
     align-items: start;
@@ -838,10 +858,14 @@ body{
 
 @media (max-width: 576px) {
     .voto-fornitura-row {
-        /* su mobile, il layout a griglia si trasforma in un layout a colonna unica, con ogni elemento che occupa l'intera larghezza disponibile e viene disposto verticalmente uno dopo l'altro */
+        /* su mobile, il layout a griglia si trasforma in un layout a colonna unica, con ogni elemento che occupa l'intera 
+            larghezza disponibile e viene disposto verticalmente uno dopo l'altro */
         grid-template-columns: 1fr;
     }
 }
+
+/* LIVELLO FORNITURA */
+/* contenitore verticale del blocco fornitura */
 
 .fornitura-wrap {
     display: flex;
@@ -849,53 +873,66 @@ body{
     gap: 8px;
     margin-bottom: 4px;
 }
-
+/* contiene il "titolo" a sinistra ed il valore della fornitura a destra */
 .fornitura-header {
     display: flex;
+    /* permette di inserire dello spazio tra i due elementi */
     justify-content: space-between;
     align-items: center;
 }
-
+/* stile per il badge che mostra il valore numerico selezionato */
 .fornitura-valore {
     font-family: 'Fredoka One', cursive;
     font-size: 1rem;
     color: var(--bs-dark);
+    /* sfondo chiaro, leggermnete più scuro dello sfondo */
     background: #FFF3CD;
     padding: 2px 12px;
     border-radius: 20px;
     min-width: 32px;
+    /* mette il testo al centro del contenitore */
     text-align: center;
 }
-/*STILE PER SLIDER FRONITURA*/
+/* SLIDER FRONITURA */
+/* classe di base dello slider */
 .fornitura-slider {
+    /* rimuovono lo stile nativo del browser in modo da avere lo slider personalizzato */
     -webkit-appearance: none;
     appearance: none;
+
     width: 100%;
     height: 6px;
     border-radius: 6px;
+    /* disegna una barra con parte attiva / inattiva */
+    /* questo gradiente viene aggiornato tramite javascript in modo da riflettere il valore corrente selezionato */
     background: linear-gradient(to right, var(--bs-body-bg) 0%, var(--bs-body-bg) 0%, #e9ecef 0%);
+    /* viene rimosso il focus nativo */
     outline: none;
+    /* il cursore diventa un 'pointer' e il colore della barra viene reso fluido mediante la transizione */
     cursor: pointer;
     transition: background 0.15s;
 }
-
+/* stile per il "thumb", ovvero il "pomello" trascinabile */
 .fornitura-slider::-webkit-slider-thumb {
+    /* rimuove lo stile nativo dato dal browser */
     -webkit-appearance: none;
     appearance: none;
+    /* le dimensioni vengono settate in maniera "statica", viene fatto circolare e di colore scuro */
     width: 22px;
     height: 22px;
     border-radius: 50%;
     background: var(--bs-dark);
     cursor: pointer;
     border: 3px solid var(--bs-body-bg);
+    /* ombra leggera ed animazione di 0.15 secondi */
     box-shadow: 0 2px 8px rgba(0,0,0,0.18);
     transition: transform 0.15s;
 }
-
+/* ingrandisce leggermente il pomello quando il mouse ci passa sopra */
 .fornitura-slider::-webkit-slider-thumb:hover {
     transform: scale(1.15);
 }
-
+/* fa la stessa cosa della classe precedente però per un browser differente (viene fatto per Firefox) */
 .fornitura-slider::-moz-range-thumb {
     width: 22px;
     height: 22px;
@@ -906,7 +943,9 @@ body{
     box-shadow: 0 2px 8px rgba(0,0,0,0.18);
 }
 
+/* stile per le etichette testuali di fornitura (minimo e massimo) */
 .fornitura-labels {
+    /* vengono messe sulla stessa linea distanziate (una all'inizio, l'altra alla fine ) */
     display: flex;
     justify-content: space-between;
     font-size: 0.68rem;
@@ -916,6 +955,7 @@ body{
     letter-spacing: 0.05em;
     padding: 0 2px;
 }
+/* FINE STILI FORNITURA */
 
 .btn-invia-rec {
     align-self: flex-end;
@@ -933,10 +973,6 @@ body{
 }
 .btn-invia-rec:hover:not(:disabled) { transform: translateY(-2px); opacity: 0.88; }
 .btn-invia-rec:disabled { opacity: 0.45; cursor: not-allowed; }
-
-
-
-
 
 /* LISTA RECENSIONI */
 .recensioni-list {
@@ -1008,9 +1044,7 @@ body{
 .rec-empty span { font-size: 2.4rem; }
 
 
-/*
-   Responsive luogo
-*/
+/* RESPONSIVE LUOGO */
 
 /* ── TABLET (≤900px) ── */
 @media (max-width: 900px) {
@@ -1492,8 +1526,8 @@ body{
     padding: 11px;
     border: none;
     border-radius: 12px;
-    background: #1a1a1a;
-    color: #FFC107;
+    background: var(--bs-dark);
+    color: var(--bs-body-bg);
     font-size: 0.9rem;
     font-weight: 600;
     cursor: pointer;
@@ -1593,10 +1627,9 @@ body{
     }
 }
 
-
-
-
 /*--------------------------FINE PROFILO.HTML --------------------------*/
+
+
 /* -------------------------- PROFILO-SUPPLIER.HTML -------------------------- */
 /* pulsante principale per confermare il form (contrasto elevato) */
 .btn-salva {
@@ -1620,16 +1653,30 @@ body{
 /* quando disabilitato, rende il bottone meno visibile e disattiva il cursore */
 .btn-salva:disabled { opacity: 0.45; cursor: not-allowed; }
 
-.edit-form { display: flex; flex-direction: column; gap: 18px; }
+/* contenitore principale del form */
+.edit-form { 
+    /* il contenuto viene organizzato in colonna con spaziatura costante */
+    display: flex; 
+    flex-direction: 
+    column; gap: 18px; 
+}
 
-.form-group { display: flex; flex-direction: column; gap: 5px; }
+/* molto simile alla classe precedente, cambia la spazitura verticale */
+.form-group { 
+    display: flex; 
+    flex-direction: column; 
+    gap: 5px; 
+}
+/* label dei campi: imposta un testo piccolo, maiuscolo e molto marcato in modo che risalti molto */
 .form-group label {
     font-size: 0.72rem;
     font-weight: 800;
     text-transform: uppercase;
+    /* stile per lo spaziamento delle lettere */
     letter-spacing: 0.08em;
     color: #999;
 }
+/* stile per tutti i campi compilabili del form */
 .form-group input,
 .form-group textarea,
 .form-group select {
@@ -1638,23 +1685,30 @@ body{
     border-radius: 12px;
     font-family: 'Nunito', sans-serif;
     font-size: 0.92rem;
-    color: #1a1a1a;
+    color: var(--bs-dark);
     background: #f8f9fa;
+    /* setta il tempo per le transizione degli effetti visivi */
     transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+    /* rimuove il focus nativo del browser, sostituito da uno stile personalizzato */
     outline: none;
 }
+/* quando l'utente seleziona il campo, il bordo passa a giallo e compare un piccolo bordo esterno per migliorare
+    la visibilità */
 .form-group input:focus,
 .form-group textarea:focus,
 .form-group select:focus {
-    border-color: #FFC107;
+    border-color: var(--bs-body-bg);
     background: var(--bs-white);
+    /* bordo "morbido" intorno al campo utile per la visibilità - opacità bassa */
     box-shadow: 0 0 0 3px rgba(255,193,7,0.18);
 }
-.form-group textarea { min-height: 100px; resize: vertical; }
 
+/* riga per form a due colonne: permette la visualizzazione di due campi correlati vicini */
 .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+/* viariante della classe precedente per una colonna singola: lo usiamo quando il campo deve occupare tutta la larghezza disponibile */
 .form-row.single { grid-template-columns: 1fr; }
 
+/* titolo per le sezioni del form: separa visivamente i gruppi del form */
 .form-section-title {
     font-family: 'Fredoka One', cursive;
     font-size: 1rem;
@@ -1664,6 +1718,8 @@ body{
     border-bottom: 1.5px dashed #f0f0f0;
 }
 
+/* CARD GENERICA */
+/* stile base per contenere i blocchi principali della pagina */
 .lc-card {
     background: var(--bs-white);
     border-radius: 22px;
@@ -1671,15 +1727,17 @@ body{
     box-shadow: 0 4px 20px rgba(0,0,0,0.08);
 }
 
+/* titolo della card: uas il font del progetto e layout flex per affiancare facilmente gli elementi della pagina */
 .lc-card-title {
     font-family: 'Fredoka One', cursive;
     font-size: 1.15rem;
-    color: #1a1a1a;
+    color: var(--bs-dark);
     margin: 0 0 16px;
     display: flex;
     align-items: center;
     gap: 8px;
 }
+/* linea decorativa dopo il titolo: occupa lo spazio residuo e crea una separazione visiva più elegante del semplice hr */
 .lc-card-title::after {
     content: '';
     flex: 1;
@@ -1688,6 +1746,9 @@ body{
     border-radius: 2px;
 }
 
+/* COPERTINA LOCALE */
+/* immagine principale del locale nella sidebar o nella scheda identità usa 'object-fit: cover' per mantenere il 
+    riempimento uniforme dell'area */
 .locale-cover {
     width: 100%;
     height: 160px;
@@ -1697,7 +1758,7 @@ body{
     margin-bottom: 14px;
     background: #f0f0f0;
 }
-
+/* griglia principale della pagina locale: sidebar fissa a sinistra e contenuto espanso a destra */
 .locale-grid {
     display: grid;
     grid-template-columns: 320px 1fr;
@@ -1706,12 +1767,14 @@ body{
     margin: 0 auto;
     align-items: start;
 }
-
+/* contenitore verticale dei metadati del locale */
 .locale-meta {
     display: flex;
     flex-direction: column;
     gap: 7px;
 }
+/* singola riga di metadata: serve ad allineare un'eventuale icona e testo sulla stessa linea mantenendo 
+    una gerarchia secondaria */
 .locale-meta-row {
     display: flex;
     align-items: center;
@@ -1720,20 +1783,22 @@ body{
     color: #666;
     font-weight: 600;
 }
+/* primo span della riga metadata: quindi viene leggermente ingrandito (spesso continee un'icona o un simbolo */
 .locale-meta-row span:first-child { font-size: 1rem; }
-
+/* titolo principale del blocco identificativo del locale */
 .locale-nome {
     font-family: 'Fredoka One', cursive;
     font-size: 1.5rem;
     line-height: 1.2;
     margin-bottom: 6px;
 }
-
+/* contenitore generale della pagina */
 .locale-page {
     margin-top: 72px;
     padding: 28px 20px 80px;
 }
-
+/* contenitore per la sidebar del locale: impila i blocchi verticalmente e resta visibile durante lo scroll 
+    grazie a 'position: sticky'*/
 .locale-sidebar {
     display: flex;
     flex-direction: column;
@@ -1741,11 +1806,13 @@ body{
     position: sticky;
     top: 90px;
 }
-
+/* etichetta "compatta" per indicare i servizi offerti dal locale */
 .locale-tipo {
     display: inline-block;
-    background: #FFC107;
-    color: #1a1a1a;
+    /* come sfondo viene utilizzato il colore del body e come colore del testo viene usato '--bs-dark' */
+    background: var(--bs-body-bg);
+    color: var(--bs-dark);
+    /* viene utilizzato un font sottile, piccolo e tutto maiuscolo */
     font-size: 0.72rem;
     font-weight: 800;
     text-transform: uppercase;
@@ -1755,29 +1822,39 @@ body{
     margin-bottom: 12px;
 }
 
+/* CARD RECENSIONE */
+/* card singola per ogni recensione, mostrata nel tab dedicato */
 .rec-card {
+    /* sfondo bianco con un'ombra leggera */
     background: var(--bs-white);
     border-radius: 18px;
     padding: 18px 20px;
     box-shadow: 0 3px 12px rgba(0,0,0,0.07);
     border: 1.5px solid rgba(0,0,0,0.04);
+    /* animazione in ingresso per rendere la lista più dinamica */
     transition: box-shadow 0.2s;
     animation: fadeSlideIn 0.35s ease both;
 }
+/* quando viene passato sopra il mouse, viene aumentata l'ombra per far aumentare la profondità della card */
 .rec-card:hover { box-shadow: 0 6px 20px rgba(0,0,0,0.11); }
 
+/* lista delle recensioni */
 .rec-list { display: flex; flex-direction: column; gap: 14px; }
+/* stile per il le info dell'utente che ha scritto la recensione */
 .rec-user-info { display: flex; align-items: center; gap: 10px; }
 .rec-user-name { font-weight: 800; font-size: 0.95rem; }
 
+/* riga superiore della card: separa il blocco utente dalle stelle e dal resto dell informaziponi della recensione */
 .rec-header-row {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
+    flex-direction: column;
     gap: 10px;
     margin-bottom: 10px;
 }
 
+/* simile alla classe 'banner-skeleton', simula i contenuti reali con un gradiente animato in "attesa" dei dati */
 .skeleton {
     background: linear-gradient(90deg, #f0f0f0 25%, #e8e8e8 50%, #f0f0f0 75%);
     background-size: 200% 100%;
@@ -1785,19 +1862,22 @@ body{
     border-radius: 8px;
 }
 
+/* box statistico: usato per mostrare un sommario riassuntivo delle valutazioni  */
 .stat-box {
     background: #f8f9fa;
     border-radius: 14px;
     padding: 14px 12px;
     text-align: center;
 }
+/* stile per il numero principale delle statistiche (numero recensioni) */
 .stat-num {
     font-family: 'Fredoka One', cursive;
     font-size: 2rem;
-    color: #1a1a1a;
+    color: var(--bs-dark);
     line-height: 1;
     margin-bottom: 2px;
 }
+/* label per le statistiche: colore grigio molto chiaro per risaltare rispetto allo sfondo ma che non risulti troppo invadente */
 .stat-label {
     font-size: 0.72rem;
     font-weight: 800;
@@ -1805,12 +1885,16 @@ body{
     letter-spacing: 0.07em;
     color: #bbb;
 }
-.stat-box.voto-big .stat-num { color: #FFC107; font-size: 2.4rem; }
+.stat-box.voto-big .stat-num { color: var(--bs-body-bg); font-size: 2.4rem; }
+/* stili per renderizzare le stelle al di sotto del voto medio */
 .stelle-mini { display: flex; justify-content: center; gap: 2px; margin-top: 3px; }
 .stella-mini { width: 13px; height: 13px; }
 
+/* stella standard */
 .stella-r { width: 16px; height: 16px; }
 
+/* NAVIGAZIONE A TAB */
+/* contenitore dei pulsanti tab: sfondo chiaro e padding interno per ottenere l'effetto di controllo "frammentato" */
 .tab-nav {
     display: flex;
     gap: 6px;
@@ -1819,6 +1903,7 @@ body{
     padding: 5px;
     margin-bottom: 20px;
 }
+/* bottone singolo della tab: occupa lo spazio disponibile in modo uniforme e resta neutro finché non attivo */
 .tab-btn {
     flex: 1;
     padding: 10px 8px;
@@ -1834,26 +1919,45 @@ body{
     text-transform: uppercase;
     letter-spacing: 0.05em;
 }
+/* quando il bottone diventa attivo, viene cambiato il colore di sfondo (bianco puro) e il colore del testo */
 .tab-btn.active {
     background: var(--bs-white);
-    color: #1a1a1a;
+    color: var(--bs-dark);
+    /* viene aggiunta una leggera ombra */
     box-shadow: 0 2px 8px rgba(0,0,0,0.10);
 }
-.tab-btn:hover:not(.active) { color: #1a1a1a; }
+/* viene scurito il testo per far percepire al meglio l'interazione possibile */
+.tab-btn:hover:not(.active) { color: var(--bs-dark); }
 
+/* pannello contanuti della tab (nascosto di default) */
 .tab-panel { display: none; }
 .tab-panel.active { display: block; }
 
 /* RESPONSIVE PROFILO-SUPPLIER.HTML */
+/* responsive per le classi di stile per la struttura generale della pagina */
 @media (max-width: 900px) {
-    .locale-grid 
-    {
-    grid-template-columns: 1fr;
-    width: 100%;
-    overflow-x: hidden; /* ← impedisce lo scroll orizzontale */
+    .locale-page {
+        padding: 16px 12px 80px;
+        overflow-x: hidden; /* impedisce lo scroll orizzontale */
     }
-    .locale-sidebar { position: static; }
-    .form-row { grid-template-columns: 1fr; }
+
+    .locale-grid {
+        display: grid !important;
+        grid-template-columns: 1fr !important;
+        gap: 16px;
+    }
+
+    .locale-sidebar {
+        position: static !important;
+    }
+
+    .form-row {
+        grid-template-columns: 1fr !important;
+    }
+
+    canvas {
+        max-width: 100%;
+    }
 }
 @media (max-width: 576px) {
     .locale-page {
@@ -2330,7 +2434,6 @@ body{
 /*
  * .left-headline
  * Titolo principale del pannello sinistro nelle pagine supplier.
- *
  * Usata in 2 pagine: login-supplier.html, reset-password-supplier.html
  */
 .left-headline {
@@ -2340,6 +2443,16 @@ body{
   color: var(--dark);
   margin-bottom: 28px;
   max-width: 480px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* si applica quando lo schermo è più piccolo di 767 pixel */
+@media (max-width: 767px) {
+  .left-headline {
+    margin-left: 15px;
+    margin-right: 0;
+  }
 }
 
 .left-headline span {
@@ -2556,8 +2669,8 @@ body{
     pointer-events: none;
 }
 .ap-notifica {
-    background: #1a1a1a;
-    color: #FFC107;
+    background: var(--bs-dark);
+    color: var(--bs-body-bg);
     font-family: 'Fredoka One', cursive;
     font-size: 0.97rem;
     padding: 13px 22px;
