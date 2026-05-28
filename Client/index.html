@@ -69,6 +69,18 @@
             </div>
         </div>
 
+        <!-- Stato locale -->
+        <div class="filtro-group">
+            <img src="/Foto/filtro.svg" alt="filtro" width="15" height="15" class="filtro-icon">
+            <div class="select-wrapper">
+                <select id="filtroStato" class="filtro-select">
+                    <option class="text-center" value="">Tutti gli stati</option>
+                    <option class="text-center" value="aperto">Aperto ora</option>
+                    <option class="text-center" value="chiuso">Chiuso ora</option>
+                </select>
+            </div>
+        </div>
+
         <!-- Reset -->
         <button id="resetFiltri">
             <img src="/Foto/reset.svg" alt="filtro" width="15" height="15" class="filtro-icon">
@@ -151,7 +163,7 @@
                 iconUrl: '/Foto/position-marker.svg', 
                 iconSize: [36, 36],
                 iconAnchor: [18, 36],
-                popupAnchor: [0, -36]
+                popupAnchor: [-20, -40]
                 }) 
             }).addTo(map);
             // tooltip è un piccolo box che appare al passaggio del mouse
@@ -160,7 +172,7 @@
                 ${luogo.indirizzo}
                 `, {
                 direction: "top",
-                offset: [0, -10]
+                offset: [-5, -30]
             });
             // al click sul marker, reindirizza alla pagina del luogo, il from=index serve per sapere da dove viene l'utente e poter 
             // mostrare un bottone "torna alla lista" nella pagina del luogo e indirizzare correttamente al click
@@ -307,6 +319,7 @@
         const testo = input.value.toLowerCase().trim(); 
         const tipo = filtroTipo.value;
         const distanzaMax = parseFloat(filtroDistanza.value);
+        const stato = filtroStato.value;
 
         // filtro testo: controllo se il nome del locale include il testo di ricerca, uso toLowerCase per rendere la ricerca case-insensitive e trim per evitare problemi con spazi extra
         if (testo) {
@@ -335,6 +348,14 @@
             } catch {
                 alert("Attiva la geolocalizzazione per filtrare per distanza");
             }
+        }
+
+        if (stato) {
+        filtrati = filtrati.filter(l => {
+            const aperto = isAperto(l.apertura, l.chiusura);
+            if (aperto === null) return true; // senza orari, mostro comunque il luogo
+            return stato === 'aperto' ? aperto : !aperto;
+        });
         }
         // aggiorno la vista con i luoghi filtrati, sia la lista che i marker sulla mappa
         aggiornaVista(filtrati);
@@ -472,15 +493,18 @@
 
     const filtroTipo = document.getElementById("filtroTipo");
     const filtroDistanza = document.getElementById("filtroDistanza");
+    const filtroStato = document.getElementById("filtroStato");
     const resetBtn = document.getElementById("resetFiltri");
     // aggiungo event listener a entrambi i filtri per applicare i filtri al cambiamento di uno qualsiasi dei due
-    [filtroTipo, filtroDistanza].forEach(f =>
-        f.addEventListener("change", applicaFiltri)
+    [filtroTipo, filtroDistanza, filtroStato].forEach(f =>
+    f.addEventListener("change", applicaFiltri)
     );
+
     // al click sul reset, svuoto i filtri e mostro tutti i luoghi
     resetBtn.addEventListener("click", () => {
         filtroTipo.value = "";
         filtroDistanza.value = "";
+        filtroStato.value = "";
         applicaFiltri();
     });
 

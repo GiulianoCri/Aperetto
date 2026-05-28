@@ -1,12 +1,11 @@
 COSE FATTE:
-    riordinate per pagine (ordine logico di presentazione)
-    e continuata revisione codice
+    Continuata revisione codice
 
 
 TODO:
     -fixare i bug inviati per messaggio
     - login-supplier.html   -> finire di commentare codice
-    - revisione generale delle classi + riordinare per pagine (ordine logico di presentazione)
+    - revisione generale delle classi
 
 PAGINE REVISIONATE:
     - index.html (completato)

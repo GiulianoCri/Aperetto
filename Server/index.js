@@ -668,7 +668,7 @@ app.post('/api/register-supplier', upload.single('immagineLocale'), async (req, 
 
     try {
         //gestione upload immagine su supabase storage, se è stata inviata un'immagine. Il nome del file sarà "locali/timestamp_nomeoriginale", così da evitare conflitti di nomi e organizzare le immagini in una cartella dedicata. Se c'è un errore durante l'upload, viene restituito un errore 500.
-        let nomeFile = null;
+        let nomeFile = 'Default/Aperitivo.jpg'; // immagine di default se non viene inviata un'immagine
         if (req.file) {
             nomeFile = `locali/${Date.now()}_${req.file.originalname}`;
             const { error: uploadError } = await supabase.storage

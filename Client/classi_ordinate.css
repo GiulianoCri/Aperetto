@@ -97,7 +97,7 @@ body{
   top: 72px;
   left: 0;
   width: 100%;
-  /* z-index elevato per sovrapporsi a tutti gli altri elementi, ma inferiore al dropdown del profilo (1100) e al toggle vista mobile (1100) */
+  /* z-index utilizzato per sovrapporre a tutto*/
   z-index: 1000;
   background: rgba(255, 193, 7, 0.45);
   /* backdrop-filter aggiunge un effetto di sfocatura al background, creando un aspetto più moderno e leggero, e migliorando la leggibilità del testo sui dispositivi mobili */
@@ -108,7 +108,9 @@ body{
   padding: 10px 20px;
   display: flex;
   align-items: center;
+  /* gap: 10px aggiunge uno spazio uniforme tra i gruppi di filtri e il pulsante reset */
   gap: 10px;
+  /* flex-wrap: wrap consente agli elementi all'interno della barra dei filtri di andare a capo su più righe quando lo spazio orizzontale è limitato */
   flex-wrap: wrap;
 }
 
@@ -211,6 +213,7 @@ body{
     box-shadow: 0 4px 16px rgba(0,0,0,0.08);
     transition: transform 0.2s ease, box-shadow 0.2s ease;
     display: flex;
+    /* flex-direction: column organizza gli elementi all'interno della card in una colonna verticale */
     flex-direction: column;
     border: 1.5px solid rgba(0,0,0,0.05);
     min-height: 300px;
@@ -232,6 +235,16 @@ body{
     box-shadow: 0 2px 6px rgba(0,0,0,0.15);
 }
 
+.badges-wrap {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    z-index: 2;
+}
+
 /* Effetti di hover e active per le card */
 .risultato-card:hover {
     transform: translateY(-4px);
@@ -242,7 +255,7 @@ body{
     transform: translateY(-1px);
 }
 
-/* Stili per l'immagine all'interno della card, con un wrapper per mantenere le proporzioni */
+/* Stili per il contenitore dell'immagine nella card */
 .risultato-card .card-img-wrap {
     position: relative;
     width: 100%;
@@ -253,7 +266,7 @@ body{
     /* flex-shrink: 0 impedisce al wrapper dell'immagine di ridursi in dimensioni quando lo spazio è limitato, garantendo che l'immagine mantenga la sua altezza e proporzioni all'interno della card, anche su schermi più piccoli o quando la card viene ridimensionata */
     flex-shrink: 0;     
 }
-
+/*stili per l immagine*/
 .risultato-card .card-img-wrap img {
     width: 100%;
     height: 100%;
@@ -322,13 +335,16 @@ body{
 /* LAYOUT APP CONTAINER - DESKTOP */
 .app-container {
     display: flex;
+    /* flex-direction: row organizza i principali contenitori della pagina (lista e mappa) in una riga orizzontale, affiancandoli uno accanto all'altro */
     flex-direction: row;
     width: 100%;
     overflow: hidden;
 }
 
 .lista {
+    /* flex: 0 0 50% indica che il contenitore della lista occupa il 50% dello spazio disponibile, non si espande oltre questa dimensione e non si riduce al di sotto di essa, garantendo un layout bilanciato tra la lista e la mappa*/
     flex: 0 0 50%;
+    /*overflow-y: auto abilita lo scorrimento verticale all'interno del contenitore della lista*/
     overflow-y: auto;
     padding: 12px;
     display: flex;
@@ -345,11 +361,12 @@ body{
     height: 100%;
     min-height: 400px;
 }
-
+/* LAYOUT APP CONTAINER - MOBILE-Impostazione bottone mappa */
 @media (max-width: 600px) {
-/* Fix lista/mappa */
     #map {
+        /* display: none nasconde completamente il contenitore della mappa, rimuovendolo dal flusso del layout e impedendo che occupi spazio o sia visibile all'utente */
         display: none !important;
+        /*flex: 0 assicura che non occupi alcuna area residua, permettendo alla lista di utilizzare tutto lo spazio disponibile*/
         flex: 0;
     }
     .lista {
@@ -385,6 +402,7 @@ body{
     gap: 8px;
   }
   .filtro-group {
+    /* flex: 1 1 calc(50% - 8px) consente a ciascun gruppo filtro di occupare il 50% dello spazio disponibile, con un margine di 8px tra di loro*/
     flex: 1 1 calc(50% - 8px);
   }
   .filtro-select {
@@ -398,12 +416,12 @@ body{
   }
 }
 
-
+/*responsive bottone geolocalizzazione */
 @media (max-width: 576px) {
     #vicinoBtn {
     background: rgba(255,255,255,0.6);
     border-radius: 12px !important;
-    padding: 6px 10px !important;
+    padding: 6px 8px !important;
     transition: background 0.2s, transform 0.15s;
     border: 1.5px solid rgba(0,0,0,0.08) !important;
     }
@@ -423,51 +441,26 @@ body{
     padding: 0 18px;
     font-size: 0.92rem;
     background: rgba(255,255,255,0.85);
+    /* backdrop-filter: blur(4px) aggiunge un effetto di sfocatura al background dell'input*/
     backdrop-filter: blur(4px);
     transition: box-shadow 0.2s, border-color 0.2s;
   }
   .search-input:focus {
       box-shadow: 0 0 0 3px rgba(0,0,0,0.10);
       border-color: rgba(0,0,0,0.3);
+      /* outline: none rimuove il bordo di focus predefinito dell'input*/
       outline: none;
       background: #fff;
   }
-}
-
-@media (max-height: 500px) and (max-width: 900px) {
- 
-    .luogo-banner {
-        height: 180px;
-    }
- 
-    .banner-nome {
-        font-size: 1.4rem;
-    }
- 
-    /* App container: layout orizzontale lista+mappa */
-    .app-container {
-        flex-direction: row;
-    }
-    
- 
-    #map {
-        flex: 1;
-        height: 100%;
-    }
- 
-    .lista {
-        flex: 0 0 260px;
-        max-height: 100%;
-        height: 100%;
-    }
 }
 
 /* stile base per i badge aperto / chiuso per i locali */
 .badge {
     /* si comporta come un blocco, ma rimane sempre inline */
     display: inline-block;
+    /* flex: 0 0 auto indica che il badge non si espande per occupare spazio extra e non si riduce al di sotto della sua dimensione naturale */
     flex: 0 0 auto;
-    width: 16.66666667%;
+    width: 16%;
     font-size: 0.75rem;
     font-weight: 700;
     padding: 2px 10px;
@@ -484,12 +477,14 @@ body{
     color: #721c24;
 }
 
-/* TOGGLE VISTA MOBILE */
+/* TOGGLE VISTA MOBILE MAPPA */
 .toggle-vista {
+    /*di default, il bottone è nascosto (display: none) e viene mostrato solo su dispositivi mobili tramite media query*/
     display: none;
     position: fixed;
     bottom: 24px;
     left: 50%;
+    /* transform: translateX(-50%) centra orizzontalmente il bottone rispetto al punto in cui è posizionato (left: 50%) */
     transform: translateX(-50%);
     z-index: 1100;
     background: var(--bs-dark);
@@ -524,142 +519,8 @@ body{
   /* toggle bottoni */
   .toggle-vista { display: flex; }
 }
-/* Badge aperto/chiuso: stili per i badge che indicano se un locale è attualmente aperto o chiuso, con colori distintivi per migliorare la visibilità e la comprensione rapida dello stato del locale */
-.badge-aperto {
-    display: inline-block;
-    flex: 0 0 auto;
-    width: 16.66666667%;
-    background: #d4edda;
-    color: #155724;
-    font-size: 0.75rem;
-    font-weight: 700;
-    padding: 2px 10px;
-    border-radius: 20px;
-}
-
-.badge-chiuso {
-    display: inline-block;
-    flex: 0 0 auto;
-    width: 16.66666667%;
-    background: #f8d7da;
-    color: #721c24;
-    font-size: 0.75rem;
-    font-weight: 700;
-    padding: 2px 10px;
-    border-radius: 20px;
-}
-
-@media (max-width: 600px) {
-  /* badge aperto/chiuso */
-  .badge-aperto,
-  .badge-chiuso {
-    width: 25%;
-    font-size: 0.68rem;
-    padding: 2px 1px;
-  }
-}
-
-.backbtn {
-    width: 35px;
-    height: 35px;
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    border: none;
-    cursor: pointer;
-}
-
-.supplier { 
-    width: 30px; 
-    height: 30px; 
-}
-.arrow-back {
-    width: 30px;
-    height: 30px;
-    background-image: url('/Foto/arrow-back.svg');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    border: none;
-    cursor: pointer;
-}
-
-.risultati {
-    width: 80%;                /* un po’ di margine ai lati */
-    max-width: 1000px;         /* larghezza massima */
-    margin-left: auto;
-    margin-right: auto;        /* centrato orizzontalmente */
-    background-color: white;   /* colore del rettangolo */
-    border-radius: 15px;       /* bordi stondati */
-    padding: 20px;             /* spazio interno */
-    box-shadow: 0 5px 15px rgba(0,0,0,0.2); /* ombra leggera */
-    min-height: 150px;         /* altezza minima */
-    box-sizing: border-box;
-    gap: 20px;                 /* spazio tra i luoghi */
-}
-.btn-back:hover { text-decoration: underline; }
-
-.detail-wrap {
-    max-width: 1000px;
-    margin: 2rem auto;
-    padding: 0 1.5rem;
-    margin-top: 90px; /* spazio per navbar fissa */
-}
-.detail-wrap img {
-    width: 100%; border-radius: 12px;
-    max-height: 380px; object-fit: cover;
-    margin-bottom: 1.2rem;
-}
-.detail-wrap h1 { margin-bottom: 0.5rem; }
-.detail-wrap p  { margin-bottom: 0.4rem; }
-/* Stato di errore */
-.errore {
-    text-align: center;
-    padding: 4rem 1rem;
-    color: black;
-}
-
-.blockquote {
-  margin-bottom: 1rem;
-  font-size: 1.25rem;
-}
-.blockquote > :last-child {
-  margin-bottom: 0;
-}
-
-.blockquote-footer {
-  margin-top: -1rem;
-  margin-bottom: 1rem;
-  font-size: 0.875em;
-  color: #6c757d;
-}
-.blockquote-footer::before {
-  content: "— ";
-}
 
 
-.img-thumbnail {
-  padding: 0.25rem;
-  background-color: var(--bs-body-bg);
-  border: var(--bs-border-width) solid var(--bs-border-color);
-  border-radius: var(--bs-border-radius);
-  max-width: 100%;
-  height: auto;
-}
-
-.figure {
-  display: inline-block;
-}
-
-.figure-img {
-  margin-bottom: 0.5rem;
-  line-height: 1;
-}
-
-.figure-caption {
-  font-size: 0.875em;
-  color: var(--bs-secondary-color);
-}
 
 /* -------------------------- FINE INDEX.HTML -------------------------- */
 
@@ -678,12 +539,14 @@ body{
 .luogo-banner img {
     width: 100%;
     height: 100%;
+    /* object-fit: cover adatta l'immagine al contenitore del banner, mantenendo le proporzioni e ritagliando se necessario per evitare distorsioni, garantendo che l'immagine riempia completamente lo spazio disponibile senza deformarsi */
     object-fit: cover;
+    /* display: block rimuove lo spazio bianco sotto l'immagine causato dal comportamento inline di default, assicurando che l'immagine si allinei correttamente con il bordo inferiore del banner e mantenendo un aspetto pulito e ordinato */
     display: block;
 }
 /* gradiente scuro in basso per leggibilità del testo */
 .luogo-banner::after {
-    /* crea un elemento che va a coprire tutta l'area del contenitore */
+    /* crea un elemento vuoto che va a coprire tutta l'area del contenitore */
     content: '';
     position: absolute;
     /* imposta contemporaneamente top, right, bottom e left
@@ -707,7 +570,7 @@ body{
     background: linear-gradient(90deg, #f0f0f0 25%, #e8e8e8 50%, #f0f0f0 75%);
     /* il gradiente è più grande dello schermo per poterlo "animare" */
     background-size: 200% 100%;
-    /* l'animazione (shimmer) è un loop infinito che dura 1.4 secondi */
+    /* animation shimmer è una animazione che si ripete all'infinito */
     animation: shimmer 1.4s infinite;
 }
 /* determina l'andamento dello shimmer (da destra verso sinistra) */
@@ -975,6 +838,7 @@ body{
 
 @media (max-width: 576px) {
     .voto-fornitura-row {
+        /* su mobile, il layout a griglia si trasforma in un layout a colonna unica, con ogni elemento che occupa l'intera larghezza disponibile e viene disposto verticalmente uno dopo l'altro */
         grid-template-columns: 1fr;
     }
 }
@@ -1002,7 +866,7 @@ body{
     min-width: 32px;
     text-align: center;
 }
-
+/*STILE PER SLIDER FRONITURA*/
 .fornitura-slider {
     -webkit-appearance: none;
     appearance: none;
@@ -1072,25 +936,7 @@ body{
 
 
 
-/* PROMPT LOGIN */
-.login-prompt {
-    background: #FFF3CD;
-    border-radius: 14px;
-    padding: 14px 18px;
-    font-size: 0.92rem;
-    font-weight: 600;
-    color: #7a5100;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 24px;
-}
-.login-prompt a {
-    color: var(--bs-dark);
-    font-weight: 800;
-    border-bottom: 2px solid var(--bs-body-bg);
-    text-decoration: none;
-}
+
 
 /* LISTA RECENSIONI */
 .recensioni-list {
@@ -1372,6 +1218,29 @@ body{
 .text-bg-info {
   background-color: RGBA(var(--bs-body-bg), var(--bs-bg-opacity, 1)) !important;
 }
+.supplier { 
+    width: 30px; 
+    height: 30px; 
+}
+/* PROMPT LOGIN */
+.login-prompt {
+    background: #FFF3CD;
+    border-radius: 14px;
+    padding: 14px 18px;
+    font-size: 0.92rem;
+    font-weight: 600;
+    color: #7a5100;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 24px;
+}
+.login-prompt a {
+    color: var(--bs-dark);
+    font-weight: 800;
+    border-bottom: 2px solid var(--bs-body-bg);
+    text-decoration: none;
+}
 /* -------------------------- FINE LOGIN.HTML -------------------------- */
 
 
@@ -1608,6 +1477,7 @@ body{
     font-size: 0.72rem;
     font-weight: 600;
     text-transform: uppercase;
+    
     letter-spacing: 0.06em;
     color: #999;
 }
@@ -1674,8 +1544,6 @@ body{
 
 /* Stili per la valutazione a stelle all'interno dell'intestazione della recensione */
 .stelle { display: flex; gap: 3px; }
-.stella       { width: 16px; height: 16px; fill: #FFC107; }
-.stella.vuota { fill: #e0e0e0; }
 
 /* Stili per i tag di raccomandazione all'interno della recensione, con un design distintivo e colori accattivanti */
 .rec-tag {
@@ -2002,8 +1870,7 @@ body{
 /* -------------------------- STILI NAVBAR --------------------------*/
 /*
  * .navbar-custom
- * Barra di navigazione fissa superiore. Altezza 72px, sfondo bianco, ombra leggera. Usata in: index, luogo, profilo, profilo-supplier.
- *
+ * Barra di navigazione fissa superiore.
  * Usata in 4 pagine: index.html, luogo.html, profilo-supplier.html, profilo.html
  */
 .navbar-custom{
@@ -2017,14 +1884,6 @@ body{
     border-bottom: 2px solid rgba(0, 0, 0, 0.12);
 }
 
-@media (max-width: 576px) {
-  .navbar-custom {
-          height: 64px;
-          gap: 8px;
-          padding: 0 10px;
-      }
-}
-
 @media (max-width: 600px) {
   .navbar-custom {
           height: 60px;
@@ -2035,7 +1894,7 @@ body{
 
 /*
  * .logo
- * Logo applicazione nella navbar. Dimensioni 100×auto con object-fit contain. Usata in: index, luogo, profilo, profilo-supplier.
+ * Logo applicazione nella navbar.
  *
  * Usata in 4 pagine: index.html, luogo.html, profilo-supplier.html, profilo.html
  */
@@ -2061,7 +1920,9 @@ body{
 /* Stili per il menu a tendina del profilo*/
 .dropdown {
     position: absolute;
+    /*top: 120% posiziona il dropdown leggermente più in basso rispetto al pulsante del profilo, creando un effetto di "discesa" quando viene attivato */
     top: 120%;
+    /* right: 0 posiziona il dropdown allineato a destra rispetto al pulsante del profilo, creando un effetto di "discesa" */
     right: 0;
     background-color: RGBA(var(--bs-white-rgb), var(--bs-bg-opacity, 1));
     box-shadow: 0 5px 15px rgba(0,0,0,0.2);
@@ -2081,6 +1942,7 @@ body{
 /* Quando è attivo */
 .dropdown.show {
     opacity: 1;
+    /* translateY(0) riporta il dropdown alla sua posizione originale, creando l'effetto di discesa */
     transform: translateY(0);
     pointer-events: auto;
 }
@@ -2094,7 +1956,7 @@ body{
 
 /*
  * .loginbtn
- * Pulsante avatar utente nella navbar (icona profilo circolare 50×50px). Apre il dropdown di login/profilo. Usata in: index, luogo.
+ * Pulsante avatar utente nella navbar (icona profilo circolare 50×50px). Apre il dropdown di login/profilo.
  *
  * Usata in 2 pagine: index.html, luogo.html
  */
@@ -2120,7 +1982,7 @@ body{
       background-position: center;
       background-repeat: no-repeat;
       cursor: pointer;
-      background-color: rgba(255,255,255,0.6);
+      background-color: transparent;
       border: none !important;
       border-radius: 50% !important;
       transition: border-color 0.2s, box-shadow 0.2s;
@@ -2133,10 +1995,10 @@ body{
 
 /* -------------------------- FINE STILI NAVBAR -------------------------- */
 
-/* -------------------------- STILI LAYOUT f -------------------------- */
+/* -------------------------- STILI LAYOUT -------------------------- */
 /*
  * .profilo-page
- * Contenitore principale della pagina profilo. Margin-top 70px (per compensare navbar fixed), min-height calc(100vh - 70px). Usata in: luogo, profilo.
+ * Contenitore principale della pagina profilo.
  *
  * Usata in 2 pagine: luogo.html, profilo.html
  */
@@ -2153,10 +2015,6 @@ body{
       }
 }
 
-@media (max-width: 480px) {
-  .profilo-page { padding: 20px 14px; }
-}
-
 @media (max-width: 600px) {
   .luogo-body .profilo-page {
           margin-top: 0;
@@ -2168,7 +2026,7 @@ body{
 
 /*
  * .profilo-sidebar
- * Sidebar bianca con bordo arrotondato (20px) e ombra. Contiene info utente/filtri. Usata in: luogo, profilo.
+ * Sidebar bianca che contiene info utente/filtri.
  *
  * Usata in 2 pagine: luogo.html, profilo.html
  */
@@ -2189,7 +2047,9 @@ body{
   .profilo-sidebar {
           position: static;
           flex-direction: row;
+          /* flex-wrap: wrap permette agli elementi all'interno della sidebar di andare a capo se lo spazio orizzontale è insufficiente, evitando che si sovrappongano o escano fuori dal contenitore */
           flex-wrap: wrap;
+          /* align-items: flex-start allinea gli elementi all'inizio della riga, creando un layout più compatto e ordinato su schermi più piccoli */
           align-items: flex-start;
           gap: 16px;
           padding: 20px;
@@ -2214,12 +2074,14 @@ body{
 
 /*
  * .profilo-grid
- * Griglia a due colonne per layout profilo: sidebar fissa 300px + area contenuto 1fr. Diventa colonna singola su mobile. Usata in: luogo, profilo.
+ * Griglia a due colonne per layout profilo,diventa a una colonna su mobile.
  *
  * Usata in 2 pagine: luogo.html, profilo.html
  */
 .profilo-grid {
     display: grid;
+    /* 300px per la sidebar, 1fr per il contenuto principale, con un gap di 24px tra le colonne */
+    /*fr (fraction) assegna tutto lo spazio rimanente alla seconda colonna */
     grid-template-columns: 300px 1fr;
     gap: 24px;
     max-width: 1100px;
@@ -2249,7 +2111,7 @@ body{
 
 /*
  * .profilo-content
- * Area contenuto principale del profilo (flex column, gap 16px). Contiene cards e sezioni dinamiche. Usata in: luogo, profilo.
+ * Area contenuto principale del profilo 
  *
  * Usata in 2 pagine: luogo.html, profilo.html
  */
@@ -2263,7 +2125,7 @@ body{
 /* -------------------------- STILI CARD LUOGO -------------------------- */
 /*
  * .luogo-card
- * Card principale per visualizzare un luogo/venue. Sfondo bianco, border-radius 20px, padding 26px 28px, ombra leggera. Responsive. Usata in: login, login-supplier, luogo, reset-password, reset-password-supplier.
+ * Card principale per visualizzare un luogo.
  *
  * Usata in 5 pagine: login-supplier.html, login.html, luogo.html, reset-password-supplier.html, reset-password.html
  */
@@ -2279,7 +2141,7 @@ body{
     width: 100%;
     box-sizing: border-box;
     border-radius: 16px;
-    padding: 20px 16px; /* vince l'ultimo dichiarato */
+    padding: 20px 16px; 
   }
 }
 
@@ -2291,7 +2153,7 @@ body{
 
 /*
  * .luogo-card-title
- * Titolo della card luogo. Font Fredoka One 1.2rem, colore scuro var(--bs-dark). Usata in: login-supplier, luogo.
+ * Titolo della card luogo.
  *
  * Usata in 2 pagine: login-supplier.html, luogo.html
  */
@@ -2304,7 +2166,7 @@ body{
     align-items: center;
     gap: 10px;
 }
-
+/* .luogo-card-title::after crea una linea decorativa sotto il titolo della card, che si estende per tutto lo spazio disponibile a destra del titolo, con uno sfondo giallo chiaro e bordi arrotondati */
 .luogo-card-title::after {
     content: '';
     flex: 1;
@@ -2325,7 +2187,7 @@ body{
 /* -------------------------- STILI INFO PILL -------------------------- */
 /*
  * .info-pill-label
- * Etichetta uppercase all'interno di un info-pill. Font-size 0.75rem, font-weight 800, text-transform uppercase, letter-spacing. Usata in: login, login-supplier, luogo, reset-password, reset-password-supplier.
+ * Etichetta uppercase all'interno di un info-pill.
  *
  * Usata in 5 pagine: login-supplier.html, login.html, luogo.html, reset-password-supplier.html, reset-password.html
  */
@@ -2339,7 +2201,7 @@ body{
 
 /*
  * .info-pill
- * Contenitore pill/badge per informazioni. Sfondo grigio chiaro semitrasparente, border-radius 14px, padding 12px 16px, display flex. Usata in: login-supplier, luogo, reset-password, reset-password-supplier.
+ * Contenitore pill/badge per informazioni.
  *
  * Usata in 4 pagine: login-supplier.html, luogo.html, reset-password-supplier.html, reset-password.html
  */
@@ -2363,7 +2225,7 @@ body{
 /* -------------------------- STILI FORM -------------------------- */
 /*
  * .form-control
- * Override Bootstrap form-control: sfondo variabile --bs-light, bordo arrotondato. Usata in: index, login, login-supplier, reset-password, reset-password-supplier.
+ * Override Bootstrap form-control
  *
  * Usata in 5 pagine: index.html, login-supplier.html, login.html, reset-password-supplier.html, reset-password.html
  */
@@ -2377,8 +2239,7 @@ body{
 
 /*
  * .select-wrapper
- * Wrapper per elementi select custom. Position relative, display block. Usata in: index, login-supplier.
- *
+ * Wrapper per elementi select custom.
  * Usata in 2 pagine: index.html, login-supplier.html
  */
 .select-wrapper {
@@ -2388,7 +2249,7 @@ body{
 
 /*
  * .psw-btn
- * Pulsante show/hide password. Posizionato in assoluto a destra dell'input, background none, border none. Usata in: login, login-supplier, reset-password, reset-password-supplier.
+ * Pulsante show/hide password. 
  *
  * Usata in 4 pagine: login-supplier.html, login.html, reset-password-supplier.html, reset-password.html
  */
@@ -2405,7 +2266,7 @@ body{
 /* -------------------------- STILI AUTENTICAZIONE -------------------------- */
 /*
  * .confirm-success
- * Icona/elemento di conferma successo (60×60px). Mostrato dopo operazioni come registrazione o reset password. Usata in: login, login-supplier.
+ * Icona/elemento di conferma successo (60×60px).
  *
  * Usata in 2 pagine: login-supplier.html, login.html
  */
@@ -2416,7 +2277,7 @@ body{
 
 /*
  * .btn-back-banner
- * Pulsante "torna indietro" sovrapposto al banner/immagine di sfondo. Posizionato in assoluto in alto a sinistra (top:10px, left:12px). Usata in: login, login-supplier, luogo, reset-password.
+ * Pulsante "torna indietro" sovrapposto al banner/immagine di sfondo. 
  *
  * Usata in 4 pagine: login-supplier.html, login.html, luogo.html, reset-password.html
  */
@@ -2458,7 +2319,7 @@ body{
 
 /*
  * .login-color
- * Colore testo principale per le pagine di login (var(--bs-dark)). Override colore di default per titoli e testi nelle schermate auth. Usata in: login, login-supplier, reset-password, reset-password-supplier.
+ * Colore testo principale per le pagine di login .
  *
  * Usata in 4 pagine: login-supplier.html, login.html, reset-password-supplier.html, reset-password.html
  */
@@ -2468,7 +2329,7 @@ body{
 
 /*
  * .left-headline
- * Titolo principale del pannello sinistro nelle pagine supplier. Font Fredoka One 46px, line-height 1.15. Usata in: login-supplier, reset-password-supplier.
+ * Titolo principale del pannello sinistro nelle pagine supplier.
  *
  * Usata in 2 pagine: login-supplier.html, reset-password-supplier.html
  */
@@ -2482,18 +2343,22 @@ body{
 }
 
 .left-headline span {
+    /* crea un gradiente lineare che va da un arancione più scuro (#D94F00) a uno più chiaro (#E07800) con un angolo di 160 gradi */
   background: linear-gradient(160deg, #D94F00, #E07800);
+  /* -webkit-background-clip: text fa sì che il gradiente venga applicato solo al testo, creando un effetto di testo sfumato */
   -webkit-background-clip: text;
+  /* -webkit-text-fill-color: transparent rende il colore del testo trasparente, permettendo al gradiente di essere visibile attraverso il testo */
   -webkit-text-fill-color: transparent;
+  /* -webkit-text-stroke: 1px var(--bs-dark) aggiunge un contorno al testo con uno spessore di 1 pixel e un colore scuro, migliorando la leggibilità del testo sfumato su sfondi chiari o complessi */
   background-clip: text;
   -webkit-text-stroke: 1px var(--bs-dark);
+  /* paint-order: stroke fill assicura che il contorno del testo venga disegnato prima del riempimento, migliorando ulteriormente la leggibilità del testo sfumato */
   paint-order: stroke fill;
 }
 
 /*
  * .nav-login-link
- * Link di navigazione nella zona auth (es. "Accedi" / "Registrati"). Font 0.875rem, font-weight 700, posizionato in assoluto top:0 right:0. Usata in: login-supplier, profilo-supplier, reset-password.
- *
+ * Link di navigazione nella zona auth (es. "Accedi" / "Registrati"). 
  * Usata in 3 pagine: login-supplier.html, profilo-supplier.html, reset-password.html
  */
 .nav-login-link {
@@ -2526,12 +2391,12 @@ body{
 /*
  * .toggle-slider
  * Slider interno dello switch toggle. Sfondo #ddd, border-radius 26px, transizione colore al checked. Usata in: login-supplier, profilo-supplier.
- * Usata in 2 pagine: login-supplier.html, profilo-supplier.html
  */
 
 /* contenitore visivo all'interno del quale il toggle viene attivato */
 .toggle-slider {
     position: absolute;
+    /*inset: 0 è una scorciatoia per impostare top, right, bottom e left a 0 */
     inset: 0;
     /* sfondo grigio chiaro (stato OFF) */
     background: #ddd;
@@ -2559,7 +2424,7 @@ body{
 
 /*
  * .toggle-switch
- * Contenitore dello switch toggle personalizzato (48×26px, position relative). Usata in: login-supplier, profilo-supplier.
+ * Contenitore dello switch toggle personalizzato .
  * Usata in 2 pagine: login-supplier.html, profilo-supplier.html
  */
 .toggle-switch {
@@ -2579,15 +2444,13 @@ body{
 
 /*
  * .toggle-label
- * Etichetta testuale accanto al toggle switch (font-weight 700, 0.92rem). Usata in: login-supplier, profilo-supplier.
- * Usata in 2 pagine: login-supplier.html, profilo-supplier.html
+ * Etichetta testuale accanto al toggle switch .
  */
 .toggle-label { font-weight: 700; font-size: 0.92rem; }
 
 /*
  * .toggle-row
  * Riga contenitore per un toggle + etichetta. Flex, space-between, align-center. Usata in: login-supplier, profilo-supplier.
- * Usata in 2 pagine: login-supplier.html, profilo-supplier.html
  */
 .toggle-row {
     display: flex;
@@ -2704,7 +2567,7 @@ body{
     animation: notificaIn 0.3s ease, notificaOut 0.3s ease 2.7s forwards;
 }
 .ap-notifica.error { color: #ff5252; }
-
+/* Le animazioni notificaIn e notificaOut gestiscono l'effetto di comparsa e scomparsa delle notifiche, con un leggero movimento verso l'alto e una dissolvenza */
 @keyframes notificaIn  { from { opacity:0; transform:translateY(14px); } to { opacity:1; transform:translateY(0); } }
 @keyframes notificaOut { to   { opacity:0; transform:translateY(14px); } }
 
@@ -2721,6 +2584,7 @@ body{
  */
 @media (max-width: 600px) {
     .d-flex.justify-content-end {
+        /*  justify-content: stretch fa sì che gli elementi all'interno del contenitore flessibile si estendano per occupare tutto lo spazio disponibile, creando un layout più fluido e adattabile su schermi più piccoli */           
           justify-content: stretch !important;
     }
 }
@@ -2733,6 +2597,7 @@ body{
  */
 @media (max-width: 768px) {
     .row.g-4 {
+        /* --bs-gutter-y è la variabile CSS che controlla lo spazio verticale tra le righe in un layout a griglia di Bootstrap. Impostandola a 0.5rem, si riduce lo spazio verticale tra le righe, rendendo il layout più compatto su schermi più piccoli */
         --bs-gutter-y: 0.5rem;
     } 
 }
