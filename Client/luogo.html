@@ -494,7 +494,7 @@
 
                 // registro l'orario limite in una variabile locale e salvo anche l'orario di apertura
                 chiusuraColazioneCorrente = chiusuraColazione;
-                aperturaCorrente = luogo.apertura.substring(0, 5);
+                aperturaCorrente = parseInt(luogo.apertura.substring(0, 2)) > 6 ? luogo.apertura.substring(0, 5) : '06:00';
 
                 // chiamo la funzione per generare fase orarie, dalla quale poi vado a creare tutti i pulsanti da inserire nella sezione "Colazione"
                 // del form per le recensioni

@@ -195,13 +195,14 @@
 
     // inizializza una variabile globale, serivirà successivamente per aggiungere il canvas alla pagina
     let chartFornituraInstance = null;
+    let aperturaColazione = null;
     function renderChartFornitura(recensioni, apertura, chiusuraColazione) {
         // controllo esistenza del canvas
         const canvas = document.getElementById('chartFornitura');
         if (!canvas) return;
 
         console.log('apertura:', apertura, '| chiusura:', chiusuraColazione);
-        console.log('fasce generate:', generaFasceOrarie(apertura, chiusuraColazione));
+        console.log('fasce generate:', generaFasceOrarie(aperturaColazione, chiusuraColazione));
 
         // se il canvas esiste, viene "distrutto" e viene posto a "null"
         if (chartFornituraInstance) {
@@ -209,7 +210,7 @@
             chartFornituraInstance = null;
         }
 
-        generaFasceOrarie(apertura, chiusuraColazione);
+        generaFasceOrarie(aperturaColazione, chiusuraColazione);
 
         // raggruppa le recensioni per fascia oraria e va a calcolare la media di fornitura (valori da 1 a 5)
         const gruppi = {};
@@ -490,8 +491,9 @@
                 const notturno = hChiusura < hApertura;
                 if (notturno) return '13:00';
 
-                return hChiusura < 13 ? luogo.chiusura.substring(0,5) : '13:00';
+                return hChiusura < 13 ? luogoCorrente.chiusura.substring(0,5) : '13:00';
             })();
+            aperturaColazione = parseInt(luogoCorrente.apertura.substring(0, 2)) > 6 ? luogoCorrente.apertura.substring(0, 5) : '06:00';
 
         } catch(err) {
             mostraNotifica(err.message, 'error');
@@ -575,19 +577,26 @@
             </div>`;
     
             initTabs();
-
+            
             // viene controllato se in luogo corrente è checkato "colazione", se true viene renderizzato il grafico
             if (luogoCorrente.colazione) {
                 // viene settato l'orario limite per le colazioni (massimo alle 13:00)
                 const chiusuraColazione = (() => {
-                    const h = parseInt(luogoCorrente.chiusura.split(':')[0], 10);
-                    return h < 13 ? '13:00' : luogoCorrente.chiusura;
+                    const hApertura = parseInt(luogoCorrente.apertura.split(':')[0], 10);
+                    const hChiusura = parseInt(luogoCorrente.chiusura.split(':')[0], 10);
+                    
                     // viene individuato l'orario di chiusura del luogo (viene splittato l'orario di chiusura in corrispondenza
                     // dei due punti e viene preso l'elemento 0) e viene confrontato con '13'
                     //  -> se minore, allora viene preso come limite massimo l'orario di chisuura del locale
                     //  -> se maggiore, viene preso come limite massimo le 13:00
+                    // se chiude dopo mezzanotte (orario notturno), usa sempre 13:00
+                    const notturno = hChiusura < hApertura;
+                    if (notturno) return '13:00';
+
+                    return hChiusura < 13 ? luogoCorrente.chiusura : '13:00';
                 })();
-                renderChartFornitura(recensioni, luogoCorrente.apertura, chiusuraColazione);
+                aperturaColazione = parseInt(luogoCorrente.apertura.substring(0, 2)) > 6 ? luogoCorrente.apertura.substring(0, 5) : '06:00';
+                renderChartFornitura(recensioni, aperturaColazione, chiusuraColazione);
             }
     
         } catch(err) {

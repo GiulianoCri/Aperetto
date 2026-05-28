@@ -261,18 +261,24 @@ body{
     width: 100%;
     height: 180px;
     min-height: 180px;
-    /*overflow: hidden assicura che l'immagine non esca dai bordi del wrapper, mantenendo un aspetto pulito e ordinato, soprattutto quando si utilizza object-fit: cover per adattare l'immagine al contenitore senza distorsioni */  
+    /*overflow: hidden assicura che l'immagine non esca dai bordi del wrapper, mantenendo un aspetto pulito e ordinato, 
+        soprattutto quando si utilizza object-fit: cover per adattare l'immagine al contenitore senza distorsioni */  
     overflow: hidden;
-    /* flex-shrink: 0 impedisce al wrapper dell'immagine di ridursi in dimensioni quando lo spazio è limitato, garantendo che l'immagine mantenga la sua altezza e proporzioni all'interno della card, anche su schermi più piccoli o quando la card viene ridimensionata */
+    /* flex-shrink: 0 impedisce al wrapper dell'immagine di ridursi in dimensioni quando lo spazio è limitato, garantendo 
+        che l'immagine mantenga la sua altezza e proporzioni all'interno della card, anche su schermi più piccoli o quando 
+        la card viene ridimensionata */
     flex-shrink: 0;     
 }
 /*stili per l immagine*/
 .risultato-card .card-img-wrap img {
     width: 100%;
     height: 100%;
-    /* object-fit: cover adatta l'immagine al contenitore del wrapper, mantenendo le proporzioni e ritagliando se necessario per evitare distorsioni, garantendo che l'immagine riempia completamente lo spazio disponibile senza deformarsi */
+    /* object-fit: cover adatta l'immagine al contenitore del wrapper, mantenendo le proporzioni e ritagliando se necessario 
+        per evitare distorsioni, garantendo che l'immagine riempia completamente lo spazio disponibile senza deformarsi */
     object-fit: cover;
-    /* display: block rimuove lo spazio bianco sotto l'immagine causato dal comportamento inline di default, assicurando che l'immagine si allinei correttamente con il bordo inferiore del wrapper e mantenendo un aspetto pulito e ordinato all'interno della card */
+    /* display: block rimuove lo spazio bianco sotto l'immagine causato dal comportamento inline di default, assicurando che 
+        l'immagine si allinei correttamente con il bordo inferiore del wrapper e mantenendo un aspetto pulito e ordinato 
+        all'interno della card */
     display: block;
     transition: transform 0.35s ease; 
 }
@@ -289,10 +295,14 @@ body{
 
 /* Body della card */
 .risultato-card .card-info {
-    /* flex: 1 permette al contenitore delle informazioni di espandersi per occupare tutto lo spazio disponibile all'interno della card, garantendo che il layout rimanga bilanciato e che le informazioni siano ben distribuite, anche quando la card viene ridimensionata o visualizzata su schermi di diverse dimensioni */
+    /* flex: 1 permette al contenitore delle informazioni di espandersi per occupare tutto lo spazio disponibile all'interno 
+        della card, garantendo che il layout rimanga bilanciato e che le informazioni siano ben distribuite, anche quando la card 
+        viene ridimensionata o visualizzata su schermi di diverse dimensioni */
     flex: 1;
     padding: 14px 16px 16px;
-    /* display: flex e flex-direction: column creano un layout verticale per gli elementi all'interno del contenitore delle informazioni, con gap: 6px che aggiunge uno spazio uniforme tra il titolo, la descrizione e l'indirizzo, migliorando la leggibilità e l'estetica della card */
+    /* display: flex e flex-direction: column creano un layout verticale per gli elementi all'interno del contenitore delle 
+        informazioni, con gap: 6px che aggiunge uno spazio uniforme tra il titolo, la descrizione e l'indirizzo, migliorando la leggibilità 
+        e l'estetica della card */
     display: flex;
     flex-direction: column;
     gap: 6px;
@@ -312,7 +322,9 @@ body{
     color: #666;
     line-height: 1.5;
     margin: 0;
-    /* display: -webkit-box, -webkit-line-clamp e -webkit-box-orient sono proprietà CSS specifiche per i browser basati su WebKit (come Chrome e Safari) che consentono di creare un effetto di troncamento del testo dopo un certo numero di linee, in questo caso 2 linee, mantenendo un layout pulito e ordinato anche quando la descrizione è più lunga del previsto */
+    /* display: -webkit-box, -webkit-line-clamp e -webkit-box-orient sono proprietà CSS specifiche per i browser basati su WebKit 
+        (come Chrome e Safari) che consentono di creare un effetto di troncamento del testo dopo un certo numero di linee, in questo 
+        caso 2 linee, mantenendo un layout pulito e ordinato anche quando la descrizione è più lunga del previsto */
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
@@ -335,14 +347,16 @@ body{
 /* LAYOUT APP CONTAINER - DESKTOP */
 .app-container {
     display: flex;
-    /* flex-direction: row organizza i principali contenitori della pagina (lista e mappa) in una riga orizzontale, affiancandoli uno accanto all'altro */
+    /* flex-direction: row organizza i principali contenitori della pagina (lista e mappa) in una riga orizzontale, affiancandoli 
+        uno accanto all'altro */
     flex-direction: row;
     width: 100%;
     overflow: hidden;
 }
 
 .lista {
-    /* flex: 0 0 50% indica che il contenitore della lista occupa il 50% dello spazio disponibile, non si espande oltre questa dimensione e non si riduce al di sotto di essa, garantendo un layout bilanciato tra la lista e la mappa*/
+    /* flex: 0 0 50% indica che il contenitore della lista occupa il 50% dello spazio disponibile, non si espande oltre questa dimensione 
+        e non si riduce al di sotto di essa, garantendo un layout bilanciato tra la lista e la mappa*/
     flex: 0 0 50%;
     /*overflow-y: auto abilita lo scorrimento verticale all'interno del contenitore della lista*/
     overflow-y: auto;
@@ -364,7 +378,8 @@ body{
 /* LAYOUT APP CONTAINER - MOBILE-Impostazione bottone mappa */
 @media (max-width: 600px) {
     #map {
-        /* display: none nasconde completamente il contenitore della mappa, rimuovendolo dal flusso del layout e impedendo che occupi spazio o sia visibile all'utente */
+        /* display: none nasconde completamente il contenitore della mappa, rimuovendolo dal flusso del layout e impedendo che occupi 
+            spazio o sia visibile all'utente */
         display: none !important;
         /*flex: 0 assicura che non occupi alcuna area residua, permettendo alla lista di utilizzare tutto lo spazio disponibile*/
         flex: 0;
@@ -402,7 +417,8 @@ body{
     gap: 8px;
   }
   .filtro-group {
-    /* flex: 1 1 calc(50% - 8px) consente a ciascun gruppo filtro di occupare il 50% dello spazio disponibile, con un margine di 8px tra di loro*/
+    /* flex: 1 1 calc(50% - 8px) consente a ciascun gruppo filtro di occupare il 50% dello spazio disponibile, con un 
+        margine di 8px tra di loro*/
     flex: 1 1 calc(50% - 8px);
   }
   .filtro-select {
@@ -539,9 +555,11 @@ body{
 .luogo-banner img {
     width: 100%;
     height: 100%;
-    /* object-fit: cover adatta l'immagine al contenitore del banner, mantenendo le proporzioni e ritagliando se necessario per evitare distorsioni, garantendo che l'immagine riempia completamente lo spazio disponibile senza deformarsi */
+    /* object-fit: cover adatta l'immagine al contenitore del banner, mantenendo le proporzioni e ritagliando se necessario 
+        per evitare distorsioni, garantendo che l'immagine riempia completamente lo spazio disponibile senza deformarsi */
     object-fit: cover;
-    /* display: block rimuove lo spazio bianco sotto l'immagine causato dal comportamento inline di default, assicurando che l'immagine si allinei correttamente con il bordo inferiore del banner e mantenendo un aspetto pulito e ordinato */
+    /* display: block rimuove lo spazio bianco sotto l'immagine causato dal comportamento inline di default, assicurando che 
+        l'immagine si allinei correttamente con il bordo inferiore del banner e mantenendo un aspetto pulito e ordinato */
     display: block;
 }
 /* gradiente scuro in basso per leggibilità del testo */
@@ -1412,13 +1430,17 @@ body{
 .step.active .step-circle {
     border-color: var(--bs-dark);
     background: var(--bs-dark);
-    color: var(--bs-body-bg);
+    color: var(--bs-white);
     /* alone attorno al cerchio */
     box-shadow: 0 0 0 4px rgba(0, 0, 0, .15);
 }
 
 /* la label diventa scuro per corrispondere al cerchio attivo */
 .step.active .step-label { color: var(--bs-dark); }
+
+.step.active .step-circle img {
+    filter: brightness(0) invert(1);
+}
 
 /* quando lo step è stato superato, diventa 'step-done'
     il cerchio diventa con lo sfondo verde con una spunta bianca (inserita mediante JavaScript) */
@@ -1547,7 +1569,7 @@ body{
     object-fit: contain;
     align-self: stretch;
 }
-/* ---------------------- RECENSIONI ---------------------- */
+/* RECENSIONI */
 /* Stili per le card delle recensioni all'interno del profilo, con effetti di hover e un layout pulito */
 .recensione-card {
     background: #fff;
