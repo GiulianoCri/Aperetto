@@ -173,7 +173,7 @@ async function geocodifica(indirizzo) {
 
 /**
  * GET /api/me
- * Endpoint "chi sono?": il client lo chiama all'avvio di ogni pagina
+ * Endpoint "chi sono?": il client lo chiama 
  * per sapere se l'utente è loggato e ottenere i suoi dati base.
  * Se la sessione esiste → 200 + dati utente.
  * Se non esiste → 401 Unauthorized (il client mostrerà "Accedi").
@@ -404,6 +404,7 @@ app.post('/api/logout', (req, res) => {
 // un'email all'utente con un link per reimpostare la password che contiene il token. Il client poi userà questo token per fare una 
 // richiesta POST a /api/reset-password con la nuova password, e il server verificherà il token, aggiornerà la password dell'utente e 
 // cancellerà il token usato.
+// nodemailer è una libreria che semplifica l'invio di email da Node.js, in questo caso la usiamo per inviare l'email di recupero password all'utente, con un link che contiene il token per reimpostare la password.
 const nodemailer = require('nodemailer');
 //crypto è un modulo di node che fornisce funzioni crittografiche, in questo caso lo usiamo per generare un token casuale e univoco per il recupero password, che sarà difficile da indovinare o riprodurre.
 const crypto = require('crypto');
@@ -634,6 +635,7 @@ app.get('/api/recensioni/mie', async (req, res) => {
             fascia_oraria,
             location:luogo_id ( nome_locale )
         `)
+        //filtro per ottenere solo le recensioni dell'utente loggato, usando l'user_id preso dalla sessione. In questo modo garantiamo che l'utente possa vedere solo le sue recensioni, e non quelle di altri utenti.
         .eq('user_id', user_id)
         .order('created_at', { ascending: false });
  
