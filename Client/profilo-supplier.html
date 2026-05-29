@@ -111,13 +111,7 @@
     // sulla sidebar possiamo trovare un'anteprima della foto di sfondo del locale, oltre alle info principali
     // abbiamo anche un link per vedere la pagina pubblica del proprio locale
     function renderSidebar(luogo, recensioni) {
-        
-        // calcola la media delle recensioni:
-        // somma tramite la funzione 'reduce' il voto di ogni recensione, dividendo poi per il numero di recensioni totali
-        const media = recensioni.length
-            ? (recensioni.reduce((s,r) => s+r.voto,0) / recensioni.length)
-            : null;
-        
+                
         // crea la sidebar con foto, nome del locale, tipologia di servizio offerto e le informazioni
         // partendo dalle informazioni ricavate dal server, le inserisce all'interno della pagina 
         return `
@@ -275,6 +269,9 @@
     // nella tab delle recensioni troviamo le statistiche (voto medio, numero di recensioni e grafico fornitura) in alto
     // in basso troviamo l'elenco delle recensioni
     function renderRecensioni( recensioni) {
+    
+        // calcola la media delle recensioni:
+        // somma tramite la funzione 'reduce' il voto di ogni recensione, dividendo poi per il numero di recensioni totali    
         const media = recensioni.length
                 ? (recensioni.reduce((s,r) => s+r.voto,0) / recensioni.length)
                 : null;
@@ -456,7 +453,7 @@
         if (!payload.nome_locale || !payload.indirizzo || !payload.apertura || !payload.chiusura 
             || (!payload.aperitivo && !payload.colazione)) {
             // se non presenti, viene inviata una notifica all'utente e viene inizializzato il bottone di salvataggio
-            mostraNotifica('Nome e indirizzo sono obbligatori', 'error');
+            mostraNotifica('Riempi i campi obbligatori', 'error');
             btnSalva.disabled = false;
             btnSalva.textContent = '💾 Salva modifiche';
             return;

@@ -21,7 +21,8 @@ const path = require("path");
 const multer = require('multer');
 //express-session: gestisce le sessioni utente server-side tramite cookie.
 const session = require('express-session');
-//upload è la configurazione di multer, in questo caso stiamo dicendo a multer di salvare i file caricati in RAM (non su disco), così possiamo poi passarli direttamente a supabase storage senza doverli salvare temporaneamente su disco
+//upload è la configurazione di multer, in questo caso stiamo dicendo a multer di salvare i file caricati in RAM (non su disco), così possiamo 
+// poi passarli direttamente a supabase storage senza doverli salvare temporaneamente su disco
 const upload = multer({ storage: multer.memoryStorage() });
 //creazione dell'app express
 const app=express();
@@ -40,15 +41,22 @@ const ROOT = path.join(__dirname,'..','Client');
 
 
 // SESSIONI
-// configuriamo express-session come middleware, in questo modo ogni richiesta che arriva al server passerà prima da questa configurazione di sessione. La sessione ci permette di mantenere lo stato dell'utente tra le varie richieste, ad esempio per sapere se è loggato o no, e per salvare i suoi dati di base (esempio email, nome) senza doverli inviare dal client ad ogni richiesta. La configurazione che abbiamo messo prevede un segreto (usato per firmare la sessione), e alcune opzioni per i cookie (durata, sicurezza, ecc). Importante: in produzione è consigliabile usare un store di sessioni più robusto (esempio Redis) invece della memoria del server, che è volatile e non scalabile.
+// configuriamo express-session come middleware, in questo modo ogni richiesta che arriva al server passerà prima da questa configurazione di sessione. 
+// La sessione ci permette di mantenere lo stato dell'utente tra le varie richieste, ad esempio per sapere se è loggato o no, e per salvare i suoi dati 
+// di base (esempio email, nome) senza doverli inviare dal client ad ogni richiesta. La configurazione che abbiamo messo prevede un segreto (usato per 
+// firmare la sessione), e alcune opzioni per i cookie (durata, sicurezza, ecc). Importante: in produzione è consigliabile usare un store di sessioni 
+// più robusto (esempio Redis) invece della memoria del server, che è volatile e non scalabile.
 app.use(session({
-    // firma crittografica del cookie di sessione, usata per garantire l'integrità della sessione e prevenire manomissioni. In produzione, questo dovrebbe essere un valore lungo, complesso e segreto, idealmente caricato da una variabile d'ambiente.
+    // firma crittografica del cookie di sessione, usata per garantire l'integrità della sessione e prevenire manomissioni. In produzione, questo dovrebbe 
+    // essere un valore lungo, complesso e segreto, idealmente caricato da una variabile d'ambiente.
     secret: 'una_stringa_segreta_molto_lunga',
     // non riscrivere la sessione se non modificata
     resave: false,
     // non creare sessione per utenti anonimi
     saveUninitialized: false,
-    //configurazione dei cookie che vengono usati per identificare la sessione dell'utente. maxAge è la durata del cookie (in questo caso 1 giorno), httpOnly significa che il cookie non è accessibile tramite JavaScript (aumenta la sicurezza contro attacchi XSS), sameSite: 'lax' aiuta a prevenire attacchi CSRF, secure: false significa che il cookie può essere trasmesso anche su connessioni non sicure (in produzione dovrebbe essere true se si usa HTTPS).
+    //configurazione dei cookie che vengono usati per identificare la sessione dell'utente. maxAge è la durata del cookie (in questo caso 1 giorno), httpOnly 
+    // significa che il cookie non è accessibile tramite JavaScript (aumenta la sicurezza contro attacchi XSS), sameSite: 'lax' aiuta a prevenire attacchi CSRF, 
+    // secure: false significa che il cookie può essere trasmesso anche su connessioni non sicure (in produzione dovrebbe essere true se si usa HTTPS).
     cookie: {
         maxAge: 1000 * 60 * 60 * 24,
         httpOnly: true,
@@ -56,21 +64,26 @@ app.use(session({
         secure: false 
     }
 }));
-// con questa riga diciamo a express di servire i file statici dalla cartella ROOT, quindi quando il client richiede un file (esempio index.html o uno script js) express lo cercherà in quella cartella
+// con questa riga diciamo a express di servire i file statici dalla cartella ROOT, quindi quando il client richiede un file (esempio index.html o uno script js) 
+// express lo cercherà in quella cartella
 app.use(express.static(ROOT)); 
-// con questa riga diciamo a express di interpretare il body delle richieste in formato json, così possiamo accedere ai dati inviati dal client tramite req.body negli handler
+// con questa riga diciamo a express di interpretare il body delle richieste in formato json, così possiamo accedere ai dati inviati dal client tramite req.body 
+// negli handler
 app.use(express.json());
 /*
 Use serve per creare un middleware, un ulteriore operazione che la richiesta subisce prima di raggiungere destinazione. 
 IMPORTANTE: use applica un middleware a tutte le richieste in entrata.
-IMPORTANTE: l'ordine in cui i middleware sono scritti nel mio file, sarebbe lo stesso con cui vengono applicati (app.use(espress.static(ROOT)) viene applicato prima di app.use(express.json()) )
-IMPORTANTE: è necessario che certi middleware vengano scritti prima di alcune handler (esempio app.use(express.json()) deve essere scritto prima di req.body negli handler)
+IMPORTANTE: l'ordine in cui i middleware sono scritti nel mio file, sarebbe lo stesso con cui vengono applicati (app.use(espress.static(ROOT)) viene applicato prima 
+            di app.use(express.json()) )
+IMPORTANTE: è necessario che certi middleware vengano scritti prima di alcune handler (esempio app.use(express.json()) deve essere scritto prima di req.body negli
+            handler)
 */
 
 //Rotte per le pagine HTML
 
 // pagina home
-// con questa rotta, quando il client fa una richiesta GET alla radice del sito (esempio http://localhost:3000/) allora express risponde inviando il file index.html che si trova nella cartella ROOT
+// con questa rotta, quando il client fa una richiesta GET alla radice del sito (esempio http://localhost:3000/) allora express risponde inviando il file index.html 
+// che si trova nella cartella ROOT
 app.get('/',(req,res)=>{
     res.sendFile(path.join(ROOT,'index.html'));
 });
@@ -98,7 +111,8 @@ app.get('/reset-password.html', (req, res) => {
 });
 
 // CONNESSIONE A SUPABASE
-// createClient è la funzione che ci permette di creare un'istanza del client di supabase, a cui poi possiamo fare le query al database e le operazioni di storage. La funzione prende come parametri l'url del nostro progetto supabase e la chiave anonima (public) 
+// createClient è la funzione che ci permette di creare un'istanza del client di supabase, a cui poi possiamo fare le query al database e le operazioni di storage. 
+// La funzione prende come parametri l'url del nostro progetto supabase e la chiave anonima (public) 
 const { createClient } = require('@supabase/supabase-js');
 const supabaseApi= 'https://ocoztbtixgjdfadqoxtn.supabase.co';
 const supabaseApiKey= 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9jb3p0YnRpeGdqZGZhZHFveHRuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU3ODIwMzIsImV4cCI6MjA5MTM1ODAzMn0.K0tLeh1T-2zjCl3WSvtueTKRQWEadmR1gBXgguALov0';
@@ -113,10 +127,12 @@ const bcrypt = require('bcrypt') //usiamo bcrypt per fare un hashing della passw
 
 //FUNZIONI AUSILIARIE
 
-//questa funzione prende un luogo (un oggetto con i dati di un locale) e se ha un'immagine, aggiunge al campo immagine l'url pubblico dell'immagine salvata su supabase storage, così da poterla mostrare al client. Se il luogo non ha un'immagine, restituisce il luogo com'è.
+//questa funzione prende un luogo (un oggetto con i dati di un locale) e se ha un'immagine, aggiunge al campo immagine l'url pubblico dell'immagine salvata su 
+// supabase storage, così da poterla mostrare al client. Se il luogo non ha un'immagine, restituisce il luogo com'è.
 const aggiungiUrl = (luogo) => {
     if (!luogo.immagine) return luogo; // se non c'è immagine, restituisce il luogo com'è
-    //se c'è un'immagine, ottiene l'url pubblico da supabase storage e lo aggiunge al campo immagine del luogo, sovrascrivendo il nome del file con l'url pubblico. In questo modo il client può usare direttamente luogo.immagine come url per mostrare l'immagine del locale.
+    //se c'è un'immagine, ottiene l'url pubblico da supabase storage e lo aggiunge al campo immagine del luogo, sovrascrivendo il nome del file con l'url pubblico. 
+    // In questo modo il client può usare direttamente luogo.immagine come url per mostrare l'immagine del locale.
     const { data: urlData } = supabase.storage
         .from('foto')
         .getPublicUrl(luogo.immagine);
@@ -150,14 +166,18 @@ const aggiungiUrl = (luogo) => {
  */
 async function geocodifica(indirizzo) {
 
-    //geocodifica l'indirizzo usando l'API di Nominatim (OpenStreetMap), che restituisce le coordinate lat e lng corrispondenti all'indirizzo. La funzione prende come parametro l'indirizzo da geocodificare, costruisce l'url della richiesta all'API di Nominatim, effettua la richiesta e restituisce un oggetto con lat e lng. Se l'indirizzo non viene trovato, restituisce lat e lng null.
+    //geocodifica l'indirizzo usando l'API di Nominatim (OpenStreetMap), che restituisce le coordinate lat e lng corrispondenti all'indirizzo. La funzione 
+    // prende come parametro l'indirizzo da geocodificare, costruisce l'url della richiesta all'API di Nominatim, effettua la richiesta e restituisce un 
+    // oggetto con lat e lng. Se l'indirizzo non viene trovato, restituisce lat e lng null.
     const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(indirizzo)}&limit=1`;
     
-    // Nominatim richiede un User-Agent identificativo, altrimenti potrebbe rifiutare la richiesta o bloccare l'IP per abuso. Qui stiamo usando un User-Agent generico con il nome della nostra app e una mail di contatto.
+    // Nominatim richiede un User-Agent identificativo, altrimenti potrebbe rifiutare la richiesta o bloccare l'IP per abuso. Qui stiamo usando un User-Agent
+    //  generico con il nome della nostra app e una mail di contatto.
     const res = await fetch(url, {
         headers: { 'User-Agent': 'Aperetto/1.0 (noreply.aperetto@gmail.com)' }
     });
-    //res.json() restituisce un array di risultati, anche se noi abbiamo messo limit=1 quindi ci aspettiamo al massimo un risultato. Se l'array è vuoto, significa che l'indirizzo non è stato trovato.
+    //res.json() restituisce un array di risultati, anche se noi abbiamo messo limit=1 quindi ci aspettiamo al massimo un risultato. Se l'array è vuoto, significa 
+    // che l'indirizzo non è stato trovato.
     const risultato = await res.json();
     
     if (!risultato || risultato.length === 0) return { lat: null, lng: null };
@@ -404,9 +424,12 @@ app.post('/api/logout', (req, res) => {
 // un'email all'utente con un link per reimpostare la password che contiene il token. Il client poi userà questo token per fare una 
 // richiesta POST a /api/reset-password con la nuova password, e il server verificherà il token, aggiornerà la password dell'utente e 
 // cancellerà il token usato.
-// nodemailer è una libreria che semplifica l'invio di email da Node.js, in questo caso la usiamo per inviare l'email di recupero password all'utente, con un link che contiene il token per reimpostare la password.
+
+// nodemailer è una libreria che semplifica l'invio di email da Node.js, in questo caso la usiamo per inviare l'email di recupero password all'utente, 
+// con un link che contiene il token per reimpostare la password.
 const nodemailer = require('nodemailer');
-//crypto è un modulo di node che fornisce funzioni crittografiche, in questo caso lo usiamo per generare un token casuale e univoco per il recupero password, che sarà difficile da indovinare o riprodurre.
+//crypto è un modulo di node che fornisce funzioni crittografiche, in questo caso lo usiamo per generare un token casuale e univoco per il recupero password, 
+// che sarà difficile da indovinare o riprodurre.
 const crypto = require('crypto');
 
 // rotta per richiedere il recupero password, riceve l'email dell'utente
